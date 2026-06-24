@@ -216,7 +216,7 @@ packages/shared/
 | frontend | 5173 | `./frontend` (build) | - |
 | backend | 5000 | `./backend` (build) | - |
 | worker | - | `./worker` (build) | - |
-| mongo | 27017 | `mongo:7` | `mongo_data:/data/db` |
+| mongo | 27017 | `mongo:8` | `mongo_data:/data/db` |
 
 **Networking**:
 - Docker Compose crea network `monolegal_default`

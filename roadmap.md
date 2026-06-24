@@ -31,7 +31,7 @@ Desarrollar una plataforma de gestión de cobranza mediante iteraciones basadas 
 - ✅ FluentValidation
 - ✅ Serilog
 - ✅ Minimal APIs
-- ✅ xUnit + FluentAssertions
+- ✅ xUnit + Shouldly
 
 ### Spec 0.3: Dependencias Frontend
 
@@ -322,7 +322,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 - ✅ `InvoiceStatus` transitions valid/invalid (xUnit)
 - ✅ Invoice creation con validaciones
-- ✅ FluentAssertions para lectibilidad
+- ✅ Shouldly para lectibilidad
 - ✅ Mínimo 85% cobertura
 
 ### Spec 5.2: Integration Tests - API

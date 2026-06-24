@@ -46,7 +46,7 @@ Código frontend mantenido con mismo rigor que backend. TypeScript strict mode f
 
 **Backend**: ASP.NET Core 10, Minimal APIs (sin full MVC), MongoDB Driver (sin EF), FluentValidation, Serilog (structured logs)  
 **Frontend**: React 19+, Vite (sin webpack), TypeScript strict, componentes shadcn/ui, TanStack Query para server state, Motion para animaciones  
-**Testing**: xUnit + FluentAssertions (backend), Vitest + Testing Library (frontend), Playwright (E2E)  
+**Testing**: xUnit + Shouldly (backend), Vitest + Testing Library (frontend), Playwright (E2E)  
 **Calidad**: Biome (linting/formatting), React Doctor (inspección React), dotnet format (backend)  
 **Infraestructura**: Docker Compose con servicios separados (frontend, backend, worker, MongoDB); imágenes optimizadas para VPS producción (<500MB tamaño final); sin secrets embebidos
 

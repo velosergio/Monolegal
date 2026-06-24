@@ -180,7 +180,7 @@
   - Servicio frontend: build ./frontend, puerto 5173, env VITE_API_URL=http://backend:5000
   - Servicio backend: build ., puerto 5000, env MONGODB_URI, depends_on mongo
   - Servicio worker: build ./worker, env MONGODB_URI, depends_on mongo
-  - Servicio mongo: image mongo:7, puerto 27017, volumen mongo_data, healthcheck
+  - Servicio mongo: image mongo:8, puerto 27017, volumen mongo_data, healthcheck
 - [x] T060 [P] [US5] Crear `scripts/init-mongo.js` para inicialización de MongoDB en docker-compose (seed data minimal)
 - [x] T061 [US5] Actualizar `.dockerignore` con reglas finales: node_modules/, .git/, .env, **/*.pdb
 - [x] T062 [US5] Actualizar `.gitignore` con entradas: .env.local, dist/, obj/, bin/, mongo_data/

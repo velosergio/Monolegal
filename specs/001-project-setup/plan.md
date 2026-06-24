@@ -250,7 +250,7 @@ services:
     depends_on: [mongo]
     
   mongo:
-    image: mongo:7
+    image: mongo:8
     ports: [27017]
     volumes: [mongo_data:/data/db]
 

@@ -94,7 +94,7 @@ ENTRYPOINT ["dotnet", "backend.dll"]
 ## 3. MongoDB en Docker - Persistencia y Configuración
 
 ### Decisión
-✅ **MongoDB 7 (Community)** containerizado en Docker Compose
+✅ **MongoDB 8 (Community)** containerizado en Docker Compose
 
 ### Justificación
 - **Persistencia**: Volúmenes Docker (`mongo_data:/data/db`) preservan datos entre restarts
@@ -108,7 +108,7 @@ ENTRYPOINT ["dotnet", "backend.dll"]
 ```yaml
 services:
   mongo:
-    image: mongo:7
+    image: mongo:8
     container_name: monolegal-mongo
     ports:
       - "27017:27017"
@@ -430,7 +430,7 @@ dotnet format
 | Runtime Backend | .NET 10 ASP.NET Core | Minimal APIs, performance, MongoDB soporte |
 | Arquiteectura Backend | Clean Architecture 4-layer | Requerido por constitución |
 | Runtime Frontend | React 19+ + Vite | Type-safe, fast build, modern |
-| Persistencia | MongoDB 7 (Docker) | Flexible schema, containerizable |
+| Persistencia | MongoDB 8 (Docker) | Flexible schema, containerizable |
 | Testing Backend | xUnit + FluentAssertions | Standard .NET, legible, fast |
 | Testing Frontend | Vitest + Testing Library | Fast, user-centric, Vite-native |
 | Testing E2E | Playwright | Cross-browser, reliable, video recording |

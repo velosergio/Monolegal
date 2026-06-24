@@ -46,7 +46,7 @@ El workflow de planificación para **Especificación 001: Configuración de Estr
 ### Verificación Inicial (Pre-Investigación)
 - ✅ **Requisitos Testeables**: Todos los FR tienen AC claros (5 user stories × 2-3 AC cada una)
 - ✅ **Alcance Delimitado**: 5 historias priorizadas (P1 backend, P1 frontend, P1 worker, P2 shared, P1 docker)
-- ✅ **Dependencias Identificadas**: Stack tecnológico locked (ASP.NET Core 10, React 19+, MongoDB 7)
+- ✅ **Dependencias Identificadas**: Stack tecnológico locked (ASP.NET Core 10, React 19+, MongoDB 8)
 - ✅ **Compliance Constitucional**: Todos los 6 principios alineados (Clean Architecture, SOLID, SDD, Test-First, Frontend Quality, Observability)
 - ✅ **Documentación Idioma**: Especificación 100% en español
 
@@ -70,7 +70,7 @@ El workflow de planificación para **Especificación 001: Configuración de Estr
 ### Stack Backend
 - **Runtime**: .NET 10 ASP.NET Core (Minimal APIs)
 - **Arquitectura**: Clean Architecture 4-layer (Domain/Application/Infrastructure/Api)
-- **BD**: MongoDB 7 (containerizado)
+- **BD**: MongoDB 8 (containerizado)
 - **Validación**: FluentValidation
 - **Logging**: Serilog (structured JSON)
 

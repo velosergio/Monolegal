@@ -71,7 +71,7 @@ curl http://localhost:5173
 
 **Infrastructure**:
 - Docker Compose (dev + prod parity)
-- MongoDB 7
+- MongoDB 8
 - Multi-stage Dockerfile
 
 ## Documentación
