@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Backend</RootNamespace>
+    <!-- No output: this project only orchestrates references for tooling/Dockerfile -->
+    <NoWarn>$(NoWarn);CS5001</NoWarn>
+  </PropertyGroup>
+  <!-- Exclude sub-project source files to avoid duplicate assembly attributes -->
+  <ItemGroup>
+    <Compile Remove="Domain/**/*.cs" />
+    <Compile Remove="Application/**/*.cs" />
+    <Compile Remove="Infrastructure/**/*.cs" />
+    <Compile Remove="Api/**/*.cs" />
+    <Compile Remove="Tests/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Api/Api.csproj" />
+    <ProjectReference Include="../packages/shared/shared.csproj" />
+  </ItemGroup>
+</Project>

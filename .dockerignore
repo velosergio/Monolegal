@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+
+# .NET build artifacts
+**/bin/
+**/obj/
+**/*.pdb
+**/*.user
+**/*.suo
+.vs/
+.vscode/
+
+# Frontend build output (se genera en el stage de build)
+frontend/dist/
+
+# Environment — solo excluir valores reales
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Testing artifacts
+coverage/
+.nyc_output/
+test-results/
+
+# Specs y docs (no necesarios en imagen)
+specs/
+docs/
+README.md
+DEVELOPMENT.md
+CLEANUP.md
+CHANGELOG.md
+
+# Datos locales de mongo
+data/

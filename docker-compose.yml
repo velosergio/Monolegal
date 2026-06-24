@@ -1,0 +1,94 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend
+    container_name: monolegal-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:5000
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - monolegal-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://0.0.0.0:5173 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend
+    container_name: monolegal-backend
+    ports:
+      - "5000:5000"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5000
+      MONGODB_URI: mongodb://root:example_dev_password@mongo:27017/monolegal_dev
+      LOG_LEVEL: Debug
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - monolegal-network
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    container_name: monolegal-worker
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      MONGODB_URI: mongodb://root:example_dev_password@mongo:27017/monolegal_dev
+      LOG_LEVEL: Debug
+      EMAIL_PROVIDER: console
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - monolegal-network
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:8
+    container_name: monolegal-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example_dev_password
+      MONGO_INITDB_DATABASE: monolegal_dev
+    volumes:
+      - mongo_data:/data/db
+      - mongo_config:/data/configdb
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - monolegal-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo_data:
+  mongo_config:
+
+networks:
+  monolegal-network:
+    driver: bridge

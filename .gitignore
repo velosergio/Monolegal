@@ -1,0 +1,56 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.vcxproj.user
+*.pdb
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm
+
+# Frontend build
+dist/
+frontend/dist/
+
+# Environment files (nunca commitear valores reales)
+.env
+.env.local
+.env.*.local
+.env.development.local
+
+# TypeScript
+*.tsbuildinfo
+.tsbuild/
+
+# Docker / datos locales
+mongo_data/
+mongo_config/
+data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Build outputs
+target/
+build/
+out/
+
+# Temporary files
+*.tmp
+*.temp
