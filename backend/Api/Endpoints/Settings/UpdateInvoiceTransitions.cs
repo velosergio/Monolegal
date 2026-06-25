@@ -22,6 +22,9 @@ public static class UpdateInvoiceTransitions
             return Results.NoContent();
         })
         .WithName("UpdateInvoiceTransitions")
-        .WithTags("Settings");
+        .WithTags("Settings")
+        .WithSummary("Actualizar la configuración de transiciones")
+        .WithDescription("Reemplaza la configuración de transiciones automáticas de facturas. Devuelve 204 sin contenido.")
+        .Produces(StatusCodes.Status204NoContent);
     }
 }

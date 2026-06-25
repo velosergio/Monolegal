@@ -68,6 +68,12 @@ public static class ListInvoices
             return Results.Ok(new PagedResponse<InvoiceListItemDto>(data, total, query.PageSize));
         })
         .WithName("ListInvoices")
-        .WithTags("Invoices");
+        .WithTags("Invoices")
+        .WithSummary("Listar facturas")
+        .WithDescription(
+            "Devuelve una lista paginada de facturas, opcionalmente filtrada por estado " +
+            "(query param 'status'). Admite paginación con 'page' y 'pageSize' (máximo 50).")
+        .Produces<PagedResponse<InvoiceListItemDto>>(StatusCodes.Status200OK)
+        .ProducesValidationProblem();
     }
 }

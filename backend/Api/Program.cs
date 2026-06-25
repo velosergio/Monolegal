@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Backend.Api.OpenApi;
 using Backend.Application.Abstractions;
 using Backend.Application.Seeding;
 using Backend.Infrastructure.Configuration;
@@ -42,15 +43,33 @@ try
         builder.Services.AddHostedService<DevDataSeederHostedService>();
     }
 
-    // OpenAPI/Swagger
-    builder.Services.AddOpenApi();
+    // OpenAPI/Swagger — el documento se genera con Microsoft.AspNetCore.OpenApi.
+    // Metadatos del documento (título/versión) deterministas para la documentación (spec 010, T006).
+    builder.Services.AddOpenApi(options =>
+    {
+        options.AddDocumentTransformer((document, context, cancellationToken) =>
+        {
+            document.Info.Title = "Monolegal API";
+            document.Info.Version = "v1";
+            return Task.CompletedTask;
+        });
+
+        // Declara el esquema de seguridad Bearer/JWT para habilitar "Authorize" en Swagger UI
+        // (spec 010, US3, FR-011).
+        options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    });
 
     var app = builder.Build();
 
-    // Middleware pipeline
+    // Middleware pipeline. Documentación interactiva restringida a Development (spec 010, D3):
+    // el documento OpenAPI se sirve en /openapi/v1.json y la UI Swagger en /swagger.
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/openapi/v1.json", "Monolegal API v1");
+        });
     }
 
     app.UseHttpsRedirection();
@@ -82,3 +101,9 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+/// <summary>
+/// Declaración pública parcial de Program para permitir que las pruebas de integración
+/// (WebApplicationFactory&lt;Program&gt;) referencien el host de la aplicación (spec 010, T007).
+/// </summary>
+public partial class Program { }

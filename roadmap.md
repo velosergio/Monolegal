@@ -116,7 +116,7 @@ LastReminderSentAt: DateTime?
 
 ---
 
-## 📡 Fase 2: Backend API (Minimal APIs) `1/2 specs`
+## 📡 Fase 2: Backend API (Minimal APIs) [✅ - Hecho] `2/2 specs`
 
 ### Spec 2.1: inovice api endpoints
 

@@ -74,6 +74,11 @@ public static class TriggerTransitions
             });
         })
         .WithName("TriggerTransitions")
-        .WithTags("Workers");
+        .WithTags("Workers")
+        .WithSummary("Disparar un ciclo de transiciones")
+        .WithDescription(
+            "Dispara manualmente un ciclo de transiciones automáticas de estado de facturas. " +
+            "Devuelve un resumen con el número de facturas evaluadas y transicionadas.")
+        .Produces(StatusCodes.Status200OK);
     }
 }

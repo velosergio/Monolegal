@@ -71,6 +71,13 @@ public static class PayInvoice
             });
         })
         .WithName("PayInvoice")
-        .WithTags("Invoices");
+        .WithTags("Invoices")
+        .WithSummary("Marcar una factura como pagada")
+        .WithDescription(
+            "Aplica la transición de pago a la factura indicada desde cualquier estado activo válido. " +
+            "Devuelve 404 si la factura no existe y 409 si el estado actual no permite el pago.")
+        .Produces(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces(StatusCodes.Status409Conflict);
     }
 }

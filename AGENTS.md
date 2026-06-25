@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-specs/009-invoice-api-endpoints/plan.md
+specs/010-swagger-openapi-docs/plan.md
 <!-- SPECKIT END -->

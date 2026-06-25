@@ -40,6 +40,11 @@ public static class GetInvoiceStats
             return Results.Ok(new InvoiceStatsDto(total, byStatus, byClient));
         })
         .WithName("GetInvoiceStats")
-        .WithTags("Invoices");
+        .WithTags("Invoices")
+        .WithSummary("Obtener estadísticas de facturas")
+        .WithDescription(
+            "Devuelve métricas agregadas para el dashboard: total de facturas, conteo por estado " +
+            "('byStatus') y conteo por cliente ('byClient').")
+        .Produces<InvoiceStatsDto>(StatusCodes.Status200OK);
     }
 }

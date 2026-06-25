@@ -35,6 +35,12 @@ public static class GetInvoiceById
             return Results.Ok(InvoiceDetailDto.FromEntity(invoice));
         })
         .WithName("GetInvoiceById")
-        .WithTags("Invoices");
+        .WithTags("Invoices")
+        .WithSummary("Obtener el detalle de una factura")
+        .WithDescription(
+            "Devuelve el objeto completo de la factura indicada por su identificador. " +
+            "Un identificador inexistente o con formato inválido devuelve 404 de forma uniforme.")
+        .Produces<InvoiceDetailDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

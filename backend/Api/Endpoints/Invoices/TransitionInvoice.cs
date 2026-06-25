@@ -80,6 +80,15 @@ public static class TransitionInvoice
             return Results.Ok(InvoiceDetailDto.FromEntity(invoice));
         })
         .WithName("TransitionInvoice")
-        .WithTags("Invoices");
+        .WithTags("Invoices")
+        .WithSummary("Transicionar el estado de una factura")
+        .WithDescription(
+            "Aplica una transición manual de estado a la factura indicada. El cuerpo debe incluir " +
+            "'newStatus'. Devuelve 400 si el cuerpo es inválido o la transición no está permitida, " +
+            "y 404 si la factura no existe.")
+        .Produces<InvoiceDetailDto>(StatusCodes.Status200OK)
+        .ProducesValidationProblem()
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

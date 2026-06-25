@@ -15,6 +15,9 @@ public static class GetInvoiceTransitions
             return Results.Ok(settings.InvoiceTransitions);
         })
         .WithName("GetInvoiceTransitions")
-        .WithTags("Settings");
+        .WithTags("Settings")
+        .WithSummary("Obtener la configuración de transiciones")
+        .WithDescription("Devuelve la configuración actual de transiciones automáticas de facturas.")
+        .Produces(StatusCodes.Status200OK);
     }
 }
