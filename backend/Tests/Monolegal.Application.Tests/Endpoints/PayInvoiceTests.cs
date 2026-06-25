@@ -1,6 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using Backend.Application.Abstractions;
+using Backend.Application.Notifications;
 using Backend.Tests.Infrastructure.Support;
+using Backend.Tests.Monolegal.Application.Tests.Email;
+using Microsoft.Extensions.Logging.Abstractions;
 using Monolegal.Domain.Entities;
 using Monolegal.Domain.Enums;
 using Monolegal.Domain.Repositories;
@@ -245,5 +249,57 @@ public class PayInvoiceTests
         var stored = await repo.GetByIdAsync(invoice.Id);
         stored.ShouldNotBeNull();
         stored!.Status.ShouldBe(InvoiceStatus.Pagado);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // spec 013 [US2]: el pago notifica al cliente y registra el resultado;
+    // un fallo de envío no revierte el pago ni falla la operación.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>Replica el flujo del endpoint incluyendo la notificación (T023/T030).</summary>
+    private static async Task PayWithNotificationAsync(
+        IInvoiceRepository invoiceRepo, IInvoiceTransitionNotifier notifier, string invoiceId)
+    {
+        var invoice = await invoiceRepo.GetByIdAsync(invoiceId);
+        if (invoice is null) return;
+
+        var previousStatus = invoice.Status;
+        new InvoiceTransitionService().ApplyPayment(invoice);
+        await notifier.NotifyTransitionAsync(invoice, previousStatus);
+        await invoiceRepo.UpdateAsync(invoice);
+    }
+
+    [Fact]
+    public async Task PayInvoice_OnSuccess_RecordsPaymentConfirmationResult()
+    {
+        var invoice = CreateInvoiceAtStatus(InvoiceStatus.SegundoRecordatorio);
+        var repo = new InMemoryInvoiceRepository();
+        await repo.AddAsync(invoice);
+        var notifier = new InvoiceTransitionNotifier(
+            new FakeEmailService(), new FakeClientEmailResolver(), NullLogger<InvoiceTransitionNotifier>.Instance);
+
+        await PayWithNotificationAsync(repo, notifier, invoice.Id);
+
+        var stored = await repo.GetByIdAsync(invoice.Id);
+        stored!.Status.ShouldBe(InvoiceStatus.Pagado);
+        stored.LastNotificationType.ShouldBe(NotificationType.PaymentConfirmation);
+        stored.LastNotificationOutcome.ShouldBe(NotificationOutcome.Sent);
+    }
+
+    [Fact]
+    public async Task PayInvoice_WhenEmailFails_StillPersistsPagadoAndRecordsFailed()
+    {
+        var invoice = CreateInvoiceAtStatus(InvoiceStatus.Pending);
+        var repo = new InMemoryInvoiceRepository();
+        await repo.AddAsync(invoice);
+        var notifier = new InvoiceTransitionNotifier(
+            new ThrowingEmailService(), new FakeClientEmailResolver("cliente@correo.com"),
+            NullLogger<InvoiceTransitionNotifier>.Instance);
+
+        await PayWithNotificationAsync(repo, notifier, invoice.Id);
+
+        var stored = await repo.GetByIdAsync(invoice.Id);
+        stored!.Status.ShouldBe(InvoiceStatus.Pagado); // la transición no se revierte
+        stored.LastNotificationOutcome.ShouldBe(NotificationOutcome.Failed);
     }
 }

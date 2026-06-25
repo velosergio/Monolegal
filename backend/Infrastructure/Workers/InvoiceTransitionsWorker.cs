@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Backend.Application.Abstractions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,6 +30,7 @@ public sealed class InvoiceTransitionsWorker : BackgroundService
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly ISystemSettingsRepository _settingsRepository;
     private readonly InvoiceTransitionService _transitionService;
+    private readonly IInvoiceTransitionNotifier _notifier;
     private readonly ILogger<InvoiceTransitionsWorker> _logger;
     private readonly InvoiceTransitionsWorkerOptions _options;
 
@@ -36,12 +38,14 @@ public sealed class InvoiceTransitionsWorker : BackgroundService
         IInvoiceRepository invoiceRepository,
         ISystemSettingsRepository settingsRepository,
         InvoiceTransitionService transitionService,
+        IInvoiceTransitionNotifier notifier,
         IOptions<InvoiceTransitionsWorkerOptions> options,
         ILogger<InvoiceTransitionsWorker> logger)
     {
         _invoiceRepository = invoiceRepository ?? throw new ArgumentNullException(nameof(invoiceRepository));
         _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
         _transitionService = transitionService ?? throw new ArgumentNullException(nameof(transitionService));
+        _notifier = notifier ?? throw new ArgumentNullException(nameof(notifier));
         _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -134,7 +138,14 @@ public sealed class InvoiceTransitionsWorker : BackgroundService
                 {
                     if (_transitionService.TryApplyTransition(invoice, config, now))
                     {
-                        // 4. Persist the change.
+                        // 4. Notify the client of the transition (sends email, records result on
+                        //    the invoice). It mutates the entity in-memory; persistence below is a
+                        //    single write covering both status and notification result (spec 013).
+                        await _notifier
+                            .NotifyTransitionAsync(invoice, previousStatus, cancellationToken)
+                            .ConfigureAwait(false);
+
+                        // 5. Persist the change (status + notification result).
                         await _invoiceRepository
                             .UpdateAsync(invoice, cancellationToken)
                             .ConfigureAwait(false);

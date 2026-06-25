@@ -27,11 +27,13 @@ public class InvoiceTransitionsWorkerCycleTests
     private static InvoiceTransitionsWorker CreateWorker(
         IInvoiceRepository invoiceRepo,
         ISystemSettingsRepository settingsRepo,
-        InvoiceTransitionsWorkerOptions? options = null) =>
+        InvoiceTransitionsWorkerOptions? options = null,
+        Backend.Application.Abstractions.IInvoiceTransitionNotifier? notifier = null) =>
         new(
             invoiceRepo,
             settingsRepo,
             new InvoiceTransitionService(),
+            notifier ?? new FakeTransitionNotifier(),
             Options.Create(options ?? new InvoiceTransitionsWorkerOptions()),
             NullLogger<InvoiceTransitionsWorker>.Instance);
 
@@ -167,5 +169,38 @@ public class InvoiceTransitionsWorkerCycleTests
         result.Transitioned.ShouldBe(1);
         result.Errors.ShouldBe(1);
         result.Duration.ShouldBeGreaterThanOrEqualTo(TimeSpan.Zero);
+    }
+
+    // ── spec 013 [US2] — Fallo de envío no revierte la transición ni cuenta como error de ciclo ──
+
+    [Fact]
+    public async Task RunCycle_EnvioFallido_MantieneTransicionYNoTocaContadores()
+    {
+        // Arrange — factura elegible; el proveedor de correo falla en el envío
+        var invoice = CreateInvoiceAtStatus(InvoiceStatus.Pending, daysAgo: 5, clientId: "client_mail");
+        var invoiceRepo = new InMemoryInvoiceRepository();
+        await invoiceRepo.AddAsync(invoice);
+        var settingsRepo = new InMemorySystemSettingsRepository(pendingDays: 3);
+
+        var notifier = new Backend.Application.Notifications.InvoiceTransitionNotifier(
+            new ThrowingEmailService(),
+            new FakeClientEmailResolver("cliente@correo.com"),
+            NullLogger<Backend.Application.Notifications.InvoiceTransitionNotifier>.Instance);
+
+        var worker = CreateWorker(invoiceRepo, settingsRepo, notifier: notifier);
+
+        // Act
+        var result = await worker.RunCycleAsync();
+
+        // Assert — la transición se mantiene; el fallo de correo no es un error del ciclo
+        result.Transitioned.ShouldBe(1);
+        result.Errors.ShouldBe(0);
+
+        var stored = await invoiceRepo.GetByIdAsync(invoice.Id);
+        stored!.Status.ShouldBe(InvoiceStatus.PrimerRecordatorio);
+        stored.LastNotificationOutcome.ShouldBe(NotificationOutcome.Failed);
+        stored.LastNotificationError.ShouldNotBeNullOrEmpty();
+        stored.RemindersCount.ShouldBe(0);
+        stored.LastReminderSentAt.ShouldBeNull();
     }
 }

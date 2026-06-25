@@ -18,6 +18,21 @@ jobs:
   test:
     name: Tests (dotnet test)
     runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:8
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example_dev_password
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -37,3 +52,5 @@ jobs:
       - name: Run tests
         run: dotnet test --no-build --configuration Release --logger "console;verbosity=normal"
         working-directory: backend
+        env:
+          MONGODB_URI: mongodb://root:example_dev_password@localhost:27017/monolegal_dev?authSource=admin

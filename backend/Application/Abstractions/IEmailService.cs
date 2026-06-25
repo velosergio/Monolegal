@@ -31,4 +31,13 @@ public interface IEmailService
     /// <param name="invoice">Factura pagada usada para componer el contenido del correo.</param>
     /// <param name="cancellationToken">Cancelación cooperativa (p. ej. apagado del worker).</param>
     Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Envía un correo de aviso de desactivación / última notificación cuando una factura
+    /// pasa a estado desactivado (spec 013, research D5).
+    /// </summary>
+    /// <param name="clientEmail">Dirección de correo del destinatario (no nula/no vacía).</param>
+    /// <param name="invoice">Factura desactivada usada para componer el contenido del correo.</param>
+    /// <param name="cancellationToken">Cancelación cooperativa (p. ej. apagado del worker).</param>
+    Task SendDeactivationNoticeAsync(string clientEmail, Invoice invoice, CancellationToken cancellationToken = default);
 }

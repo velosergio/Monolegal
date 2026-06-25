@@ -1,3 +1,7 @@
+using Backend.Application.Abstractions;
+using Backend.Application.Notifications;
+using Backend.Infrastructure.Clients;
+using Backend.Infrastructure.Email;
 using Backend.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +60,23 @@ public static class DependencyInjection
         var workerOptions = new InvoiceTransitionsWorkerOptions();
         configuration.GetSection(InvoiceTransitionsWorkerOptions.SectionName).Bind(workerOptions);
         services.AddSingleton(Microsoft.Extensions.Options.Options.Create(workerOptions));
+
+        // Email notifications on transition (spec 013).
+        // EmailOptions desde la sección "Email" (credenciales SMTP por variables de entorno).
+        var emailOptions = new EmailOptions();
+        configuration.GetSection(EmailOptions.SectionName).Bind(emailOptions);
+        services.AddSingleton(Microsoft.Extensions.Options.Options.Create(emailOptions));
+        services.AddSingleton<EmailTemplateProvider>();
+
+        // Selección del emisor: SMTP si hay host configurado; en caso contrario NoOp (Dev/CI).
+        if (!string.IsNullOrWhiteSpace(emailOptions.Host))
+            services.AddSingleton<IEmailService, SmtpEmailService>();
+        else
+            services.AddSingleton<IEmailService, NoOpEmailService>();
+
+        // Resolución del correo del cliente y orquestador de notificación en transición.
+        services.AddSingleton<IClientEmailResolver, ConfiguredClientEmailResolver>();
+        services.AddSingleton<IInvoiceTransitionNotifier, InvoiceTransitionNotifier>();
 
         // Background worker: evaluates and applies invoice status transitions periodically.
         services.AddHostedService<InvoiceTransitionsWorker>();

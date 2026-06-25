@@ -9,8 +9,9 @@ using Monolegal.Api.Endpoints.Invoices;
 using Monolegal.Api.Endpoints.Settings;
 using Monolegal.Api.Endpoints.Workers;
 using Serilog;
+using Serilog.Formatting.Compact;
 
-// Configure Serilog early
+// Configure Serilog early (bootstrap logger hasta que el host lo reconfigure)
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
@@ -19,8 +20,18 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // Serilog as the logging provider
-    builder.Host.UseSerilog();
+    // Serilog as the logging provider. Sink de archivo en JSON estructurado (CompactJsonFormatter)
+    // para persistir la observabilidad de notificaciones/transiciones (spec 013, 3.4), conservando
+    // la consola. La ruta es configurable vía "Logging:File:Path".
+    builder.Host.UseSerilog((context, loggerConfiguration) =>
+    {
+        var logPath = context.Configuration["Logging:File:Path"] ?? "logs/monolegal-.json";
+        loggerConfiguration
+            .MinimumLevel.Information()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File(new CompactJsonFormatter(), logPath, rollingInterval: RollingInterval.Day);
+    });
 
     // Infrastructure services (MongoDB connection, startup verification,
     // "mongodb" health check, logging) — see specs/004-mongodb-connection.

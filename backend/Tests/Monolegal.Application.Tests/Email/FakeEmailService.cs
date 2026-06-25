@@ -15,6 +15,7 @@ internal sealed class FakeEmailService : IEmailService
 {
     public List<(string ClientEmail, Invoice Invoice)> ReminderCalls { get; } = new();
     public List<(string ClientEmail, Invoice Invoice)> PaymentConfirmationCalls { get; } = new();
+    public List<(string ClientEmail, Invoice Invoice)> DeactivationNoticeCalls { get; } = new();
 
     public Task SendReminderAsync(string clientEmail, Invoice invoice, CancellationToken cancellationToken = default)
     {
@@ -25,6 +26,12 @@ internal sealed class FakeEmailService : IEmailService
     public Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice, CancellationToken cancellationToken = default)
     {
         PaymentConfirmationCalls.Add((clientEmail, invoice));
+        return Task.CompletedTask;
+    }
+
+    public Task SendDeactivationNoticeAsync(string clientEmail, Invoice invoice, CancellationToken cancellationToken = default)
+    {
+        DeactivationNoticeCalls.Add((clientEmail, invoice));
         return Task.CompletedTask;
     }
 }

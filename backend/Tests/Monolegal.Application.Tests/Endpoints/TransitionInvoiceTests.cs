@@ -1,7 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using Backend.Application.Abstractions;
+using Backend.Application.Notifications;
 using Backend.Application.Validation;
 using Backend.Tests.Infrastructure.Support;
+using Backend.Tests.Monolegal.Application.Tests.Email;
+using Microsoft.Extensions.Logging.Abstractions;
 using Monolegal.Api.Endpoints.Invoices;
 using Monolegal.Domain.Enums;
 using Monolegal.Domain.Repositories;
@@ -97,5 +101,73 @@ public class TransitionInvoiceTests
         var outcome = await TransitionAsync(repo, invoice.Id, newStatus);
 
         outcome.ShouldBe(Outcome.BadRequest);
+    }
+
+    // ── spec 013 [US2]: la transición manual notifica y registra el resultado ──────
+
+    /// <summary>Replica el flujo del endpoint incluyendo la notificación (T024/T031).</summary>
+    private static async Task<Outcome> TransitionWithNotificationAsync(
+        IInvoiceRepository repo, IInvoiceTransitionNotifier notifier, string id, string? newStatus)
+    {
+        var validator = new TransitionInvoiceRequestValidator(InvoiceStatusApi.IsValid);
+        var validation = await validator.ValidateAsync(new TransitionInvoiceInput(newStatus));
+        if (!validation.IsValid)
+            return Outcome.BadRequest;
+
+        InvoiceStatusApi.TryParse(newStatus, out var parsed);
+
+        var invoice = await repo.GetByIdAsync(id);
+        if (invoice is null)
+            return Outcome.NotFound;
+
+        var previousStatus = invoice.Status;
+        try
+        {
+            new InvoiceTransitionService().ApplyManualTransition(invoice, parsed);
+        }
+        catch (InvalidOperationException)
+        {
+            return Outcome.BadRequest;
+        }
+
+        await notifier.NotifyTransitionAsync(invoice, previousStatus);
+        await repo.UpdateAsync(invoice);
+        return Outcome.Ok;
+    }
+
+    [Fact]
+    public async Task Transition_ToReminder_RecordsReminderResult()
+    {
+        var repo = new InMemoryInvoiceRepository();
+        var invoice = InvoiceTestFactory.Create("c1", 100m, InvoiceStatus.PrimerRecordatorio);
+        await repo.AddAsync(invoice);
+        var notifier = new InvoiceTransitionNotifier(
+            new FakeEmailService(), new FakeClientEmailResolver(), NullLogger<InvoiceTransitionNotifier>.Instance);
+
+        var outcome = await TransitionWithNotificationAsync(repo, notifier, invoice.Id, "segundorecordatorio");
+
+        outcome.ShouldBe(Outcome.Ok);
+        var stored = await repo.GetByIdAsync(invoice.Id);
+        stored!.Status.ShouldBe(InvoiceStatus.SegundoRecordatorio);
+        stored.LastNotificationType.ShouldBe(NotificationType.Reminder);
+        stored.LastNotificationOutcome.ShouldBe(NotificationOutcome.Sent);
+    }
+
+    [Fact]
+    public async Task Transition_WhenEmailFails_StillPersistsTransition()
+    {
+        var repo = new InMemoryInvoiceRepository();
+        var invoice = InvoiceTestFactory.Create("c1", 100m, InvoiceStatus.SegundoRecordatorio);
+        await repo.AddAsync(invoice);
+        var notifier = new InvoiceTransitionNotifier(
+            new ThrowingEmailService(), new FakeClientEmailResolver("cliente@correo.com"),
+            NullLogger<InvoiceTransitionNotifier>.Instance);
+
+        var outcome = await TransitionWithNotificationAsync(repo, notifier, invoice.Id, "desactivado");
+
+        outcome.ShouldBe(Outcome.Ok);
+        var stored = await repo.GetByIdAsync(invoice.Id);
+        stored!.Status.ShouldBe(InvoiceStatus.Desactivado); // no se revierte
+        stored.LastNotificationOutcome.ShouldBe(NotificationOutcome.Failed);
     }
 }

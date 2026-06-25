@@ -45,4 +45,18 @@ public class EmailServiceContractTests
         fake.PaymentConfirmationCalls[0].ClientEmail.ShouldBe(ClientEmail);
         fake.PaymentConfirmationCalls[0].Invoice.ShouldBeSameAs(invoice);
     }
+
+    [Fact]
+    public async Task SendDeactivationNoticeAsync_EsSustituible_YRecibeCorreoYFactura()
+    {
+        IEmailService emailService = new FakeEmailService();
+        var invoice = CreateInvoice();
+
+        await emailService.SendDeactivationNoticeAsync(ClientEmail, invoice);
+
+        var fake = (FakeEmailService)emailService;
+        fake.DeactivationNoticeCalls.ShouldHaveSingleItem();
+        fake.DeactivationNoticeCalls[0].ClientEmail.ShouldBe(ClientEmail);
+        fake.DeactivationNoticeCalls[0].Invoice.ShouldBeSameAs(invoice);
+    }
 }

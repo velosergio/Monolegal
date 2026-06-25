@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Backend.Application.Abstractions;
 using Backend.Application.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,7 @@ public static class TransitionInvoice
             [FromBody] TransitionRequest request,
             IInvoiceRepository invoiceRepository,
             InvoiceTransitionService transitionService,
+            IInvoiceTransitionNotifier notifier,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) =>
         {
@@ -58,6 +60,7 @@ public static class TransitionInvoice
             }
 
             // 3. Aplicar la transición validándola contra la matriz de dominio → 400 si no permitida.
+            var previousStatus = invoice.Status;
             try
             {
                 transitionService.ApplyManualTransition(invoice, newStatus);
@@ -70,7 +73,11 @@ public static class TransitionInvoice
                 return Results.BadRequest(new { error = ex.Message });
             }
 
-            // 4. Persistir y devolver la factura actualizada.
+            // 4. Notificar al cliente la transición (registra el resultado en la factura; un fallo
+            //    de envío no revierte la transición ni falla la respuesta — spec 013).
+            await notifier.NotifyTransitionAsync(invoice, previousStatus, cancellationToken);
+
+            // 5. Persistir y devolver la factura actualizada.
             await invoiceRepository.UpdateAsync(invoice, cancellationToken);
 
             logger.LogInformation(

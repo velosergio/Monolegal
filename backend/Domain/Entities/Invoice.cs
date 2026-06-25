@@ -20,6 +20,12 @@ public class Invoice
     public DateTime? LastReminderSentAt { get; private set; }
     public DateTime LastStatusTransitionAt { get; private set; }
 
+    // Último resultado de notificación por correo asociado a una transición (spec 013).
+    public NotificationType? LastNotificationType { get; private set; }
+    public NotificationOutcome LastNotificationOutcome { get; private set; }
+    public DateTime? LastNotificationAt { get; private set; }
+    public string? LastNotificationError { get; private set; }
+
     public Invoice(string clientId, decimal amount)
     {
         if (string.IsNullOrWhiteSpace(clientId))
@@ -37,6 +43,10 @@ public class Invoice
         LastStatusTransitionAt = CreatedAt;
         RemindersCount = 0;
         LastReminderSentAt = null;
+        LastNotificationType = null;
+        LastNotificationOutcome = NotificationOutcome.None;
+        LastNotificationAt = null;
+        LastNotificationError = null;
     }
 
     public void UpdateStatus(InvoiceStatus newStatus)
@@ -50,6 +60,28 @@ public class Invoice
     {
         RemindersCount++;
         LastReminderSentAt = DateTime.UtcNow;
+        UpdateAuditDate();
+    }
+
+    /// <summary>
+    /// Registra el resultado del último intento de notificación por correo asociado a una
+    /// transición de estado (spec 013). No modifica el estado de la factura ni los contadores
+    /// de recordatorio; esos efectos se manejan por separado (<see cref="RecordReminderSent"/>).
+    /// </summary>
+    /// <param name="type">Tipo de notificación intentada.</param>
+    /// <param name="outcome">Resultado del intento (Sent/Skipped/Failed).</param>
+    /// <param name="at">Momento del intento.</param>
+    /// <param name="error">Motivo resumido del fallo; sólo no nulo cuando <paramref name="outcome"/> es Failed.</param>
+    public void RecordNotificationResult(
+        NotificationType? type,
+        NotificationOutcome outcome,
+        DateTime at,
+        string? error = null)
+    {
+        LastNotificationType = type;
+        LastNotificationOutcome = outcome;
+        LastNotificationAt = at;
+        LastNotificationError = outcome == NotificationOutcome.Failed ? error : null;
         UpdateAuditDate();
     }
 

@@ -1,3 +1,4 @@
+using Backend.Application.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -23,6 +24,7 @@ public static class PayInvoice
             string id,
             IInvoiceRepository invoiceRepository,
             InvoiceTransitionService transitionService,
+            IInvoiceTransitionNotifier notifier,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) =>
         {
@@ -41,6 +43,7 @@ public static class PayInvoice
             }
 
             // 3. Apply payment transition.
+            var previousStatus = invoice.Status;
             try
             {
                 transitionService.ApplyPayment(invoice);
@@ -54,7 +57,11 @@ public static class PayInvoice
                 return Results.Conflict(new { error = ex.Message });
             }
 
-            // 4. Persist the change.
+            // 4. Notify the client (records the result on the invoice; a send failure does not
+            //    revert the transition nor fail the response — spec 013).
+            await notifier.NotifyTransitionAsync(invoice, previousStatus, cancellationToken);
+
+            // 5. Persist the change (status + notification result).
             await invoiceRepository.UpdateAsync(invoice, cancellationToken);
 
             logger.LogInformation(
