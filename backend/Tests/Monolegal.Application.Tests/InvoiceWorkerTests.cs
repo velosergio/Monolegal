@@ -64,6 +64,16 @@ public class InvoiceWorkerTests
 
         public Task<IEnumerable<Invoice>> GetTransitionableAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(GetTransitionable());
+
+        public Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken cancellationToken = default)
+            => Task.FromResult(_store.Values.Where(i => i.Status == status));
+
+        public Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default)
+        {
+            if (_store.TryGetValue(id, out var invoice))
+                invoice.UpdateStatus(newStatus);
+            return Task.CompletedTask;
+        }
     }    /// <summary>
     /// Repositorio de configuración en memoria con valores predeterminados.
     /// </summary>

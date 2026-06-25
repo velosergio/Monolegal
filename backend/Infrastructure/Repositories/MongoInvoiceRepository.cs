@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,6 +72,26 @@ public sealed class MongoInvoiceRepository : IInvoiceRepository
         return await _collection
             .Find(x => transitionableStatuses.Contains(x.Status))
             .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken cancellationToken = default)
+    {
+        return await _collection
+            .Find(x => x.Status == status)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default)
+    {
+        var update = Builders<Invoice>.Update
+            .Set(x => x.Status, newStatus)
+            .Set(x => x.UpdatedAt, DateTime.UtcNow)
+            .Set(x => x.LastStatusTransitionAt, DateTime.UtcNow);
+
+        await _collection
+            .UpdateOneAsync(x => x.Id == id, update, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
     }
 }
