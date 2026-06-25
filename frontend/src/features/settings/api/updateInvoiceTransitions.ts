@@ -1,4 +1,4 @@
-import { InvoiceTransitionsConfig } from './getInvoiceTransitions'
+import type { InvoiceTransitionsConfig } from './getInvoiceTransitions'
 
 export const updateInvoiceTransitions = async (data: InvoiceTransitionsConfig): Promise<void> => {
   const response = await fetch('/api/settings/invoice-transitions', {

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { getInvoiceTransitions, InvoiceTransitionsConfig } from '../api/getInvoiceTransitions'
+import type React from 'react'
+import { useEffect, useState } from 'react'
+import { getInvoiceTransitions, type InvoiceTransitionsConfig } from '../api/getInvoiceTransitions'
 import { updateInvoiceTransitions } from '../api/updateInvoiceTransitions'
 
 export const InvoiceTransitionsTab: React.FC = () => {
@@ -28,7 +29,7 @@ export const InvoiceTransitionsTab: React.FC = () => {
     const { name, value } = e.target
     setConfig((prev) => ({
       ...prev,
-      [name]: parseInt(value) || 0,
+      [name]: parseInt(value, 10) || 0,
     }))
   }
 
@@ -39,7 +40,7 @@ export const InvoiceTransitionsTab: React.FC = () => {
     try {
       await updateInvoiceTransitions(config)
       setMessage('Configuración guardada exitosamente.')
-    } catch (err) {
+    } catch (_err) {
       setMessage('Error al guardar la configuración.')
     } finally {
       setSaving(false)
@@ -54,8 +55,11 @@ export const InvoiceTransitionsTab: React.FC = () => {
       {message && <div className="mb-4 text-green-600">{message}</div>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium">Días de Pendiente a 1er Recordatorio</label>
+          <label htmlFor="pendingToFirstReminderDays" className="block text-sm font-medium">
+            Días de Pendiente a 1er Recordatorio
+          </label>
           <input
+            id="pendingToFirstReminderDays"
             type="number"
             name="pendingToFirstReminderDays"
             value={config.pendingToFirstReminderDays}
@@ -65,8 +69,11 @@ export const InvoiceTransitionsTab: React.FC = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium">Días de 1er a 2do Recordatorio</label>
+          <label htmlFor="firstToSecondReminderDays" className="block text-sm font-medium">
+            Días de 1er a 2do Recordatorio
+          </label>
           <input
+            id="firstToSecondReminderDays"
             type="number"
             name="firstToSecondReminderDays"
             value={config.firstToSecondReminderDays}
@@ -76,10 +83,11 @@ export const InvoiceTransitionsTab: React.FC = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium">
+          <label htmlFor="secondToDeactivatedDays" className="block text-sm font-medium">
             Días de 2do Recordatorio a Desactivado
           </label>
           <input
+            id="secondToDeactivatedDays"
             type="number"
             name="secondToDeactivatedDays"
             value={config.secondToDeactivatedDays}

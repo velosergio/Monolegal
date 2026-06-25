@@ -1,4 +1,4 @@
-import { createContext, use, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 
 type Theme = 'dark' | 'light' | 'system'
 
@@ -20,6 +20,19 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
+function applyThemeClass(theme: Theme) {
+  const root = window.document.documentElement
+  root.classList.remove('light', 'dark')
+
+  if (theme === 'system') {
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    root.classList.add(systemTheme)
+    return
+  }
+
+  root.classList.add(theme)
+}
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
@@ -30,25 +43,17 @@ export function ThemeProvider({
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
 
+  // Apply on first mount only — after this, applyThemeClass is called directly in the handler
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect
   useEffect(() => {
-    const root = window.document.documentElement
-    root.classList.remove('light', 'dark')
-
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      root.classList.add(systemTheme)
-      return
-    }
-
-    root.classList.add(theme)
-  }, [theme])
+    applyThemeClass(theme)
+  }, [])
 
   const value: ThemeProviderState = {
     theme,
     setTheme: (newTheme: Theme) => {
       localStorage.setItem(storageKey, newTheme)
+      applyThemeClass(newTheme)
       setTheme(newTheme)
     },
   }
@@ -58,13 +63,4 @@ export function ThemeProvider({
       {children}
     </ThemeProviderContext.Provider>
   )
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function useTheme() {
-  const context = use(ThemeProviderContext)
-  if (context === undefined) {
-    throw new Error('useTheme debe usarse dentro de un ThemeProvider')
-  }
-  return context
 }

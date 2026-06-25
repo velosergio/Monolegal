@@ -18,7 +18,7 @@ export interface PayInvoiceResponse {
  * Throws on any 4xx/5xx response so the caller (or a TanStack mutation) can
  * handle the error appropriately.
  */
-export const payInvoice = async (id: string): Promise<PayInvoiceResponse> => {
+const payInvoice = async (id: string): Promise<PayInvoiceResponse> => {
   const response = await fetch(`/api/invoices/${id}/pay`, {
     method: 'POST',
     headers: {

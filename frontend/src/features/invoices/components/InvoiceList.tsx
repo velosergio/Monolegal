@@ -1,7 +1,7 @@
-import React from 'react'
+import type React from 'react'
 import { Button } from '@/components/ui/button'
 import { usePayInvoice } from '../api/payInvoice'
-import { Invoice, InvoiceStatus, INVOICE_STATUS_LABELS, TERMINAL_STATUSES } from '../types'
+import { INVOICE_STATUS_LABELS, type Invoice, InvoiceStatus, TERMINAL_STATUSES } from '../types'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -27,14 +27,17 @@ function formatDate(iso: string): string {
   })
 }
 
+// Construido una sola vez a nivel de módulo — reutilizado en cada render.
+const mxnFormatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+})
+
 /**
  * Formatea un número como moneda (MXN).
  */
 function formatAmount(amount: number): string {
-  return new Intl.NumberFormat('es-MX', {
-    style: 'currency',
-    currency: 'MXN',
-  }).format(amount)
+  return mxnFormatter.format(amount)
 }
 
 /**
