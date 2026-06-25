@@ -32,7 +32,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:5000
-      MONGODB_URI: mongodb://root:example_dev_password@mongo:27017/monolegal_dev
+      MONGODB_URI: mongodb://root:example_dev_password@mongo:27017/monolegal_dev?authSource=admin
       LOG_LEVEL: Debug
     depends_on:
       mongo:
@@ -54,7 +54,7 @@ services:
     container_name: monolegal-worker
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      MONGODB_URI: mongodb://root:example_dev_password@mongo:27017/monolegal_dev
+      MONGODB_URI: mongodb://root:example_dev_password@mongo:27017/monolegal_dev?authSource=admin
       LOG_LEVEL: Debug
       EMAIL_PROVIDER: console
     depends_on:

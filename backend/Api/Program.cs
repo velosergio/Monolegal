@@ -13,11 +13,9 @@ try
     // Serilog as the logging provider
     builder.Host.UseSerilog();
 
-    // Infrastructure services (MongoDB, logging)
+    // Infrastructure services (MongoDB connection, startup verification,
+    // "mongodb" health check, logging) — see specs/004-mongodb-connection.
     builder.Services.AddInfrastructure(builder.Configuration);
-
-    // Health checks
-    builder.Services.AddHealthChecks();
 
     // OpenAPI/Swagger
     builder.Services.AddOpenApi();

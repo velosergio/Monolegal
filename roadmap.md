@@ -6,7 +6,7 @@ Desarrollar una plataforma de gestión de cobranza mediante iteraciones basadas 
 
 ---
 
-## 📋 Fase 0: Setup & Infrastructure
+## 📋 Fase 0: Setup & Infrastructure [✅ - Hecho]
 
 ### Spec 0.1: Estructura de Proyectos
 

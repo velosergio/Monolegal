@@ -150,7 +150,7 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```bash
 # .env (desarrollo)
 ASPNETCORE_ENVIRONMENT=Development
-MONGODB_URI=mongodb://root:example_dev_password@mongo:27017/monolegal_dev
+MONGODB_URI=mongodb://root:example_dev_password@mongo:27017/monolegal_dev?authSource=admin
 VITE_API_URL=http://localhost:5000
 LOG_LEVEL=Debug
 
@@ -160,6 +160,16 @@ MONGODB_URI=mongodb+srv://user:pass@mongodb-cluster.mongodb.net/monolegal_prod
 VITE_API_URL=https://api.monolegal.com
 LOG_LEVEL=Information
 ```
+
+## Conexión y Verificación de MongoDB
+
+La conexión a MongoDB se configura mediante la variable de entorno `MONGODB_URI` (sin credenciales hardcodeadas) y se encapsula en `MongoDbOptions` con pooling y `ServerSelectionTimeout` explícitos. El usuario root vive en la base `admin`, por lo que la URI **debe** incluir `?authSource=admin`.
+
+- **Verificación al arranque**: el backend ejecuta un `ping` con reintentos acotados (~10s) y registra el resultado con Serilog estructurado (`Conexión a MongoDB verificada. Base=... DuracionMs=...`). Política *fail-soft*: un fallo no aborta el arranque; queda observable vía el health check.
+- **Health check**: `GET /health` ejecuta un `ping` real contra MongoDB y devuelve `200 Healthy` / `503 Unhealthy`. Lo consume el `healthcheck` del contenedor backend en `docker-compose`.
+- **Reporte diferenciado**: los fallos se clasifican en *no disponible* vs *autenticación* para diagnóstico claro (sin filtrar credenciales).
+
+Detalle de diseño en [`specs/004-mongodb-connection/`](specs/004-mongodb-connection/) y la decisión *fail-soft* en [`docs/adr/0001-verificacion-conexion-mongodb.md`](docs/adr/0001-verificacion-conexion-mongodb.md).
 
 ## Principios de Desarrollo
 

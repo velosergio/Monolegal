@@ -37,8 +37,13 @@ try
     // -------------------------------------------------------------------------
     // MongoDB: register singleton client
     // -------------------------------------------------------------------------
-    var mongoConnectionString = builder.Configuration["MongoDB:ConnectionString"]
-        ?? throw new InvalidOperationException("MongoDB:ConnectionString is required");
+    // Unified connection source with the API: MONGODB_URI (injected by docker-compose),
+    // falling back to the MongoDB:ConnectionString config key. See
+    // specs/004-mongodb-connection/contracts/connection-config.md.
+    var mongoConnectionString = builder.Configuration["MONGODB_URI"]
+        ?? builder.Configuration["MongoDB:ConnectionString"]
+        ?? throw new InvalidOperationException(
+            "La cadena de conexión a MongoDB es obligatoria. Defina la variable de entorno MONGODB_URI.");
 
     builder.Services.AddSingleton<IMongoClient>(_ =>
         new MongoClient(mongoConnectionString));
