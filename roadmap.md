@@ -199,7 +199,7 @@ LastReminderSentAt: DateTime?
 
 ---
 
-## ⚙️ Fase 3: Worker & Email Service `0/4 specs`
+## ⚙️ Fase 3: Worker & Email Service `1/4 specs`
 
 ### Spec 3.1: Email Service Interface
 
