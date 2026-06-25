@@ -199,7 +199,7 @@ LastReminderSentAt: DateTime?
 
 ---
 
-## ⚙️ Fase 3: Worker & Email Service `1/4 specs`
+## ⚙️ Fase 3: Worker & Email Service `2/4 specs`
 
 ### Spec 3.1: Email Service Interface
 
@@ -212,16 +212,16 @@ Task SendReminderAsync(string clientEmail, Invoice invoice)
 Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 ```
 
-### Spec 3.2: Hosted Service - State Transitions
+### Spec 3.2: Hosted Service - State Transitions ✅ (implementada — `specs/012-worker-state-transitions`)
 
 **GIVEN** worker corriendo  
-**WHEN** se ejecuta cada X minutos (configurable)  
+**WHEN** se ejecuta cada X minutos (configurable vía `InvoiceTransitionsWorker:IntervalMinutes`)  
 **THEN**:
 
-- ✅ Busca facturas en `primerrecordatorio` con 7+ días sin recordatorio
-- ✅ Busca facturas en `segundorecordatorio` con 14+ días sin recordatorio
-- ✅ Ejecuta transiciones automáticas
-- ✅ Registra ejecución en logs (Serilog)
+- ✅ Busca facturas en `primerrecordatorio`/`segundorecordatorio` según umbrales de días configurables (admin)
+- ✅ Ejecuta transiciones automáticas (delegando en `InvoiceTransitionService`)
+- ✅ Aísla errores por factura (un fallo no aborta el lote)
+- ✅ Registra cada ciclo en logs Serilog (timestamp, evaluadas, transicionadas, errores, duración)
 
 ### Spec 3.3: Email Sending on Transition
 

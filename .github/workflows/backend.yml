@@ -1,0 +1,39 @@
+name: Backend
+
+on:
+  push:
+    paths:
+      - "backend/**"
+      - "packages/**"
+      - "global.json"
+      - ".github/workflows/backend.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - "packages/**"
+      - "global.json"
+      - ".github/workflows/backend.yml"
+
+jobs:
+  test:
+    name: Tests (dotnet test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: backend
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: backend
+
+      - name: Run tests
+        run: dotnet test --no-build --configuration Release --logger "console;verbosity=normal"
+        working-directory: backend

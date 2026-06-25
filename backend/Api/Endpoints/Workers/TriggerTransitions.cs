@@ -48,29 +48,55 @@ public static class TriggerTransitions
             var now = DateTime.UtcNow;
             int evaluated = 0;
             int transitioned = 0;
+            int errors = 0;
 
-            // 3. Evaluate and apply transitions.
+            // 3. Evaluate and apply transitions, isolating per-invoice failures so a single
+            //    failure does not abort the batch (spec 012, FR-007, SC-004).
             foreach (var invoice in candidates)
             {
                 evaluated++;
+                var previousStatus = invoice.Status;
 
-                if (transitionService.TryApplyTransition(invoice, config, now))
+                try
                 {
-                    // 4. Persist the change.
-                    await invoiceRepository.UpdateAsync(invoice, cancellationToken);
-                    transitioned++;
+                    if (transitionService.TryApplyTransition(invoice, config, now))
+                    {
+                        // 4. Persist the change.
+                        await invoiceRepository.UpdateAsync(invoice, cancellationToken);
+                        transitioned++;
+
+                        logger.LogInformation(
+                            "Transición aplicada. InvoiceId={InvoiceId} De={PreviousStatus} A={NewStatus}",
+                            invoice.Id,
+                            previousStatus,
+                            invoice.Status);
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    errors++;
+                    logger.LogError(
+                        ex,
+                        "Trigger manual — error al procesar la factura. InvoiceId={InvoiceId}",
+                        invoice.Id);
                 }
             }
 
             logger.LogInformation(
-                "Trigger manual de transiciones completado. Evaluadas={Evaluated} Transicionadas={Transitioned}",
+                "Trigger manual de transiciones completado. Evaluadas={Evaluated} Transicionadas={Transitioned} Errores={Errors}",
                 evaluated,
-                transitioned);
+                transitioned,
+                errors);
 
             return Results.Ok(new
             {
                 evaluated,
-                transitioned
+                transitioned,
+                errors
             });
         })
         .WithName("TriggerTransitions")

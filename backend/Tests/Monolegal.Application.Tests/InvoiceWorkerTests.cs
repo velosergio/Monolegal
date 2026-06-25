@@ -99,8 +99,8 @@ public class InvoiceWorkerTests
             => Task.FromResult((IReadOnlyDictionary<string, long>)_store.Values
                 .GroupBy(i => i.ClientId).ToDictionary(g => g.Key, g => (long)g.Count()));
     }    /// <summary>
-    /// Repositorio de configuración en memoria con valores predeterminados.
-    /// </summary>
+         /// Repositorio de configuración en memoria con valores predeterminados.
+         /// </summary>
     private sealed class InMemorySystemSettingsRepository : ISystemSettingsRepository
     {
         private SystemSettings _settings;

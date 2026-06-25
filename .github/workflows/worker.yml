@@ -1,0 +1,39 @@
+name: Worker
+
+on:
+  push:
+    paths:
+      - "worker/**"
+      - "packages/**"
+      - "global.json"
+      - ".github/workflows/worker.yml"
+  pull_request:
+    paths:
+      - "worker/**"
+      - "packages/**"
+      - "global.json"
+      - ".github/workflows/worker.yml"
+
+jobs:
+  test:
+    name: Tests (dotnet test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: worker
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: worker
+
+      - name: Run tests
+        run: dotnet test --no-build --configuration Release --logger "console;verbosity=normal"
+        working-directory: worker

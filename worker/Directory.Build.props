@@ -1,0 +1,12 @@
+<Project>
+  <!--
+    Vulnerability overrides for transitive dependencies pulled in by MongoDB.Driver.
+    These force NuGet to resolve patched versions across all projects in this solution.
+    SharpCompress >= 0.32.0 patches GHSA-6c8g-7p36-r338 (Moderate)
+    Snappier >= 1.1.1 patches GHSA-pggp-6c3x-2xmx (High)
+  -->
+  <ItemGroup>
+    <PackageReference Include="SharpCompress" Version="0.49.1" />
+    <PackageReference Include="Snappier" Version="1.3.1" />
+  </ItemGroup>
+</Project>

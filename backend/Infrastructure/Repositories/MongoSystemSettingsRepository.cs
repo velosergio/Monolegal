@@ -18,7 +18,7 @@ public class MongoSystemSettingsRepository : ISystemSettingsRepository
     public async Task<SystemSettings> GetSettingsAsync()
     {
         var settings = await _collection.Find(x => x.Id == SettingsId).FirstOrDefaultAsync();
-        
+
         if (settings == null)
         {
             settings = new SystemSettings { Id = SettingsId };

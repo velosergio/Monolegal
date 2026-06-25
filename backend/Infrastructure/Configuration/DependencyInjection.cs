@@ -50,6 +50,13 @@ public static class DependencyInjection
         services.AddSingleton<MongoIndexBuilder>();
         services.AddHostedService<MongoConnectionVerifier>();
 
+        // Background worker options: interval is operational config, bound from configuration
+        // (section "InvoiceTransitionsWorker", overridable via env var InvoiceTransitionsWorker__IntervalMinutes).
+        // Default interval applies when unset/invalid (spec 012, FR-001/FR-002, SC-005).
+        var workerOptions = new InvoiceTransitionsWorkerOptions();
+        configuration.GetSection(InvoiceTransitionsWorkerOptions.SectionName).Bind(workerOptions);
+        services.AddSingleton(Microsoft.Extensions.Options.Options.Create(workerOptions));
+
         // Background worker: evaluates and applies invoice status transitions periodically.
         services.AddHostedService<InvoiceTransitionsWorker>();
 
