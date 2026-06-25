@@ -1,12 +1,7 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { usePayInvoice } from '../api/payInvoice'
-import {
-  Invoice,
-  InvoiceStatus,
-  INVOICE_STATUS_LABELS,
-  TERMINAL_STATUSES,
-} from '../types'
+import { Invoice, InvoiceStatus, INVOICE_STATUS_LABELS, TERMINAL_STATUSES } from '../types'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -63,11 +58,7 @@ const PayButton: React.FC<PayButtonProps> = ({ invoiceId }) => {
 
   return (
     <div className="flex flex-col items-start gap-1">
-      <Button
-        size="sm"
-        disabled={isPending}
-        onClick={() => mutate(invoiceId)}
-      >
+      <Button size="sm" disabled={isPending} onClick={() => mutate(invoiceId)}>
         {isPending ? 'Procesando…' : 'Pagar'}
       </Button>
       {isError && (
@@ -130,9 +121,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({ invoices }) => {
                 <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">
                   {shortId(invoice.id)}
                 </td>
-                <td className="px-4 py-3 text-gray-800 dark:text-gray-200">
-                  {invoice.clientId}
-                </td>
+                <td className="px-4 py-3 text-gray-800 dark:text-gray-200">{invoice.clientId}</td>
                 <td className="px-4 py-3 text-right font-medium text-gray-800 dark:text-gray-200">
                   {formatAmount(invoice.amount)}
                 </td>
@@ -142,9 +131,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({ invoices }) => {
                 <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
                   {formatDate(invoice.lastStatusTransitionAt)}
                 </td>
-                <td className="px-4 py-3">
-                  {!isTerminal && <PayButton invoiceId={invoice.id} />}
-                </td>
+                <td className="px-4 py-3">{!isTerminal && <PayButton invoiceId={invoice.id} />}</td>
               </tr>
             )
           })}
@@ -163,12 +150,9 @@ const STATUS_BADGE_CLASSES: Partial<Record<InvoiceStatus, string>> = {
   [InvoiceStatus.Pending]: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
   [InvoiceStatus.PrimerRecordatorio]:
     'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
-  [InvoiceStatus.SegundoRecordatorio]:
-    'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
-  [InvoiceStatus.Desactivado]:
-    'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400',
-  [InvoiceStatus.Cancelled]:
-    'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400',
+  [InvoiceStatus.SegundoRecordatorio]: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+  [InvoiceStatus.Desactivado]: 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400',
+  [InvoiceStatus.Cancelled]: 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400',
   [InvoiceStatus.Draft]: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
   [InvoiceStatus.Overdue]: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
 }
@@ -179,8 +163,7 @@ interface StatusBadgeProps {
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const classes =
-    STATUS_BADGE_CLASSES[status] ??
-    'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+    STATUS_BADGE_CLASSES[status] ?? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
 
   return (
     <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${classes}`}>

@@ -22,6 +22,14 @@ public interface IInvoiceRepository
     Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Returns the total number of invoices in the collection. Used by the
+    /// development data seeder to verify the "empty database" precondition and
+    /// guarantee idempotency (only seeds when the count is zero). See
+    /// specs/008-seed-data-clientes/contracts/dev-data-seeder.md.
+    /// </summary>
+    Task<long> CountAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Atomically updates only the status-related fields of an invoice:
     /// <see cref="Entities.Invoice.Status"/>, <see cref="Entities.Invoice.UpdatedAt"/>
     /// and <see cref="Entities.Invoice.LastStatusTransitionAt"/>. The rest of the document

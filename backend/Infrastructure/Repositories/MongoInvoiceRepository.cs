@@ -83,6 +83,13 @@ public sealed class MongoInvoiceRepository : IInvoiceRepository
             .ConfigureAwait(false);
     }
 
+    public async Task<long> CountAsync(CancellationToken cancellationToken = default)
+    {
+        return await _collection
+            .CountDocumentsAsync(FilterDefinition<Invoice>.Empty, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     public async Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default)
     {
         var update = Builders<Invoice>.Update

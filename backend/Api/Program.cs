@@ -1,4 +1,8 @@
+using Backend.Application.Abstractions;
+using Backend.Application.Seeding;
 using Backend.Infrastructure.Configuration;
+using Backend.Infrastructure.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Monolegal.Api.Endpoints.Invoices;
 using Monolegal.Api.Endpoints.Settings;
 using Monolegal.Api.Endpoints.Workers;
@@ -19,6 +23,15 @@ try
     // Infrastructure services (MongoDB connection, startup verification,
     // "mongodb" health check, logging) — see specs/004-mongodb-connection.
     builder.Services.AddInfrastructure(builder.Configuration);
+
+    // Development-only data seeder (spec 008). Gate de seguridad: en producción NO se
+    // registra ni se ejecuta. Se registra tras AddInfrastructure para correr después de
+    // la verificación de conexión a MongoDB.
+    if (builder.Environment.IsDevelopment())
+    {
+        builder.Services.AddSingleton<IDevDataSeeder, DevDataSeeder>();
+        builder.Services.AddHostedService<DevDataSeederHostedService>();
+    }
 
     // OpenAPI/Swagger
     builder.Services.AddOpenApi();

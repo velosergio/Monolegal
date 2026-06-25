@@ -74,6 +74,9 @@ public class InvoiceWorkerTests
                 invoice.UpdateStatus(newStatus);
             return Task.CompletedTask;
         }
+
+        public Task<long> CountAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult((long)_store.Count);
     }    /// <summary>
     /// Repositorio de configuración en memoria con valores predeterminados.
     /// </summary>

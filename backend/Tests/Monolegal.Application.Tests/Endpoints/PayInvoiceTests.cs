@@ -66,6 +66,9 @@ public class PayInvoiceTests
                 invoice.UpdateStatus(newStatus);
             return Task.CompletedTask;
         }
+
+        public Task<long> CountAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult((long)_store.Count);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

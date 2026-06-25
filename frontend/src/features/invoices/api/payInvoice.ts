@@ -7,9 +7,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
  * - `lastStatusTransitionAt` is an ISO-8601 UTC timestamp.
  */
 export interface PayInvoiceResponse {
-    id: string
-    status: number
-    lastStatusTransitionAt: string
+  id: string
+  status: number
+  lastStatusTransitionAt: string
 }
 
 /**
@@ -19,26 +19,26 @@ export interface PayInvoiceResponse {
  * handle the error appropriately.
  */
 export const payInvoice = async (id: string): Promise<PayInvoiceResponse> => {
-    const response = await fetch(`/api/invoices/${id}/pay`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
+  const response = await fetch(`/api/invoices/${id}/pay`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 
-    if (!response.ok) {
-        // Surface the error message from the API body when available.
-        let message = `Error al pagar la factura (${response.status})`
-        try {
-            const body = await response.json()
-            if (body?.error) message = body.error
-        } catch {
-            // ignore JSON parse errors — keep the default message
-        }
-        throw new Error(message)
+  if (!response.ok) {
+    // Surface the error message from the API body when available.
+    let message = `Error al pagar la factura (${response.status})`
+    try {
+      const body = await response.json()
+      if (body?.error) message = body.error
+    } catch {
+      // ignore JSON parse errors — keep the default message
     }
+    throw new Error(message)
+  }
 
-    return response.json() as Promise<PayInvoiceResponse>
+  return response.json() as Promise<PayInvoiceResponse>
 }
 
 /**
@@ -52,13 +52,13 @@ export const payInvoice = async (id: string): Promise<PayInvoiceResponse> => {
  * depends on it re-fetches automatically.
  */
 export const usePayInvoice = () => {
-    const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
 
-    return useMutation({
-        mutationFn: (id: string) => payInvoice(id),
-        onSuccess: () => {
-            // Invalidate the invoices list so it reflects the new status.
-            queryClient.invalidateQueries({ queryKey: ['invoices'] })
-        },
-    })
+  return useMutation({
+    mutationFn: (id: string) => payInvoice(id),
+    onSuccess: () => {
+      // Invalidate the invoices list so it reflects the new status.
+      queryClient.invalidateQueries({ queryKey: ['invoices'] })
+    },
+  })
 }

@@ -55,6 +55,9 @@ public class InvoiceRepositoryContractTests
                 invoice.UpdateStatus(newStatus);
             return Task.CompletedTask;
         }
+
+        public Task<long> CountAsync(CancellationToken ct = default)
+            => Task.FromResult((long)_store.Count);
     }
 
     private static async Task<IInvoiceRepository> RepoWithAsync(params Invoice[] invoices)

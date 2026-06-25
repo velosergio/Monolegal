@@ -6,7 +6,7 @@ Desarrollar una plataforma de gestión de cobranza mediante iteraciones basadas 
 
 ---
 
-## 📋 Fase 0: Setup & Infrastructure [✅ - Hecho]
+## 📋 Fase 0: Setup & Infrastructure [✅ - Hecho] `4/4 specs`
 
 ### Spec 0.1: Estructura de Proyectos
 
@@ -60,7 +60,7 @@ Desarrollar una plataforma de gestión de cobranza mediante iteraciones basadas 
 
 ---
 
-## 🏗️ Fase 1: Domain & Data Layer
+## 🏗️ Fase 1: Domain & Data Layer `3/4 specs`
 
 ### Spec 1.1: Entidad Invoice (Dominio)
 
@@ -116,7 +116,7 @@ LastReminderSentAt: DateTime?
 
 ---
 
-## 📡 Fase 2: Backend API (Minimal APIs)
+## 📡 Fase 2: Backend API (Minimal APIs) `0/5 specs`
 
 ### Spec 2.1: GET /api/invoices (Lista)
 
@@ -197,7 +197,7 @@ LastReminderSentAt: DateTime?
 
 ---
 
-## ⚙️ Fase 3: Worker & Email Service
+## ⚙️ Fase 3: Worker & Email Service `0/4 specs`
 
 ### Spec 3.1: Email Service Interface
 
@@ -244,7 +244,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🎨 Fase 4: Frontend (React UI)
+## 🎨 Fase 4: Frontend (React UI) `0/6 specs`
 
 ### Spec 4.1: Layout Base
 
@@ -313,7 +313,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🧪 Fase 5: Testing & Quality
+## 🧪 Fase 5: Testing & Quality `0/5 specs`
 
 ### Spec 5.1: Unit Tests - Domain
 
@@ -373,7 +373,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🚀 Fase 6: Deployment & Documentation
+## 🚀 Fase 6: Deployment & Documentation `0/6 specs`
 
 ### Spec 6.1: Docker Compose Optimizado
 
