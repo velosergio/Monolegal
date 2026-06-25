@@ -7,6 +7,13 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
+
+  <!-- Excluir subdirectorios con sus propios .csproj para evitar conflictos de ensamblado -->
+  <ItemGroup>
+    <Compile Remove="Monolegal.Domain.Tests\**" />
+    <Compile Remove="Monolegal.Application.Tests\obj\**" />
+    <Compile Remove="Monolegal.Application.Tests\bin\**" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />

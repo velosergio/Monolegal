@@ -1,6 +1,11 @@
+using Backend.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using Monolegal.Domain.Repositories;
+using Monolegal.Domain.Services;
+using Monolegal.Infrastructure.Repositories;
+using Monolegal.Infrastructure.Workers;
 using Serilog;
 
 namespace Backend.Infrastructure.Configuration;
@@ -19,6 +24,13 @@ public static class DependencyInjection
         var mongoOptions = BuildMongoOptions(configuration);
         services.AddSingleton(Microsoft.Extensions.Options.Options.Create(mongoOptions));
 
+        // Domain services
+        services.AddSingleton<InvoiceTransitionService>();
+
+        // Repositories
+        services.AddSingleton<ISystemSettingsRepository, MongoSystemSettingsRepository>();
+        services.AddSingleton<IInvoiceRepository, MongoInvoiceRepository>();
+
         // Build the client from explicit settings so pooling and server-selection
         // timeout are configured (FR-010, research D4).
         var clientSettings = MongoClientSettings.FromConnectionString(mongoOptions.ConnectionString);
@@ -34,7 +46,12 @@ public static class DependencyInjection
         });
 
         // Startup connection verification with observable structured logging (FR-005/006/007).
+        // MongoIndexBuilder is registered first so MongoConnectionVerifier can inject it.
+        services.AddSingleton<MongoIndexBuilder>();
         services.AddHostedService<MongoConnectionVerifier>();
+
+        // Background worker: evaluates and applies invoice status transitions periodically.
+        services.AddHostedService<InvoiceTransitionsWorker>();
 
         // Real MongoDB connectivity health check exposed at /health (FR-008).
         services.AddHealthChecks()

@@ -11,4 +11,10 @@ public interface IInvoiceRepository
     Task<IEnumerable<Invoice>> GetByClientIdAsync(string clientId, CancellationToken cancellationToken = default);
     Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default);
     Task UpdateAsync(Invoice invoice, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns all invoices in states that can be automatically transitioned:
+    /// Pending, PrimerRecordatorio, SegundoRecordatorio.
+    /// </summary>
+    Task<IEnumerable<Invoice>> GetTransitionableAsync(CancellationToken cancellationToken = default);
 }

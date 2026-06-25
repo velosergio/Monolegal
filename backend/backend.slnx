@@ -4,4 +4,5 @@
   <Project Path="Domain/Domain.csproj" />
   <Project Path="Infrastructure/Infrastructure.csproj" />
   <Project Path="Tests/Tests.csproj" />
+  <Project Path="Tests/Monolegal.Domain.Tests/Monolegal.Domain.Tests.csproj" />
 </Solution>

@@ -4,7 +4,7 @@
 
 **Creado**: 2026-06-24
 
-**Estado**: Draft
+**Estado**: Activo
 
 **Entrada**: Fase 0.4 - MongoDB Connection del roadmap.md
 

@@ -1,4 +1,7 @@
 using Backend.Infrastructure.Configuration;
+using Monolegal.Api.Endpoints.Invoices;
+using Monolegal.Api.Endpoints.Settings;
+using Monolegal.Api.Endpoints.Workers;
 using Serilog;
 
 // Configure Serilog early
@@ -32,6 +35,16 @@ try
 
     // Health check endpoint
     app.MapHealthChecks("/health");
+
+    // Settings endpoints
+    app.MapGetInvoiceTransitions();
+    app.MapUpdateInvoiceTransitions();
+
+    // Invoices endpoints
+    app.MapPayInvoice();
+
+    // Workers endpoints
+    app.MapTriggerTransitions();
 
     app.Run();
 }

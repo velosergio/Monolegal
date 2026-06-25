@@ -85,10 +85,11 @@ LastReminderSentAt: DateTime?
 **WHEN** se ejecutan transiciones  
 **THEN** los estados permitidos son:
 
-- ✅ `pending` → `primerrecordatorio` (después de X días)
-- ✅ `primerrecordatorio` → `segundorecordatorio` (después de X días)
-- ✅ `segundorecordatorio` → `desactivado` (después de X días o pago)
+- ✅ `pending` → `primerrecordatorio` (tiempo configurable)
+- ✅ `primerrecordatorio` → `segundorecordatorio` (tiempo configurable)
+- ✅ `segundorecordatorio` → `desactivado` (tiempo configurable sin pago)
 - ✅ Cualquier estado → `pagado` (manual o automático)
+- ✅ Nueva pestaña en vista de configuración para definir los tiempos
 
 ### Spec 1.3: MongoDB Repository
 

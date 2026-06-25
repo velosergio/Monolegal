@@ -4,7 +4,7 @@
 
 **Creado**: 2026-06-24
 
-**Estado**: Borrador
+**Estado**: Activo
 
 **Entrada**: User description: "## 🏗️ Fase 1: Domain & Data Layer ... "
 

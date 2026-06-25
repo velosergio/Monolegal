@@ -1,3 +1,4 @@
+using Backend.Infrastructure.Persistence;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,7 +16,8 @@ namespace Backend.Infrastructure.Configuration;
 public sealed class MongoConnectionVerifier(
     IMongoDatabase database,
     IOptions<MongoDbOptions> options,
-    ILogger<MongoConnectionVerifier> logger) : IHostedService
+    ILogger<MongoConnectionVerifier> logger,
+    MongoIndexBuilder indexBuilder) : IHostedService
 {
     private static readonly TimeSpan TotalRetryWindow = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(1);
@@ -23,6 +25,7 @@ public sealed class MongoConnectionVerifier(
     private readonly IMongoDatabase _database = database;
     private readonly MongoDbOptions _options = options.Value;
     private readonly ILogger<MongoConnectionVerifier> _logger = logger;
+    private readonly MongoIndexBuilder _indexBuilder = indexBuilder;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
@@ -46,6 +49,8 @@ public sealed class MongoConnectionVerifier(
                     _options.DatabaseName,
                     attempt,
                     sw.ElapsedMilliseconds);
+
+                await _indexBuilder.EnsureIndexesAsync(cancellationToken).ConfigureAwait(false);
                 return;
             }
             catch (Exception ex) when (ex is not OperationCanceledException)

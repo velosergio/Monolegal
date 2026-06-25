@@ -1,5 +1,10 @@
 using System;
+using System.Runtime.CompilerServices;
 using Monolegal.Domain.Enums;
+
+// Permite que los proyectos de tests accedan a los miembros internos
+[assembly: InternalsVisibleTo("Monolegal.Domain.Tests")]
+[assembly: InternalsVisibleTo("Tests")]
 
 namespace Monolegal.Domain.Entities;
 
@@ -13,6 +18,7 @@ public class Invoice
     public DateTime UpdatedAt { get; private set; }
     public int RemindersCount { get; private set; }
     public DateTime? LastReminderSentAt { get; private set; }
+    public DateTime LastStatusTransitionAt { get; private set; }
 
     public Invoice(string clientId, decimal amount)
     {
@@ -28,6 +34,7 @@ public class Invoice
         Status = InvoiceStatus.Draft;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = CreatedAt;
+        LastStatusTransitionAt = CreatedAt;
         RemindersCount = 0;
         LastReminderSentAt = null;
     }
@@ -35,6 +42,7 @@ public class Invoice
     public void UpdateStatus(InvoiceStatus newStatus)
     {
         Status = newStatus;
+        LastStatusTransitionAt = DateTime.UtcNow;
         UpdateAuditDate();
     }
 
@@ -43,6 +51,15 @@ public class Invoice
         RemindersCount++;
         LastReminderSentAt = DateTime.UtcNow;
         UpdateAuditDate();
+    }
+
+    /// <summary>
+    /// Permite sobrescribir <see cref="LastStatusTransitionAt"/> para pruebas deterministas.
+    /// Sólo accesible desde el ensamblado de tests de dominio (InternalsVisibleTo).
+    /// </summary>
+    internal void OverrideLastStatusTransitionAt(DateTime dateTime)
+    {
+        LastStatusTransitionAt = dateTime;
     }
 
     private void UpdateAuditDate()

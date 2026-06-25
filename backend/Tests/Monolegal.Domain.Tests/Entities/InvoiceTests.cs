@@ -22,7 +22,7 @@ public class InvoiceTests
         invoice.Id.ShouldNotBeNullOrWhiteSpace();
         invoice.ClientId.ShouldBe(clientId);
         invoice.Amount.ShouldBe(amount);
-        invoice.Status.ShouldBeOneOf(InvoiceStatus.Draft, InvoiceStatus.Pending);
+        invoice.Status.ShouldBe(InvoiceStatus.Draft);
         invoice.CreatedAt.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(1));
         invoice.UpdatedAt.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(1));
         invoice.RemindersCount.ShouldBe(0);
@@ -79,10 +79,10 @@ public class InvoiceTests
         System.Threading.Thread.Sleep(10);
 
         // Act
-        invoice.UpdateStatus(InvoiceStatus.Paid);
+        invoice.UpdateStatus(InvoiceStatus.Pagado);
 
         // Assert
-        invoice.Status.ShouldBe(InvoiceStatus.Paid);
+        invoice.Status.ShouldBe(InvoiceStatus.Pagado);
         invoice.UpdatedAt.ShouldBeGreaterThan(initialUpdatedAt);
     }
 }
