@@ -62,6 +62,15 @@ public class Invoice
         LastStatusTransitionAt = dateTime;
     }
 
+    /// <summary>
+    /// Permite sobrescribir <see cref="CreatedAt"/> para pruebas deterministas de orden
+    /// (p. ej. paginación por fecha de creación). Sólo accesible desde los ensamblados de tests.
+    /// </summary>
+    internal void OverrideCreatedAt(DateTime dateTime)
+    {
+        CreatedAt = dateTime;
+    }
+
     private void UpdateAuditDate()
     {
         UpdatedAt = DateTime.UtcNow;

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Backend.Application.Abstractions;
 using Backend.Application.Seeding;
 using Backend.Infrastructure.Configuration;
@@ -23,6 +24,14 @@ try
     // Infrastructure services (MongoDB connection, startup verification,
     // "mongodb" health check, logging) — see specs/004-mongodb-connection.
     builder.Services.AddInfrastructure(builder.Configuration);
+
+    // Serialización JSON: los valores de InvoiceStatus se intercambian como cadena en
+    // minúscula en el contrato HTTP (research.md D1, spec 009). Aplica a todos los enums.
+    builder.Services.ConfigureHttpJsonOptions(options =>
+    {
+        options.SerializerOptions.Converters.Add(
+            new JsonStringEnumConverter(new LowerCaseNamingPolicy()));
+    });
 
     // Development-only data seeder (spec 008). Gate de seguridad: en producción NO se
     // registra ni se ejecuta. Se registra tras AddInfrastructure para correr después de
@@ -55,6 +64,10 @@ try
 
     // Invoices endpoints
     app.MapPayInvoice();
+    app.MapListInvoices();
+    app.MapGetInvoiceById();
+    app.MapTransitionInvoice();
+    app.MapGetInvoiceStats();
 
     // Workers endpoints
     app.MapTriggerTransitions();

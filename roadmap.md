@@ -60,7 +60,7 @@ Desarrollar una plataforma de gestión de cobranza mediante iteraciones basadas 
 
 ---
 
-## 🏗️ Fase 1: Domain & Data Layer `3/4 specs`
+## 🏗️ Fase 1: Domain & Data Layer [✅ - Hecho] `4/4 specs`
 
 ### Spec 1.1: Entidad Invoice (Dominio)
 
@@ -116,9 +116,11 @@ LastReminderSentAt: DateTime?
 
 ---
 
-## 📡 Fase 2: Backend API (Minimal APIs) `0/5 specs`
+## 📡 Fase 2: Backend API (Minimal APIs) `1/2 specs`
 
-### Spec 2.1: GET /api/invoices (Lista)
+### Spec 2.1: inovice api endpoints
+
+#### GET /api/invoices (Lista)
 
 **GIVEN** facturas en MongoDB  
 **WHEN** se llama `GET /api/invoices`  
@@ -143,7 +145,7 @@ LastReminderSentAt: DateTime?
 - ✅ Query params: `?status=primerrecordatorio&page=1&pageSize=10`
 - ✅ Status 200 OK
 
-### Spec 2.2: GET /api/invoices/{id} (Detalle)
+####  GET /api/invoices/{id} (Detalle)
 
 **GIVEN** ID de factura válido  
 **WHEN** se llama `GET /api/invoices/{id}`  
@@ -152,7 +154,7 @@ LastReminderSentAt: DateTime?
 - ✅ Status 200 con objeto completo
 - ✅ Status 404 si no existe
 
-### Spec 2.3: POST /api/invoices/transition/{id}
+#### POST /api/invoices/transition/{id}
 
 **GIVEN** factura en estado válido  
 **WHEN** se llama `POST /api/invoices/transition/{id}` con `{ "newStatus": "segundorecordatorio" }`  
@@ -162,7 +164,7 @@ LastReminderSentAt: DateTime?
 - ✅ Status 200 con factura actualizada
 - ✅ Status 400 si transición no permitida
 
-### Spec 2.4: GET /api/invoices/stats (Dashboard)
+#### GET /api/invoices/stats (Dashboard)
 
 **GIVEN** facturas en BD  
 **WHEN** se llama `GET /api/invoices/stats`  
@@ -185,7 +187,7 @@ LastReminderSentAt: DateTime?
 }
 ```
 
-### Spec 2.5: Swagger/OpenAPI
+### Spec 2.2: Swagger/OpenAPI
 
 **GIVEN** endpoints implementados  
 **WHEN** se accede a `/swagger`  
@@ -201,8 +203,8 @@ LastReminderSentAt: DateTime?
 
 ### Spec 3.1: Email Service Interface
 
-**GIVEN** necesidad de enviar correos  
-**WHEN** se define contrato  
+**GIVEN** necesidad de enviar correos
+**WHEN** se define contrato
 **THEN** interfaz `IEmailService`:
 
 ```csharp
@@ -300,16 +302,6 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ POST a `/api/invoices/transition/{id}`
 - ✅ Toast de éxito/error
 - ✅ Tabla y modal se actualizan
-
-### Spec 4.6: Dark Mode
-
-**GIVEN** aplicación cargada  
-**WHEN** usuario activa dark mode en settings  
-**THEN**:
-
-- ✅ shadcn/ui responde al tema
-- ✅ Preferencia guardada en localStorage
-- ✅ Sistema respeta preferencia del OS
 
 ---
 

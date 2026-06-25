@@ -49,4 +49,25 @@ internal sealed class FakeInvoiceRepository : IInvoiceRepository
 
     public Task<long> CountAsync(CancellationToken ct = default)
         => Task.FromResult((long)_store.Count);
+
+    public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
+        InvoiceStatus? status, int page, int pageSize, CancellationToken ct = default)
+    {
+        var query = status.HasValue ? _store.Where(i => i.Status == status.Value) : _store.AsEnumerable();
+        var filtered = query.ToList();
+        var items = filtered
+            .OrderByDescending(i => i.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+        return Task.FromResult(((IReadOnlyList<Invoice>)items, (long)filtered.Count));
+    }
+
+    public Task<IReadOnlyDictionary<InvoiceStatus, long>> CountByStatusAsync(CancellationToken ct = default)
+        => Task.FromResult((IReadOnlyDictionary<InvoiceStatus, long>)_store
+            .GroupBy(i => i.Status).ToDictionary(g => g.Key, g => (long)g.Count()));
+
+    public Task<IReadOnlyDictionary<string, long>> CountByClientAsync(CancellationToken ct = default)
+        => Task.FromResult((IReadOnlyDictionary<string, long>)_store
+            .GroupBy(i => i.ClientId).ToDictionary(g => g.Key, g => (long)g.Count()));
 }

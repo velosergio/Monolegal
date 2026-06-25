@@ -77,6 +77,27 @@ public class InvoiceWorkerTests
 
         public Task<long> CountAsync(CancellationToken cancellationToken = default)
             => Task.FromResult((long)_store.Count);
+
+        public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
+            InvoiceStatus? status, int page, int pageSize, CancellationToken cancellationToken = default)
+        {
+            var query = status.HasValue ? _store.Values.Where(i => i.Status == status.Value) : _store.Values.AsEnumerable();
+            var filtered = query.ToList();
+            var items = filtered
+                .OrderByDescending(i => i.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            return Task.FromResult(((IReadOnlyList<Invoice>)items, (long)filtered.Count));
+        }
+
+        public Task<IReadOnlyDictionary<InvoiceStatus, long>> CountByStatusAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult((IReadOnlyDictionary<InvoiceStatus, long>)_store.Values
+                .GroupBy(i => i.Status).ToDictionary(g => g.Key, g => (long)g.Count()));
+
+        public Task<IReadOnlyDictionary<string, long>> CountByClientAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult((IReadOnlyDictionary<string, long>)_store.Values
+                .GroupBy(i => i.ClientId).ToDictionary(g => g.Key, g => (long)g.Count()));
     }    /// <summary>
     /// Repositorio de configuración en memoria con valores predeterminados.
     /// </summary>

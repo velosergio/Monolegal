@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-24
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: Descripción del usuario (Spec 1.3): "GIVEN entidad Invoice en dominio, WHEN se implementa repositorio, THEN debe soportar GetByStatusAsync(InvoiceStatus), GetByClientIdAsync(clientId), UpdateStatusAsync(id, newStatus), InsertAsync(invoice), e índices en Status y ClientId."
 

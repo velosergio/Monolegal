@@ -4,7 +4,7 @@
 
 **Creado**: 2026-06-25
 
-**Estado**: Draft
+**Estado**: Activo
 
 **Entrada**: User description: "### Spec 1.4: Seed Data - 3 Clientes Mínimo — GIVEN MongoDB vacío, WHEN se ejecuta seeder, THEN existen: Cliente A con 3 facturas (estados variados), Cliente B con 2 facturas, Cliente C con 3 facturas, Al menos 1 factura por estado en `primerrecordatorio` y `segundorecordatorio`."
 

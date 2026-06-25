@@ -67,6 +67,41 @@ public class InvoiceTransitionService
         invoice.UpdateStatus(InvoiceStatus.Pagado);
     }
 
+    /// <summary>
+    /// Aplica una transición de estado solicitada manualmente, validándola contra la matriz
+    /// de transiciones permitidas (spec 006). Para <see cref="InvoiceStatus.Pagado"/> delega en
+    /// <see cref="ApplyPayment"/>. Cualquier transición no permitida lanza
+    /// <see cref="InvalidOperationException"/> (el endpoint la traduce a HTTP 400).
+    ///
+    /// Matriz: Pending→{PrimerRecordatorio,Pagado}; PrimerRecordatorio→{SegundoRecordatorio,Pagado};
+    /// SegundoRecordatorio→{Desactivado,Pagado}; Desactivado→{Pagado}; Pagado→{}.
+    /// </summary>
+    public void ApplyManualTransition(Invoice invoice, InvoiceStatus newStatus)
+    {
+        if (invoice == null) throw new ArgumentNullException(nameof(invoice));
+
+        if (newStatus == InvoiceStatus.Pagado)
+        {
+            ApplyPayment(invoice);
+            return;
+        }
+
+        if (!IsTransitionAllowed(invoice.Status, newStatus))
+            throw new InvalidOperationException(
+                $"Transición no permitida de '{invoice.Status}' a '{newStatus}'.");
+
+        invoice.UpdateStatus(newStatus);
+    }
+
+    private static bool IsTransitionAllowed(InvoiceStatus current, InvoiceStatus next) =>
+        (current, next) switch
+        {
+            (InvoiceStatus.Pending, InvoiceStatus.PrimerRecordatorio) => true,
+            (InvoiceStatus.PrimerRecordatorio, InvoiceStatus.SegundoRecordatorio) => true,
+            (InvoiceStatus.SegundoRecordatorio, InvoiceStatus.Desactivado) => true,
+            _ => false
+        };
+
     // ──────────────────────────────────────────────────────────────────────────
     // Private helpers
     // ──────────────────────────────────────────────────────────────────────────

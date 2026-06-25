@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -100,5 +101,49 @@ public sealed class MongoInvoiceRepository : IInvoiceRepository
         await _collection
             .UpdateOneAsync(x => x.Id == id, update, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    public async Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
+        InvoiceStatus? status, int page, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var filter = status.HasValue
+            ? Builders<Invoice>.Filter.Eq(x => x.Status, status.Value)
+            : Builders<Invoice>.Filter.Empty;
+
+        var total = await _collection
+            .CountDocumentsAsync(filter, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        var items = await _collection
+            .Find(filter)
+            .SortByDescending(x => x.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return (items, total);
+    }
+
+    public async Task<IReadOnlyDictionary<InvoiceStatus, long>> CountByStatusAsync(CancellationToken cancellationToken = default)
+    {
+        var results = await _collection
+            .Aggregate()
+            .Group(x => x.Status, g => new { Status = g.Key, Count = g.LongCount() })
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return results.ToDictionary(r => r.Status, r => r.Count);
+    }
+
+    public async Task<IReadOnlyDictionary<string, long>> CountByClientAsync(CancellationToken cancellationToken = default)
+    {
+        var results = await _collection
+            .Aggregate()
+            .Group(x => x.ClientId, g => new { ClientId = g.Key, Count = g.LongCount() })
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return results.ToDictionary(r => r.ClientId, r => r.Count);
     }
 }

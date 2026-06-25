@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using Backend.Tests.Infrastructure.Support;
 using Monolegal.Domain.Entities;
 using Monolegal.Domain.Enums;
 using Monolegal.Domain.Repositories;
@@ -23,53 +21,7 @@ namespace Backend.Tests.Monolegal.Application.Tests.Endpoints;
 [Trait("Category", "Application")]
 public class PayInvoiceTests
 {
-    // ─────────────────────────────────────────────────────────────────────────
-    // In-memory fakes (misma estructura que InvoiceWorkerTests)
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private sealed class InMemoryInvoiceRepository : IInvoiceRepository
-    {
-        private readonly Dictionary<string, Invoice> _store = new();
-
-        public IReadOnlyCollection<Invoice> All => _store.Values.ToList().AsReadOnly();
-
-        public Task<Invoice?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
-            => Task.FromResult(_store.TryGetValue(id, out var invoice) ? invoice : null);
-
-        public Task<IEnumerable<Invoice>> GetByClientIdAsync(string clientId, CancellationToken cancellationToken = default)
-            => Task.FromResult(_store.Values.Where(i => i.ClientId == clientId));
-
-        public Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default)
-        {
-            _store[invoice.Id] = invoice;
-            return Task.CompletedTask;
-        }
-
-        public Task UpdateAsync(Invoice invoice, CancellationToken cancellationToken = default)
-        {
-            _store[invoice.Id] = invoice;
-            return Task.CompletedTask;
-        }
-
-        public Task<IEnumerable<Invoice>> GetTransitionableAsync(CancellationToken cancellationToken = default)
-            => Task.FromResult(_store.Values.Where(i =>
-                i.Status is InvoiceStatus.Pending
-                    or InvoiceStatus.PrimerRecordatorio
-                    or InvoiceStatus.SegundoRecordatorio));
-
-        public Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken cancellationToken = default)
-            => Task.FromResult(_store.Values.Where(i => i.Status == status));
-
-        public Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default)
-        {
-            if (_store.TryGetValue(id, out var invoice))
-                invoice.UpdateStatus(newStatus);
-            return Task.CompletedTask;
-        }
-
-        public Task<long> CountAsync(CancellationToken cancellationToken = default)
-            => Task.FromResult((long)_store.Count);
-    }
+    // Usa el fake compartido Backend.Tests.Infrastructure.Support.InMemoryInvoiceRepository.
 
     // ─────────────────────────────────────────────────────────────────────────
     // Handler (replica la lógica que tendrá el endpoint T017)

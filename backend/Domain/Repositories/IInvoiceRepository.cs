@@ -36,4 +36,25 @@ public interface IInvoiceRepository
     /// (Amount, ClientId, RemindersCount, ...) is left untouched. A non-existent id is a no-op.
     /// </summary>
     Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns a page of invoices, optionally filtered by <paramref name="status"/>, ordered by
+    /// <see cref="Entities.Invoice.CreatedAt"/> descending, together with the total number of
+    /// matches for the applied filter (independent of the returned page). Used by
+    /// GET /api/invoices. See specs/009-invoice-api-endpoints/contracts/list-invoices.md.
+    /// </summary>
+    Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
+        InvoiceStatus? status, int page, int pageSize, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the count of invoices grouped by status across the whole collection.
+    /// Used by GET /api/invoices/stats (byStatus aggregate).
+    /// </summary>
+    Task<IReadOnlyDictionary<InvoiceStatus, long>> CountByStatusAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the count of invoices grouped by client id across the whole collection.
+    /// Used by GET /api/invoices/stats (byClient aggregate).
+    /// </summary>
+    Task<IReadOnlyDictionary<string, long>> CountByClientAsync(CancellationToken cancellationToken = default);
 }
