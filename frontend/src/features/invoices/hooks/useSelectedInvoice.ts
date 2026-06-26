@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 /** Nombre del parámetro de búsqueda que refleja la factura seleccionada en la URL. */
-export const SELECTED_INVOICE_PARAM = 'factura'
+const SELECTED_INVOICE_PARAM = 'factura'
 
 export interface SelectedInvoice {
   /** Id de la factura seleccionada, o `null` si no hay ninguna (modal cerrado). */

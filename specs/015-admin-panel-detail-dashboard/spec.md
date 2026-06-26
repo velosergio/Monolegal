@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-26
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: User description (roadmap.md, Specs 4.3 Invoice Detail Modal y 4.4 Dashboard / Stats):
 

@@ -92,6 +92,24 @@ try
     app.MapGetInvoiceTransitions();
     app.MapUpdateInvoiceTransitions();
 
+    // Email settings endpoints (spec 017 — US1)
+    app.MapGetEmailSettings();
+    app.MapUpdateEmailSettings();
+    app.MapValidateEmailCredentials();
+
+    // Email templates endpoints (spec 017 — US2)
+    app.MapGetEmailTemplates();
+    app.MapUpdateEmailTemplate();
+    app.MapResetEmailTemplate();
+    app.MapPreviewEmailTemplate();
+
+    // Email test send endpoint (spec 017 — US3)
+    app.MapSendTestEmail();
+
+    // Email admin tools endpoints (spec 017 — US4)
+    app.MapResendFailedNotifications();
+    app.MapSanitizeStuckNotifications();
+
     // Invoices endpoints
     app.MapPayInvoice();
     app.MapListInvoices();

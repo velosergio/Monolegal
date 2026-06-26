@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-25
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: Descripción del usuario (Spec 2.x): Endpoints HTTP para listar facturas con filtro y paginación (`GET /api/invoices`), consultar detalle (`GET /api/invoices/{id}`), transicionar estado (`POST /api/invoices/transition/{id}`) y obtener estadísticas de dashboard (`GET /api/invoices/stats`).
 

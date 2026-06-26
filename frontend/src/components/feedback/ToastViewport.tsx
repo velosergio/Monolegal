@@ -1,6 +1,6 @@
 import { X } from 'lucide-react'
 import { domAnimation, LazyMotion, m, useReducedMotion } from 'motion/react'
-import { useContext } from 'react'
+import { use } from 'react'
 import { motionTransition, toastInOut } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 import { ToastApiContext, type ToastMessage } from './ToastProvider'
@@ -23,7 +23,7 @@ export function ToastViewport() {
   const toasts = useToastState()
   // Lectura tolerante: el viewport puede montarse en layouts sin provider (tests);
   // sin provider no hay toasts, por lo que `dismiss` nunca se invoca.
-  const api = useContext(ToastApiContext)
+  const api = use(ToastApiContext)
   const dismiss = api?.dismiss ?? (() => {})
   const reduced = useReducedMotion()
 

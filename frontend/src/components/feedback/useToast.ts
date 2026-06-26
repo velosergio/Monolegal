@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { use } from 'react'
 import {
   type ToastApi,
   ToastApiContext,
@@ -11,7 +11,7 @@ import {
  * Lanza si se usa fuera de `<ToastProvider>`.
  */
 export function useToast(): ToastApi {
-  const api = useContext(ToastApiContext)
+  const api = use(ToastApiContext)
   if (!api) {
     throw new Error('useToast debe usarse dentro de <ToastProvider>')
   }
@@ -20,5 +20,5 @@ export function useToast(): ToastApi {
 
 /** Lista actual de toasts (para el `ToastViewport`). */
 export function useToastState(): ToastMessage[] {
-  return useContext(ToastStateContext)
+  return use(ToastStateContext)
 }

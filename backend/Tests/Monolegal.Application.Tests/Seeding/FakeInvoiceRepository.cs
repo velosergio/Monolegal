@@ -44,6 +44,9 @@ internal sealed class FakeInvoiceRepository : IInvoiceRepository
     public Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken ct = default)
         => Task.FromResult(_store.Where(i => i.Status == status));
 
+    public Task<IEnumerable<Invoice>> GetByNotificationOutcomeAsync(NotificationOutcome outcome, CancellationToken ct = default)
+        => Task.FromResult(_store.Where(i => i.LastNotificationOutcome == outcome));
+
     public Task<long> CountAsync(CancellationToken ct = default)
         => Task.FromResult((long)_store.Count);
 

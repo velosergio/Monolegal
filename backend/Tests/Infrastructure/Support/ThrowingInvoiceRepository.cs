@@ -50,6 +50,9 @@ public sealed class ThrowingInvoiceRepository : IInvoiceRepository
     public Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken cancellationToken = default)
         => _inner.GetByStatusAsync(status, cancellationToken);
 
+    public Task<IEnumerable<Invoice>> GetByNotificationOutcomeAsync(NotificationOutcome outcome, CancellationToken cancellationToken = default)
+        => _inner.GetByNotificationOutcomeAsync(outcome, cancellationToken);
+
     public Task<long> CountAsync(CancellationToken cancellationToken = default)
         => _inner.CountAsync(cancellationToken);
 

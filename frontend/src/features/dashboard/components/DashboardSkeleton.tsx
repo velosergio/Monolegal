@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 /** Esqueleto de carga del dashboard (forma de tarjetas + gráficos). */
 export function DashboardSkeleton() {
   return (
-    <div role="status" aria-label="Cargando estadísticas" className="flex flex-col gap-6">
+    <output aria-label="Cargando estadísticas" className="flex flex-col gap-6">
       <span className="sr-only">Cargando estadísticas…</span>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[0, 1, 2].map((index) => (
@@ -32,6 +32,6 @@ export function DashboardSkeleton() {
           </Card>
         ))}
       </div>
-    </div>
+    </output>
   )
 }

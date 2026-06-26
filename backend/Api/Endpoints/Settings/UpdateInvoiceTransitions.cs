@@ -18,7 +18,7 @@ public static class UpdateInvoiceTransitions
             var settings = await repository.GetSettingsAsync();
             settings.UpdateTransitions(request);
             await repository.UpdateSettingsAsync(settings);
-            
+
             return Results.NoContent();
         })
         .WithName("UpdateInvoiceTransitions")

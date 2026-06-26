@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-25
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: User description: "Quiero que uses shadcn para construir el panel de administración, quiero que sea con animaciones con motion, transiciones suaves, skeletons y buenas prácticas, quiero 100 de 100 en react doctor de forma honesta" (roadmap.md, Specs 4.1 Layout Base y 4.2 Invoices Page - Listado)
 

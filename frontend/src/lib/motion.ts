@@ -25,12 +25,6 @@ export const fadeInUp: Variants = {
   visible: { opacity: 1, y: 0 },
 }
 
-/** Entrada de una barra de gráfico: crece desde 0 en el eje correspondiente. */
-export const growBar: Variants = {
-  hidden: { scaleX: 0 },
-  visible: { scaleX: 1 },
-}
-
 /**
  * Entrada/salida de una notificación tipo *toast* (usar con `AnimatePresence`).
  * Con movimiento reducido se combina con `motionTransition(reduced)` (duración 0).

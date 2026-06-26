@@ -86,6 +86,14 @@ public sealed class MongoInvoiceRepository : IInvoiceRepository
             .ConfigureAwait(false);
     }
 
+    public async Task<IEnumerable<Invoice>> GetByNotificationOutcomeAsync(NotificationOutcome outcome, CancellationToken cancellationToken = default)
+    {
+        return await _collection
+            .Find(x => x.LastNotificationOutcome == outcome)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     public async Task<long> CountAsync(CancellationToken cancellationToken = default)
     {
         return await _collection

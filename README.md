@@ -305,16 +305,42 @@ Características:
 
 # Correos
 
-Proveedores:
+Configuración gestionada desde la vista `/configuracion` (spec 017) y persistida vía API.
 
-* Resend
-* SMTP
+Proveedores (conmutables en runtime, sin reinicio):
 
-Plantillas:
+* SMTP (MailKit)
+* Resend (API REST)
 
-* HTML
-* WYSIWYG
-* Variables dinámicas
+Política de secretos (Constitución): las credenciales **solo** viven en variables de
+entorno, nunca en la base de datos ni en respuestas de la API. La configuración no secreta
+(proveedor activo, remitente, host/puerto SMTP, dominio Resend, plantillas) se persiste en
+`SystemSettings`.
+
+Variables de entorno (secretos y defaults de arranque):
+
+```dotenv
+# SMTP
+Email__Host=
+Email__Port=587
+Email__Username=
+Email__Password=            # SECRETO (solo entorno)
+Email__UseStartTls=true
+Email__From=no-reply@monolegal.local
+Email__FromName=Monolegal
+# Resend
+Email__Resend__ApiKey=      # SECRETO (solo entorno)
+Email__Resend__FromDomain=
+```
+
+La vista de configuración expone:
+
+* Selección de proveedor + estado de la credencial (sin mostrar el valor) y botón de validación.
+* Plantillas por tipo (`reminder`, `paymentconfirmation`, `deactivationnotice`) con catálogo
+  cerrado de variables `{{...}}`, vista previa y restablecer a default.
+* Envío de correo de prueba con el proveedor y la plantilla reales.
+* Herramientas globales: reenviar notificaciones fallidas y sanear notificaciones atascadas
+  (con confirmación explícita).
 
 ---
 

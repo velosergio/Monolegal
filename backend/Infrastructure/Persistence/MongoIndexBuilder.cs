@@ -52,6 +52,10 @@ public sealed class MongoIndexBuilder(
             new CreateIndexModel<Invoice>(
                 Builders<Invoice>.IndexKeys.Ascending(x => x.LastStatusTransitionAt),
                 new CreateIndexOptions { Background = false, Name = "LastStatusTransitionAt_asc" }),
+
+            new CreateIndexModel<Invoice>(
+                Builders<Invoice>.IndexKeys.Ascending(x => x.LastNotificationOutcome),
+                new CreateIndexOptions { Background = false, Name = "LastNotificationOutcome_asc" }),
         };
 
         foreach (var model in models)

@@ -30,16 +30,17 @@ export function DonutChart({ data, total, ariaLabel, centerLabel = 'Total' }: Do
   const reduced = useReducedMotion()
   const sum = total ?? data.reduce((acc, datum) => acc + datum.value, 0)
 
+  // Una sola pasada: filtramos valores positivos y calculamos el segmento a la vez.
   let cumulative = 0
-  const segments = data
-    .filter((datum) => datum.value > 0)
-    .map((datum, index) => {
-      const fraction = sum > 0 ? datum.value / sum : 0
-      const arc = fraction * CIRCUMFERENCE
-      const rotation = (cumulative / (sum || 1)) * 360 - 90
-      cumulative += datum.value
-      return { datum, index, arc, rotation }
-    })
+  const segments: { datum: ChartDatum; index: number; arc: number; rotation: number }[] = []
+  for (const datum of data) {
+    if (datum.value <= 0) continue
+    const fraction = sum > 0 ? datum.value / sum : 0
+    const arc = fraction * CIRCUMFERENCE
+    const rotation = (cumulative / (sum || 1)) * 360 - 90
+    cumulative += datum.value
+    segments.push({ datum, index: segments.length, arc, rotation })
+  }
 
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-6">

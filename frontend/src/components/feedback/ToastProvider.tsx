@@ -40,14 +40,18 @@ function createId(): string {
  */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastMessage[]>([])
-  const timers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
+  // Inicialización perezosa: el `Map` se crea una sola vez (no en cada render).
+  const timers = useRef<Map<string, ReturnType<typeof setTimeout>> | null>(null)
+  if (timers.current === null) {
+    timers.current = new Map()
+  }
 
   const dismiss = useCallback((id: string) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id))
-    const timer = timers.current.get(id)
+    const timer = timers.current?.get(id)
     if (timer) {
       clearTimeout(timer)
-      timers.current.delete(id)
+      timers.current?.delete(id)
     }
   }, [])
 
@@ -57,7 +61,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       setToasts((prev) => [...prev, { id, variant, message, createdAt: Date.now() }])
       if (variant === 'success') {
         const timer = setTimeout(() => dismiss(id), SUCCESS_TIMEOUT_MS)
-        timers.current.set(id, timer)
+        timers.current?.set(id, timer)
       }
     },
     [dismiss]

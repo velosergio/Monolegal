@@ -16,11 +16,14 @@ vi.stubGlobal(
   )
 )
 
-// jsdom/Node no siempre expone localStorage; lo polirellenamos en memoria para
-// que el estado persistido (tema, sidebar colapsado) no rompa los tests.
-if (!globalThis.localStorage) {
+// Node 22+ expone un `localStorage` global experimental cuyo getter lanza
+// "localStorage is not available because --localstorage-file was not provided"
+// con solo leerlo. Por eso evitamos comprobar `globalThis.localStorage` y
+// siempre instalamos una implementación en memoria, para que el estado
+// persistido (tema, sidebar colapsado) no rompa los tests.
+const createMemoryStorage = (): Storage => {
   const store = new Map<string, string>()
-  vi.stubGlobal('localStorage', {
+  return {
     getItem: (key: string) => (store.has(key) ? (store.get(key) as string) : null),
     setItem: (key: string, value: string) => {
       store.set(key, String(value))
@@ -35,8 +38,10 @@ if (!globalThis.localStorage) {
     get length() {
       return store.size
     },
-  })
+  } as Storage
 }
+
+vi.stubGlobal('localStorage', createMemoryStorage())
 
 // jsdom no implementa matchMedia (lo usa Motion para prefers-reduced-motion).
 // Por defecto reportamos "sin preferencia de movimiento reducido".

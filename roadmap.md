@@ -246,7 +246,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🎨 Fase 4: Frontend (React UI) `5/5 specs`
+## 🎨 Fase 4: Frontend (React UI) `5/10 specs`
 
 ### Spec 4.1: Layout Base ✅ Implementada (feature 014-admin-panel-invoices)
 
@@ -302,6 +302,73 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ POST a `/api/invoices/transition/{id}`
 - ✅ Toast de éxito/error
 - ✅ Tabla y modal se actualizan
+
+### Spec 4.6: Vista Configuración + Resend API + Tools
+
+**GIVEN** usuario en `/configuracion`  
+**WHEN** página carga  
+**THEN**:
+
+- ✅ Sección de configuración de Resend API (API key, dominio remitente)
+- ✅ Gestión de plantillas de email (asunto, cuerpo, variables)
+- ✅ Botón de prueba para enviar email de test
+- ✅ Tools/utilidades de administración (reenvío manual, limpieza de cola)
+- ✅ Validación de credenciales con feedback (toast éxito/error)
+- ✅ Persistencia de ajustes vía API
+
+### Spec 4.7: CRUD Facturas
+
+**GIVEN** usuario en `/invoices`  
+**WHEN** gestiona facturas  
+**THEN**:
+
+- ✅ Crear factura (form con validación: cliente, monto, items, vencimiento)
+- ✅ Editar factura existente (datos no bloqueados por estado)
+- ✅ Eliminar factura (confirmación modal)
+- ✅ POST/PUT/DELETE a `/api/invoices`
+- ✅ Toast de éxito/error en cada operación
+- ✅ Tabla y dashboard se actualizan vía TanStack Query
+
+### Spec 4.8: CRUD Clientes
+
+**GIVEN** usuario en `/clientes`  
+**WHEN** gestiona clientes  
+**THEN**:
+
+- ✅ Listado de clientes con búsqueda y paginación
+- ✅ Crear cliente (form con validación: nombre, email, datos de contacto)
+- ✅ Editar cliente existente
+- ✅ Eliminar cliente (confirmación modal, valida facturas asociadas)
+- ✅ POST/PUT/DELETE a `/api/clients`
+- ✅ Toast de éxito/error y refresco automático del listado
+
+### Spec 4.9: Dashboard UI/UX
+
+**GIVEN** usuario en `/dashboard`  
+**WHEN** revisa métricas  
+**THEN**:
+
+- ✅ Layout refinado con jerarquía visual clara
+- ✅ Gráficos interactivos (donut, barras, tendencias)
+- ✅ Filtros por rango de fechas y estado
+- ✅ Animaciones (motion) suaves y consistentes
+- ✅ Diseño responsive (mobile/desktop)
+- ✅ Estados de carga (skeletons) y vacíos (empty states)
+
+### Spec 4.10: Vista Envíos
+
+**GIVEN** usuario en `/envios`  
+**WHEN** página carga  
+**THEN**:
+
+- ✅ Listado de facturas con su estado de envío (pendiente, enviado, fallido, reintentando)
+- ✅ Columnas: ID, Cliente, Email, Estado de envío, Último intento, Reintentos
+- ✅ Filtro por estado de envío y búsqueda por cliente/email
+- ✅ Acciones manuales: reenviar email, reintentar fallidos, cancelar envío
+- ✅ POST a endpoints de reenvío/reintento (`/api/invoices/{id}/resend`)
+- ✅ Indicadores visuales (badges de color) por estado de envío
+- ✅ Toast de éxito/error y refresco automático vía TanStack Query
+- ✅ Estados de carga (skeletons) y vacíos (empty states)
 
 ---
 
@@ -461,7 +528,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 | 1    | 1.1-1.4 | 4/4 | ✅ |
 | 2    | 2.1-2.2 | 2/2 | ✅ |
 | 3    | 3.1-3.4 | 4/4 | ✅ |
-| 4    | 4.1-4.5 | 5/5 | ✅ |
+| 4    | 4.1-4.5 | 510 | 🟡 |
 | 5    | 5.1-5.6 | 0/6 | ⬜ |
 | 6    | 6.1-6.6 | 0/6 | ⬜ |
 

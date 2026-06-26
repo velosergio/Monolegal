@@ -65,22 +65,38 @@ public static class DependencyInjection
         configuration.GetSection(InvoiceTransitionsWorkerOptions.SectionName).Bind(workerOptions);
         services.AddSingleton(Microsoft.Extensions.Options.Options.Create(workerOptions));
 
-        // Email notifications on transition (spec 013).
-        // EmailOptions desde la sección "Email" (credenciales SMTP por variables de entorno).
+        // Email notifications on transition (spec 013) + configuración multi-proveedor (spec 017).
+        // EmailOptions desde la sección "Email": SOLO secretos y defaults de arranque (entorno).
         var emailOptions = new EmailOptions();
         configuration.GetSection(EmailOptions.SectionName).Bind(emailOptions);
         services.AddSingleton(Microsoft.Extensions.Options.Options.Create(emailOptions));
         services.AddSingleton<EmailTemplateProvider>();
 
-        // Selección del emisor: SMTP si hay host configurado; en caso contrario NoOp (Dev/CI).
-        if (!string.IsNullOrWhiteSpace(emailOptions.Host))
-            services.AddSingleton<IEmailService, SmtpEmailService>();
+        // HttpClient para el proveedor Resend (API REST).
+        services.AddHttpClient("resend");
+
+        // Proveedores concretos, factory y estado de credenciales (spec 017, D1/FR-008).
+        services.AddSingleton<IEmailProvider, SmtpEmailProvider>();
+        services.AddSingleton<IEmailProvider, ResendEmailProvider>();
+        services.AddSingleton<IEmailProviderFactory, EmailProviderFactory>();
+        services.AddSingleton<IEmailCredentialStatus, EmailCredentialStatusService>();
+
+        // Emisor de alto nivel: si hay algún proveedor configurado (host SMTP o API key Resend),
+        // se usa el servicio respaldado por settings (proveedor activo en runtime). En Dev/CI sin
+        // proveedor configurado se mantiene NoOp para no requerir un servidor real.
+        var anyProviderConfigured = !string.IsNullOrWhiteSpace(emailOptions.Host)
+            || !string.IsNullOrWhiteSpace(emailOptions.Resend.ApiKey);
+        if (anyProviderConfigured)
+            services.AddSingleton<IEmailService, SettingsBackedEmailService>();
         else
             services.AddSingleton<IEmailService, NoOpEmailService>();
 
         // Resolución del correo del cliente y orquestador de notificación en transición.
         services.AddSingleton<IClientEmailResolver, ConfiguredClientEmailResolver>();
         services.AddSingleton<IInvoiceTransitionNotifier, InvoiceTransitionNotifier>();
+
+        // Herramientas globales de administración de envíos (spec 017, US4).
+        services.AddSingleton<IEmailAdminService, EmailAdminService>();
 
         // Background worker: evaluates and applies invoice status transitions periodically.
         services.AddHostedService<InvoiceTransitionsWorker>();

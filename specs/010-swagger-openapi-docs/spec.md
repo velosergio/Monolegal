@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-25
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: Descripción del usuario (Spec 2.2): Documentación interactiva Swagger/OpenAPI accesible en `/swagger`. Dado que los endpoints están implementados, al acceder a `/swagger` se deben mostrar todos los endpoints documentados, los modelos y DTO visibles, y la funcionalidad "Try it out" operativa.
 

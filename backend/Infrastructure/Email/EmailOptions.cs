@@ -29,4 +29,24 @@ public sealed class EmailOptions
 
     /// <summary>Usar STARTTLS al conectar.</summary>
     public bool UseStartTls { get; set; } = true;
+
+    /// <summary>
+    /// Opciones del proveedor Resend (spec 017). La API key es un secreto: solo por
+    /// variables de entorno (<c>Email__Resend__ApiKey</c>), nunca persistida en BD.
+    /// </summary>
+    public ResendOptions Resend { get; set; } = new();
+}
+
+/// <summary>
+/// Opciones del proveedor Resend (spec 017, D8). <see cref="ApiKey"/> es secreta y se lee
+/// solo del entorno; <see cref="FromDomain"/> es un parámetro no secreto que también puede
+/// editarse desde la vista de configuración (la BD tiene prioridad cuando existe).
+/// </summary>
+public sealed class ResendOptions
+{
+    /// <summary>API key de Resend (SECRETA; solo entorno: <c>Email__Resend__ApiKey</c>).</summary>
+    public string? ApiKey { get; set; }
+
+    /// <summary>Dominio remitente verificado en Resend (no secreto).</summary>
+    public string? FromDomain { get; set; }
 }

@@ -22,6 +22,14 @@ public interface IInvoiceRepository
     Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Returns all invoices whose last email notification ended with the given
+    /// <paramref name="outcome"/>. Backs the global admin tools (spec 017, US4): the resend tool
+    /// queries <see cref="NotificationOutcome.Failed"/> and the sanitize tool queries
+    /// <see cref="NotificationOutcome.None"/>. Supported by the <c>LastNotificationOutcome</c> index.
+    /// </summary>
+    Task<IEnumerable<Invoice>> GetByNotificationOutcomeAsync(NotificationOutcome outcome, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Returns the total number of invoices in the collection. Used by the
     /// development data seeder to verify the "empty database" precondition and
     /// guarantee idempotency (only seeds when the count is zero). See

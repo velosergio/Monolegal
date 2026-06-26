@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-25
 
-**Status**: Borrador
+**Status**: Activo
 
 **Input**: User description: "### Spec 3.2: Hosted Service - State Transitions — worker corriendo que se ejecuta cada X minutos (configurable), busca facturas en `primerrecordatorio` con días suficientes sin recordatorio, busca facturas en `segundorecordatorio` con días suficientes sin recordatorio, ejecuta transiciones automáticas y registra la ejecución en logs."
 

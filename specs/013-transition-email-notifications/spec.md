@@ -4,7 +4,7 @@
 
 **Creado**: 2026-06-25
 
-**Estado**: Draft
+**Estado**: Activo
 
 **Entrada**: User description: "### Spec 3.3: Email Sending on Transition — GIVEN transición de estado WHEN worker procesa factura THEN envía correo con template según nuevo estado, actualiza `LastReminderSentAt`, incrementa `RemindersCount`, registra éxito/error en BD. ### Spec 3.4: Logging & Monitoring — GIVEN worker ejecutándose WHEN procesa facturas THEN Serilog registra timestamp, factura, estado anterior/nuevo, resultado email; logs persistidos (file o cloud); estructurado en formato JSON."
 

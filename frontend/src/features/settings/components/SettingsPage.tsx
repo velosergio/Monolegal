@@ -2,6 +2,10 @@ import { type LucideIcon, Monitor, Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/components/theme-provider'
 import { useDocumentTitle } from '@/hooks/use-document-title'
 import { cn } from '@/lib/utils'
+import { AdminToolsSection } from './AdminToolsSection'
+import { EmailProviderSection } from './EmailProviderSection'
+import { EmailTemplatesSection } from './EmailTemplatesSection'
+import { TestEmailSection } from './TestEmailSection'
 
 type ThemeOption = 'light' | 'dark' | 'system'
 
@@ -62,6 +66,11 @@ export function SettingsPage() {
           </div>
         </fieldset>
       </div>
+
+      <EmailProviderSection />
+      <EmailTemplatesSection />
+      <TestEmailSection />
+      <AdminToolsSection />
     </section>
   )
 }

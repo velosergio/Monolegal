@@ -49,6 +49,9 @@ public class InvoiceRepositoryContractTests
         public Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken ct = default)
             => Task.FromResult(_store.Values.Where(i => i.Status == status));
 
+        public Task<IEnumerable<Invoice>> GetByNotificationOutcomeAsync(NotificationOutcome outcome, CancellationToken ct = default)
+            => Task.FromResult(_store.Values.Where(i => i.LastNotificationOutcome == outcome));
+
         public Task<long> CountAsync(CancellationToken ct = default)
             => Task.FromResult((long)_store.Count);
 

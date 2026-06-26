@@ -4,7 +4,7 @@
 
 **Creado**: 2026-06-25
 
-**Estado**: Draft
+**Estado**: Activo
 
 **Entrada**: User description: "### Spec 3.1: Email Service Interface — GIVEN necesidad de enviar correos WHEN se define contrato THEN interfaz `IEmailService`: SendReminderAsync(string clientEmail, Invoice invoice), SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)"
 
