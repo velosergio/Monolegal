@@ -81,6 +81,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
             <NavLink
               key={to}
               to={to}
+              end={to === '/'}
               onClick={onNavigate}
               title={collapsed ? label : undefined}
               className={({ isActive }) =>

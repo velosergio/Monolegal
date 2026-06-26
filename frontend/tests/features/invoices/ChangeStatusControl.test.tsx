@@ -38,7 +38,7 @@ describe('ChangeStatusControl', () => {
     expect(screen.queryByRole('option', { name: 'Pendiente' })).not.toBeInTheDocument()
   })
 
-  it('en estado terminal (sin transiciones) no muestra el botón de cambio', () => {
+  it('en estado terminal (sin transiciones) no muestra el formulario de cambio', () => {
     renderWithQuery(
       <ChangeStatusControl
         invoiceId="abcdef1234567890"
@@ -51,7 +51,9 @@ describe('ChangeStatusControl', () => {
     expect(screen.getByText(/no admite cambios de estado/i)).toBeInTheDocument()
   })
 
-  it('el botón de cambio está deshabilitado hasta elegir un destino', () => {
+  it('al confirmar sin selección muestra validación y no realiza ninguna petición', async () => {
+    const fetchMock = mockFetchJson(updated)
+    const user = userEvent.setup()
     renderWithQuery(
       <ChangeStatusControl
         invoiceId="abcdef1234567890"
@@ -60,10 +62,13 @@ describe('ChangeStatusControl', () => {
       />
     )
 
-    expect(screen.getByRole('button', { name: /cambiar estado/i })).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: /cambiar estado/i }))
+
+    expect(await screen.findByText(/selecciona un estado destino/i)).toBeInTheDocument()
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
-  it('aplica el cambio de estado seleccionado', async () => {
+  it('aplica el cambio seleccionado y notifica el éxito con un toast', async () => {
     const fetchMock = mockFetchJson(updated)
     const user = userEvent.setup()
     renderWithQuery(
@@ -84,9 +89,11 @@ describe('ChangeStatusControl', () => {
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit]
     expect(url).toContain('/api/invoices/transition/abcdef1234567890')
     expect(JSON.parse(init.body as string)).toEqual({ newStatus: 'segundorecordatorio' })
+
+    expect(await screen.findByText(/estado actualizado a «2do Recordatorio»/i)).toBeInTheDocument()
   })
 
-  it('muestra un mensaje de error legible ante un 400', async () => {
+  it('ante un 400 muestra un toast de error y conserva el mensaje inline', async () => {
     mockFetchJson({ error: 'Transición no permitida' }, { ok: false, status: 400 })
     const user = userEvent.setup()
     renderWithQuery(
@@ -101,6 +108,8 @@ describe('ChangeStatusControl', () => {
     await user.click(await screen.findByRole('option', { name: '2do Recordatorio' }))
     await user.click(screen.getByRole('button', { name: /cambiar estado/i }))
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(/no se pudo cambiar el estado/i)
+    // El toast (role alert) y el mensaje inline persistente comparten el texto.
+    const matches = await screen.findAllByText(/transición no permitida/i)
+    expect(matches.length).toBeGreaterThanOrEqual(2)
   })
 })

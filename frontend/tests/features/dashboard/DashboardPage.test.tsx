@@ -22,15 +22,16 @@ describe('DashboardPage', () => {
     mockFetchJson(stats)
     renderWithQuery(<DashboardPage />)
 
-    expect(await screen.findByText('100')).toBeInTheDocument()
-    expect(screen.getByText(/total de facturas/i)).toBeInTheDocument()
+    expect(await screen.findByText(/total de facturas/i)).toBeInTheDocument()
+    // El total aparece en la tarjeta y en el centro del donut.
+    expect(screen.getAllByText('100').length).toBeGreaterThanOrEqual(1)
   })
 
   it('muestra el indicador de último refresh con botón de actualizar', async () => {
     mockFetchJson(stats)
     renderWithQuery(<DashboardPage />)
 
-    await screen.findByText('100')
+    await screen.findByText(/total de facturas/i)
     expect(screen.getByText(/actualizado/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /actualizar/i })).toBeInTheDocument()
   })

@@ -246,7 +246,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🎨 Fase 4: Frontend (React UI) `4/6 specs`
+## 🎨 Fase 4: Frontend (React UI) `5/5 specs`
 
 ### Spec 4.1: Layout Base ✅ Implementada (feature 014-admin-panel-invoices)
 
@@ -292,7 +292,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Gráficos (motion animados)
 - ✅ Último refresh mostrado
 
-### Spec 4.5: Form - Manual State Transition
+### Spec 4.5: Form - Manual State Transition ✅ Implementada (feature 016-transition-form-donut-dashboard)
 
 **GIVEN** modal de detalle abierto  
 **WHEN** usuario selecciona nuevo estado y confirma  
@@ -305,7 +305,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🧪 Fase 5: Testing & Quality `0/5 specs`
+## 🧪 Fase 5: Testing & Quality `0/6 specs`
 
 ### Spec 5.1: Unit Tests - Domain
 
@@ -362,6 +362,20 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ React Doctor sin warnings
 - ✅ No console.log en producción
 - ✅ Naming conventions consistentes
+
+### Spec 5.6: Test Runner Unificado
+
+**GIVEN** los distintos sistemas de test del proyecto (backend xUnit, frontend Vitest, E2E Playwright)  
+**WHEN** se ejecuta un único comando (ej. `npm run test:all` o script `test-all`)  
+**THEN**:
+
+- ⬜ Corre los tests del backend (`dotnet test`)
+- ⬜ Corre los tests del frontend (`vitest run`)
+- ⬜ Corre los tests E2E (`playwright test`)
+- ⬜ Ejecuta todas las suites con un solo comando multiplataforma (Windows/Linux)
+- ⬜ Reporta resultado consolidado (PASS/FAIL por suite) y código de salida agregado
+- ⬜ Falla el comando completo si cualquier suite falla (apto para CI)
+
 
 ---
 
@@ -439,15 +453,17 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ## 📊 Matriz de Aceptación
 
-| Fase | Spec | Status | Tests | Docs |
-|------|------|--------|-------|------|
-| 0    | 0.1-0.4 | ⬜ | ⬜ | ⬜ |
-| 1    | 1.1-1.4 | ⬜ | ⬜ | ⬜ |
-| 2    | 2.1-2.5 | ⬜ | ⬜ | ⬜ |
-| 3    | 3.1-3.4 | ⬜ | ⬜ | ⬜ |
-| 4    | 4.1-4.6 | ⬜ | ⬜ | ⬜ |
-| 5    | 5.1-5.5 | ⬜ | ⬜ | ⬜ |
-| 6    | 6.1-6.6 | ⬜ | ⬜ | ⬜ |
+> Leyenda: ✅ Hecho · 🟡 En progreso · ⬜ Pendiente
+
+| Fase | Spec | Progreso | Status |
+|------|------|----------|--------|
+| 0    | 0.1-0.4 | 4/4 | ✅ |
+| 1    | 1.1-1.4 | 4/4 | ✅ |
+| 2    | 2.1-2.2 | 2/2 | ✅ |
+| 3    | 3.1-3.4 | 4/4 | ✅ |
+| 4    | 4.1-4.5 | 5/5 | ✅ |
+| 5    | 5.1-5.6 | 0/6 | ⬜ |
+| 6    | 6.1-6.6 | 0/6 | ⬜ |
 
 ---
 

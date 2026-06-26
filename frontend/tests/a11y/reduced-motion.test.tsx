@@ -2,7 +2,14 @@ import { screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { InvoicesPage } from '@/features/invoices/components/InvoicesPage'
-import { DURATION, motionTransition, REDUCED_TRANSITION } from '@/lib/motion'
+import {
+  DURATION,
+  donutSweepTransition,
+  motionTransition,
+  REDUCED_TRANSITION,
+  staggerContainer,
+  toastInOut,
+} from '@/lib/motion'
 import { mockFetchJson, renderWithQuery } from '../test-utils'
 
 describe('Movimiento reducido', () => {
@@ -13,6 +20,20 @@ describe('Movimiento reducido', () => {
 
   it('motionTransition usa la duración base cuando no hay reducción', () => {
     expect(motionTransition(false).duration).toBe(DURATION.base)
+  })
+
+  it('donutSweepTransition es instantánea con movimiento reducido y animada sin reducción', () => {
+    expect(donutSweepTransition(true)).toEqual(REDUCED_TRANSITION)
+    expect(donutSweepTransition(true).duration).toBe(0)
+    expect(donutSweepTransition(false).duration).toBe(DURATION.slow)
+  })
+
+  it('toastInOut define estados de entrada/salida y staggerContainer escalona a sus hijos', () => {
+    expect(toastInOut.hidden).toBeDefined()
+    expect(toastInOut.visible).toBeDefined()
+    expect(toastInOut.exit).toBeDefined()
+    const visible = staggerContainer.visible as { transition: { staggerChildren: number } }
+    expect(visible.transition.staggerChildren).toBeGreaterThan(0)
   })
 
   it('la página se monta correctamente con prefers-reduced-motion activo', async () => {

@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { type RenderOptions, render } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 import { vi } from 'vitest'
+import { ToastProvider } from '@/components/feedback/ToastProvider'
+import { ToastViewport } from '@/components/feedback/ToastViewport'
 
 /**
  * Crea un QueryClient aislado por test (sin reintentos ni caché compartida) para
@@ -17,7 +19,14 @@ function createTestQueryClient(): QueryClient {
 }
 
 function Wrapper({ children, client }: { children: ReactNode; client: QueryClient }) {
-  return <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  return (
+    <QueryClientProvider client={client}>
+      <ToastProvider>
+        {children}
+        <ToastViewport />
+      </ToastProvider>
+    </QueryClientProvider>
+  )
 }
 
 /**

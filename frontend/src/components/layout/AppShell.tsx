@@ -1,5 +1,6 @@
 import { Menu } from 'lucide-react'
 import { type ReactNode, useCallback, useState } from 'react'
+import { ToastViewport } from '@/components/feedback/ToastViewport'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -90,6 +91,8 @@ export function AppShell({ children }: AppShellProps) {
           {children}
         </main>
       </div>
+
+      <ToastViewport />
     </div>
   )
 }

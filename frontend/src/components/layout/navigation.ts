@@ -13,7 +13,7 @@ export interface NavItem {
  * "Dashboard").
  */
 export const NAV_ITEMS: readonly NavItem[] = [
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard, disabled: false },
   { to: '/facturas', label: 'Facturas', icon: FileText, disabled: false },
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, disabled: false },
   { to: '/configuracion', label: 'Configuración', icon: Settings, disabled: false },
 ]

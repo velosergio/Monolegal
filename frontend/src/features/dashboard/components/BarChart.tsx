@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'motion/react'
+import { domAnimation, LazyMotion, m, useReducedMotion } from 'motion/react'
 import { chartTransition } from '@/lib/motion'
 import type { ChartDatum } from '../types'
 
@@ -24,38 +24,42 @@ export function BarChart({ data, ariaLabel }: BarChartProps) {
   }
 
   return (
-    <ul aria-label={ariaLabel} className="flex flex-col gap-3">
-      {data.map((datum, index) => {
-        const ratio = max > 0 ? datum.value / max : 0
-        return (
-          <li key={datum.label} className="grid grid-cols-[8rem_1fr_auto] items-center gap-3">
-            <span className="truncate text-sm text-foreground" title={datum.label}>
-              {datum.label}
-            </span>
-            <svg
-              role="presentation"
-              className="h-4 w-full overflow-visible"
-              preserveAspectRatio="none"
-              viewBox="0 0 100 10"
-            >
-              <rect x={0} y={0} width={100} height={10} rx={2} className="fill-muted" />
-              <motion.rect
-                x={0}
-                y={0}
-                width={Math.max(ratio * 100, datum.value > 0 ? 1 : 0)}
-                height={10}
-                rx={2}
-                fill={datum.color ?? DEFAULT_BAR_COLOR}
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={chartTransition(reduced, index)}
-                style={{ transformOrigin: 'left center' }}
-              />
-            </svg>
-            <span className="text-sm font-medium tabular-nums text-foreground">{datum.value}</span>
-          </li>
-        )
-      })}
-    </ul>
+    <LazyMotion features={domAnimation}>
+      <ul aria-label={ariaLabel} className="flex flex-col gap-3">
+        {data.map((datum, index) => {
+          const ratio = max > 0 ? datum.value / max : 0
+          return (
+            <li key={datum.label} className="grid grid-cols-[8rem_1fr_auto] items-center gap-3">
+              <span className="truncate text-sm text-foreground" title={datum.label}>
+                {datum.label}
+              </span>
+              <svg
+                role="presentation"
+                className="h-4 w-full overflow-visible"
+                preserveAspectRatio="none"
+                viewBox="0 0 100 10"
+              >
+                <rect x={0} y={0} width={100} height={10} rx={2} className="fill-muted" />
+                <m.rect
+                  x={0}
+                  y={0}
+                  width={Math.max(ratio * 100, datum.value > 0 ? 1 : 0)}
+                  height={10}
+                  rx={2}
+                  fill={datum.color ?? DEFAULT_BAR_COLOR}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={chartTransition(reduced, index)}
+                  style={{ transformOrigin: 'left center' }}
+                />
+              </svg>
+              <span className="text-sm font-medium tabular-nums text-foreground">
+                {datum.value}
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+    </LazyMotion>
   )
 }
