@@ -35,8 +35,6 @@ describe('ClientsPage', () => {
     mockFetchJson({ data: [], total: 0, pageSize: 10 })
     renderWithQuery(<ClientsPage />)
 
-    await waitFor(() =>
-      expect(screen.getByText('No se encontraron clientes.')).toBeInTheDocument()
-    )
+    await waitFor(() => expect(screen.getByText('No se encontraron clientes.')).toBeInTheDocument())
   })
 })

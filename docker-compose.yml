@@ -31,6 +31,17 @@ services:
       ASPNETCORE_URLS: http://+:5000
       MONGODB_URI: ${MONGODB_URI:-mongodb://root:example_dev_password@mongo:27017/monolegal_dev?authSource=admin}
       LOG_LEVEL: ${LOG_LEVEL:-Information}
+      # Email: proveedor activo y credenciales (Resend / SMTP). Secretas: solo por entorno.
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-console}
+      Email__Resend__ApiKey: ${Email__Resend__ApiKey:-}
+      Email__Resend__FromDomain: ${Email__Resend__FromDomain:-}
+      Email__Host: ${Email__Host:-}
+      Email__Port: ${Email__Port:-587}
+      Email__Username: ${Email__Username:-}
+      Email__Password: ${Email__Password:-}
+      Email__UseStartTls: ${Email__UseStartTls:-true}
+      Email__From: ${Email__From:-no-reply@monolegal.local}
+      Email__FromName: ${Email__FromName:-Monolegal}
     depends_on:
       mongo:
         condition: service_healthy
@@ -52,6 +63,16 @@ services:
       MONGODB_URI: ${MONGODB_URI:-mongodb://root:example_dev_password@mongo:27017/monolegal_dev?authSource=admin}
       LOG_LEVEL: ${LOG_LEVEL:-Information}
       EMAIL_PROVIDER: ${EMAIL_PROVIDER:-console}
+      # Email: credenciales necesarias para que el worker envíe correos. Secretas: solo por entorno.
+      Email__Resend__ApiKey: ${Email__Resend__ApiKey:-}
+      Email__Resend__FromDomain: ${Email__Resend__FromDomain:-}
+      Email__Host: ${Email__Host:-}
+      Email__Port: ${Email__Port:-587}
+      Email__Username: ${Email__Username:-}
+      Email__Password: ${Email__Password:-}
+      Email__UseStartTls: ${Email__UseStartTls:-true}
+      Email__From: ${Email__From:-no-reply@monolegal.local}
+      Email__FromName: ${Email__FromName:-Monolegal}
     depends_on:
       mongo:
         condition: service_healthy

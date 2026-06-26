@@ -1,7 +1,8 @@
 import { Plus, Trash2 } from 'lucide-react'
+import { useId } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import type { InvoiceItemForm } from '../types'
+import { createInvoiceItemForm, type InvoiceItemForm } from '../types'
 import { formatAmount } from '../utils'
 
 interface InvoiceItemsEditorProps {
@@ -22,13 +23,14 @@ function lineSubtotal(item: InvoiceItemForm): number {
  * subtotal por línea y el total general, ambos derivados y de solo lectura.
  */
 export function InvoiceItemsEditor({ items, onChange, error, disabled }: InvoiceItemsEditorProps) {
+  const fieldId = useId()
   const total = items.reduce((sum, item) => sum + lineSubtotal(item), 0)
 
   const updateItem = (index: number, patch: Partial<InvoiceItemForm>) => {
     onChange(items.map((item, i) => (i === index ? { ...item, ...patch } : item)))
   }
 
-  const addItem = () => onChange([...items, { description: '', quantity: 1, unitPrice: 0 }])
+  const addItem = () => onChange([...items, createInvoiceItemForm()])
   const removeItem = (index: number) => onChange(items.filter((_, i) => i !== index))
 
   return (
@@ -43,20 +45,27 @@ export function InvoiceItemsEditor({ items, onChange, error, disabled }: Invoice
 
       <div className="flex flex-col gap-2">
         {items.map((item, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: las líneas no tienen id estable en el formulario
-          <div key={index} className="flex items-end gap-2">
-            <label className="flex flex-1 flex-col gap-1 text-xs">
+          <div key={item.rowId} className="flex items-end gap-2">
+            <label
+              htmlFor={`${fieldId}-${item.rowId}-desc`}
+              className="flex flex-1 flex-col gap-1 text-xs"
+            >
               <span className="text-muted-foreground">Descripción</span>
               <Input
+                id={`${fieldId}-${item.rowId}-desc`}
                 value={item.description}
                 onChange={(e) => updateItem(index, { description: e.target.value })}
                 disabled={disabled}
                 aria-label={`Descripción de la línea ${index + 1}`}
               />
             </label>
-            <label className="flex w-20 flex-col gap-1 text-xs">
+            <label
+              htmlFor={`${fieldId}-${item.rowId}-qty`}
+              className="flex w-20 flex-col gap-1 text-xs"
+            >
               <span className="text-muted-foreground">Cant.</span>
               <Input
+                id={`${fieldId}-${item.rowId}-qty`}
                 type="number"
                 min="0"
                 step="1"
@@ -66,9 +75,13 @@ export function InvoiceItemsEditor({ items, onChange, error, disabled }: Invoice
                 aria-label={`Cantidad de la línea ${index + 1}`}
               />
             </label>
-            <label className="flex w-28 flex-col gap-1 text-xs">
+            <label
+              htmlFor={`${fieldId}-${item.rowId}-price`}
+              className="flex w-28 flex-col gap-1 text-xs"
+            >
               <span className="text-muted-foreground">Precio unit.</span>
               <Input
+                id={`${fieldId}-${item.rowId}-price`}
                 type="number"
                 min="0"
                 step="0.01"

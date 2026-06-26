@@ -316,7 +316,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Validación de credenciales con feedback (toast éxito/error)
 - ✅ Persistencia de ajustes vía API
 
-### Spec 4.7: CRUD Facturas
+### Spec 4.7: CRUD Facturas ✅ Implementada (feature 018-crud-facturas-clientes)
 
 **GIVEN** usuario en `/invoices`  
 **WHEN** gestiona facturas  
@@ -329,7 +329,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Toast de éxito/error en cada operación
 - ✅ Tabla y dashboard se actualizan vía TanStack Query
 
-### Spec 4.8: CRUD Clientes
+### Spec 4.8: CRUD Clientes ✅ Implementada (feature 018-crud-facturas-clientes)
 
 **GIVEN** usuario en `/clientes`  
 **WHEN** gestiona clientes  

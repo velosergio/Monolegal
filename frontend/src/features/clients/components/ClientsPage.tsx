@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, Plus, Search } from 'lucide-react'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useReducer, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useDocumentTitle } from '@/hooks/use-document-title'
@@ -12,6 +12,37 @@ import { DeleteClientDialog } from './DeleteClientDialog'
 const PAGE_SIZE = 10
 
 /**
+ * Estado del listado: término en edición (`searchInput`), término confirmado tras el debounce
+ * (`search`) y página actual. Están acoplados (confirmar búsqueda vuelve a la página 1), por eso
+ * se agrupan en un reducer en lugar de tres useState sueltos.
+ */
+interface ListState {
+  searchInput: string
+  search: string
+  page: number
+}
+
+type ListAction =
+  | { type: 'searchInputChanged'; value: string }
+  | { type: 'searchCommitted'; value: string }
+  | { type: 'pageChanged'; page: number }
+
+const INITIAL_LIST_STATE: ListState = { searchInput: '', search: '', page: 1 }
+
+function listReducer(state: ListState, action: ListAction): ListState {
+  switch (action.type) {
+    case 'searchInputChanged':
+      return { ...state, searchInput: action.value }
+    case 'searchCommitted':
+      return { ...state, search: action.value, page: 1 }
+    case 'pageChanged':
+      return { ...state, page: action.page }
+    default:
+      return state
+  }
+}
+
+/**
  * Página de Clientes (spec 018, US2): listado paginado con búsqueda, alta/edición/baja con
  * confirmación, toasts y refresco automático vía TanStack Query.
  */
@@ -19,9 +50,8 @@ export function ClientsPage() {
   useDocumentTitle('Clientes')
   const searchId = useId()
 
-  const [searchInput, setSearchInput] = useState('')
-  const [search, setSearch] = useState('')
-  const [page, setPage] = useState(1)
+  const [list, dispatch] = useReducer(listReducer, INITIAL_LIST_STATE)
+  const { searchInput, search, page } = list
 
   // Modo del modal de formulario: cerrado | crear | editar(cliente).
   const [formState, setFormState] = useState<{ open: boolean; client: Client | null }>({
@@ -32,10 +62,7 @@ export function ClientsPage() {
 
   // Debounce de la búsqueda (estabiliza el valor antes de consultar).
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearch(searchInput)
-      setPage(1)
-    }, 300)
+    const timer = setTimeout(() => dispatch({ type: 'searchCommitted', value: searchInput }), 300)
     return () => clearTimeout(timer)
   }, [searchInput])
 
@@ -65,7 +92,7 @@ export function ClientsPage() {
             id={searchId}
             type="search"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => dispatch({ type: 'searchInputChanged', value: e.target.value })}
             placeholder="Buscar por nombre o email…"
             aria-label="Buscar clientes"
             className="pl-9"
@@ -118,7 +145,7 @@ export function ClientsPage() {
               size="sm"
               variant="outline"
               disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              onClick={() => dispatch({ type: 'pageChanged', page: Math.max(1, page - 1) })}
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               Anterior
@@ -128,7 +155,7 @@ export function ClientsPage() {
               size="sm"
               variant="outline"
               disabled={page >= totalPages}
-              onClick={() => setPage((p) => p + 1)}
+              onClick={() => dispatch({ type: 'pageChanged', page: page + 1 })}
             >
               Siguiente
               <ChevronRight className="h-4 w-4" aria-hidden="true" />

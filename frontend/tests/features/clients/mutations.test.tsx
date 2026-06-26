@@ -49,7 +49,10 @@ describe('mutaciones de clientes', () => {
     result.current.mutate(values)
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/clients', expect.objectContaining({ method: 'POST' }))
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/clients',
+      expect.objectContaining({ method: 'POST' })
+    )
     expect(invalidateSpy.mock.calls.map((c) => JSON.stringify(c[0]?.queryKey))).toContain(
       JSON.stringify(['clients'])
     )
@@ -66,7 +69,10 @@ describe('mutaciones de clientes', () => {
     result.current.mutate({ id: 'c1', values })
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/clients/c1', expect.objectContaining({ method: 'PUT' }))
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/clients/c1',
+      expect.objectContaining({ method: 'PUT' })
+    )
   })
 
   it('useDeleteClient lanza ClientHasInvoicesError ante 409', async () => {
@@ -98,6 +104,9 @@ describe('mutaciones de clientes', () => {
     result.current.mutate('c1')
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/clients/c1', expect.objectContaining({ method: 'DELETE' }))
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/clients/c1',
+      expect.objectContaining({ method: 'DELETE' })
+    )
   })
 })

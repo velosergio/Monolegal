@@ -12,7 +12,7 @@ import type { InvoiceFormValues } from '@/features/invoices/types'
 const values: InvoiceFormValues = {
   clientId: 'c1',
   dueDate: '2026-09-01',
-  items: [{ description: 'Asesoría', quantity: 2, unitPrice: 150 }],
+  items: [{ rowId: 'row-1', description: 'Asesoría', quantity: 2, unitPrice: 150 }],
 }
 
 function wrapper(client: QueryClient) {
@@ -32,7 +32,11 @@ afterEach(() => vi.restoreAllMocks())
 describe('mutaciones de facturas', () => {
   it('useCreateInvoice hace POST y manda items sin amount; invalida listado y stats', async () => {
     const fetchMock = vi.fn((_url: string, _init: RequestInit) =>
-      Promise.resolve({ ok: true, status: 201, json: () => Promise.resolve({ id: 'i1' }) } as Response)
+      Promise.resolve({
+        ok: true,
+        status: 201,
+        json: () => Promise.resolve({ id: 'i1' }),
+      } as Response)
     )
     vi.stubGlobal('fetch', fetchMock)
     const client = newClient()
@@ -56,7 +60,11 @@ describe('mutaciones de facturas', () => {
 
   it('useUpdateInvoice hace PUT al id correcto', async () => {
     const fetchMock = vi.fn(() =>
-      Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ id: 'i1' }) } as Response)
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ id: 'i1' }),
+      } as Response)
     )
     vi.stubGlobal('fetch', fetchMock)
     const client = newClient()
@@ -65,7 +73,10 @@ describe('mutaciones de facturas', () => {
     result.current.mutate({ id: 'i1', values })
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/invoices/i1', expect.objectContaining({ method: 'PUT' }))
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/invoices/i1',
+      expect.objectContaining({ method: 'PUT' })
+    )
   })
 
   it('useDeleteInvoice hace DELETE', async () => {
@@ -79,6 +90,9 @@ describe('mutaciones de facturas', () => {
     result.current.mutate('i1')
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/invoices/i1', expect.objectContaining({ method: 'DELETE' }))
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/invoices/i1',
+      expect.objectContaining({ method: 'DELETE' })
+    )
   })
 })

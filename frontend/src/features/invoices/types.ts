@@ -123,9 +123,16 @@ export interface InvoiceItem {
 
 /** Línea de detalle editable en el formulario (sin subtotal: se deriva). */
 export interface InvoiceItemForm {
+  /** Id estable solo de cliente para usar como `key` de React; no se envía al backend. */
+  rowId: string
   description: string
   quantity: number
   unitPrice: number
+}
+
+/** Crea una línea vacía con un id estable para la lista del formulario. */
+export function createInvoiceItemForm(): InvoiceItemForm {
+  return { rowId: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0 }
 }
 
 /** Datos del formulario de factura (alta/edición). */

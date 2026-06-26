@@ -5,8 +5,8 @@ import type { InvoiceItemForm } from '@/features/invoices/types'
 
 describe('InvoiceItemsEditor', () => {
   const items: InvoiceItemForm[] = [
-    { description: 'Asesoría', quantity: 2, unitPrice: 150 },
-    { description: 'Trámite', quantity: 1, unitPrice: 50 },
+    { rowId: 'row-1', description: 'Asesoría', quantity: 2, unitPrice: 150 },
+    { rowId: 'row-2', description: 'Trámite', quantity: 1, unitPrice: 50 },
   ]
 
   it('muestra el total derivado de la suma de subtotales', () => {
