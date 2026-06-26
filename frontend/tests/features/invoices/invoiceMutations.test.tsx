@@ -31,7 +31,7 @@ afterEach(() => vi.restoreAllMocks())
 
 describe('mutaciones de facturas', () => {
   it('useCreateInvoice hace POST y manda items sin amount; invalida listado y stats', async () => {
-    const fetchMock = vi.fn(() =>
+    const fetchMock = vi.fn((_url: string, _init: RequestInit) =>
       Promise.resolve({ ok: true, status: 201, json: () => Promise.resolve({ id: 'i1' }) } as Response)
     )
     vi.stubGlobal('fetch', fetchMock)
