@@ -15,14 +15,16 @@ public sealed record InvoiceListItemDto(
     string ClientId,
     decimal Amount,
     InvoiceStatus Status,
-    DateTime CreatedAt)
+    DateTime CreatedAt,
+    DateTime LastStatusTransitionAt)
 {
     public static InvoiceListItemDto FromEntity(Invoice invoice) => new(
         invoice.Id,
         invoice.ClientId,
         invoice.Amount,
         invoice.Status,
-        invoice.CreatedAt);
+        invoice.CreatedAt,
+        invoice.LastStatusTransitionAt);
 }
 
 /// <summary>Respuesta paginada genérica: datos de la página, total de coincidencias y tamaño de página.</summary>

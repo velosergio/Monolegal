@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, use, useEffect, useState } from 'react'
 
 type Theme = 'dark' | 'light' | 'system'
 
@@ -43,11 +43,12 @@ export function ThemeProvider({
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   )
 
-  // Apply on first mount only — after this, applyThemeClass is called directly in the handler
-  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect
+  // Aplica el tema almacenado/por defecto al montar. Lee de localStorage en lugar
+  // del estado `theme`, por lo que el efecto depende solo de props estables y no
+  // arrastra un valor obsoleto en su clausura.
   useEffect(() => {
-    applyThemeClass(theme)
-  }, [])
+    applyThemeClass((localStorage.getItem(storageKey) as Theme) || defaultTheme)
+  }, [storageKey, defaultTheme])
 
   const value: ThemeProviderState = {
     theme,
@@ -63,4 +64,9 @@ export function ThemeProvider({
       {children}
     </ThemeProviderContext.Provider>
   )
+}
+
+/** Accede al tema actual y al setter del `ThemeProvider`. */
+export function useTheme() {
+  return use(ThemeProviderContext)
 }

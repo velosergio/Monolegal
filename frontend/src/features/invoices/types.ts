@@ -1,53 +1,83 @@
 /**
- * Espejo del enum InvoiceStatus definido en el backend:
- * backend/Domain/Enums/InvoiceStatus.cs
- *
- * Solo se incluyen los valores relevantes para el flujo de facturas;
- * cualquier estado no listado aquí se considera desconocido.
+ * El backend serializa `InvoiceStatus` como cadena en minúsculas (nombre del
+ * miembro del enum), p. ej. `PrimerRecordatorio → "primerrecordatorio"`.
+ * Ver backend/Api/Endpoints/Invoices/InvoiceStatusApi.cs (JsonStringEnumConverter global).
  */
-export enum InvoiceStatus {
-  Draft = 0,
-  Pending = 1,
-  Pagado = 2,
-  Overdue = 3,
-  Cancelled = 4,
-  PrimerRecordatorio = 10,
-  SegundoRecordatorio = 11,
-  Desactivado = 12,
-}
+export type KnownInvoiceStatus =
+  | 'draft'
+  | 'pending'
+  | 'pagado'
+  | 'overdue'
+  | 'cancelled'
+  | 'primerrecordatorio'
+  | 'segundorecordatorio'
+  | 'desactivado'
 
 /**
- * Estados terminales: una factura en alguno de estos estados ya no puede
- * recibir un pago manual, por lo que el botón "Pagar" no se muestra.
+ * Estado tal como llega de la API. Se admiten estados desconocidos (futuros) sin
+ * romper el tipado: se renderizan con una etiqueta neutra.
  */
-export const TERMINAL_STATUSES: ReadonlySet<InvoiceStatus> = new Set([
-  InvoiceStatus.Pagado,
-  InvoiceStatus.Desactivado,
-  InvoiceStatus.Cancelled,
+export type InvoiceStatus = KnownInvoiceStatus | (string & {})
+
+/**
+ * Estados que pueden filtrarse en el panel (conjunto válido expuesto por la API).
+ */
+export const FILTERABLE_STATUSES = [
+  'pending',
+  'primerrecordatorio',
+  'segundorecordatorio',
+  'desactivado',
+  'pagado',
+] as const satisfies readonly KnownInvoiceStatus[]
+
+/**
+ * Estados terminales: una factura en alguno de estos estados ya no admite pago manual.
+ */
+export const TERMINAL_STATUSES: ReadonlySet<string> = new Set<KnownInvoiceStatus>([
+  'pagado',
+  'desactivado',
+  'cancelled',
 ])
 
 /**
- * Representación legible en español de cada estado de factura.
+ * Etiqueta legible en español por estado.
  */
-export const INVOICE_STATUS_LABELS: Record<InvoiceStatus, string> = {
-  [InvoiceStatus.Draft]: 'Borrador',
-  [InvoiceStatus.Pending]: 'Pendiente',
-  [InvoiceStatus.Pagado]: 'Pagado',
-  [InvoiceStatus.Overdue]: 'Vencida',
-  [InvoiceStatus.Cancelled]: 'Cancelada',
-  [InvoiceStatus.PrimerRecordatorio]: '1er Recordatorio',
-  [InvoiceStatus.SegundoRecordatorio]: '2do Recordatorio',
-  [InvoiceStatus.Desactivado]: 'Desactivado',
+export const INVOICE_STATUS_LABELS: Record<KnownInvoiceStatus, string> = {
+  draft: 'Borrador',
+  pending: 'Pendiente',
+  pagado: 'Pagado',
+  overdue: 'Vencida',
+  cancelled: 'Cancelada',
+  primerrecordatorio: '1er Recordatorio',
+  segundorecordatorio: '2do Recordatorio',
+  desactivado: 'Desactivado',
 }
 
 /**
- * Forma de una factura tal como la devuelve la API del backend.
- * El campo `status` es el valor numérico del enum `InvoiceStatus`.
+ * Devuelve la etiqueta legible de un estado, con respaldo al valor en bruto si
+ * el estado no está mapeado (compatibilidad futura).
+ */
+export function statusLabel(status: InvoiceStatus): string {
+  return INVOICE_STATUS_LABELS[status as KnownInvoiceStatus] ?? status
+}
+
+/**
+ * Forma de una factura tal como la devuelve la API del backend (spec 014).
  */
 export interface Invoice {
   id: string
   clientId: string
   amount: number
   status: InvoiceStatus
-  lastStatusTransitionAt: string // ISO-8601 UTC
+  createdAt: string // ISO-8601 UTC
+  lastStatusTransitionAt: string // ISO-8601 UTC — "Última Acción"
+}
+
+/**
+ * Respuesta paginada del listado de facturas.
+ */
+export interface PagedInvoices {
+  data: Invoice[]
+  total: number
+  pageSize: number
 }

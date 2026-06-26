@@ -1,26 +1,24 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { screen } from '@testing-library/react'
+import { beforeAll, describe, expect, it } from 'vitest'
 import App from '../src/App'
+import { renderWithQuery } from './test-utils'
+
+// Precarga el módulo diferido de InvoicesPage para que React.lazy resuelva de
+// inmediato y los asserts no dependan del tiempo de carga en frío del chunk.
+beforeAll(async () => {
+  await import('@/features/invoices/components/InvoicesPage')
+})
 
 describe('App', () => {
-  it('monta sin errores', async () => {
-    render(<App />)
-    // Verifica que el componente raíz monta correctamente
-    expect(document.body).toBeTruthy()
-    // Espera a que el efecto asíncrono de InvoiceTransitionsTab termine
-    // para evitar actualizaciones de estado fuera de act(...).
-    await screen.findByText('Tiempos de Transición de Facturas')
+  it('monta sin errores y muestra la marca', async () => {
+    renderWithQuery(<App />)
+    expect(screen.getByRole('img', { name: 'Monolegal' })).toBeInTheDocument()
+    await screen.findByRole('heading', { name: 'Facturas' })
   })
 
-  it('renderiza el encabezado de la aplicación', async () => {
-    render(<App />)
-    expect(screen.getByRole('heading', { level: 1 })).toBeTruthy()
-    await screen.findByText('Tiempos de Transición de Facturas')
-  })
-
-  it('renderiza el contenido principal', async () => {
-    render(<App />)
-    expect(screen.getByRole('main')).toBeTruthy()
-    await screen.findByText('Tiempos de Transición de Facturas')
+  it('renderiza el área principal', async () => {
+    renderWithQuery(<App />)
+    expect(screen.getByRole('main')).toBeInTheDocument()
+    await screen.findByRole('heading', { name: 'Facturas' })
   })
 })

@@ -79,9 +79,11 @@ public class InvoiceWorkerTests
             => Task.FromResult((long)_store.Count);
 
         public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
-            InvoiceStatus? status, int page, int pageSize, CancellationToken cancellationToken = default)
+            InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default)
         {
             var query = status.HasValue ? _store.Values.Where(i => i.Status == status.Value) : _store.Values.AsEnumerable();
+            if (!string.IsNullOrWhiteSpace(clientSearch))
+                query = query.Where(i => i.ClientId.Contains(clientSearch.Trim(), System.StringComparison.OrdinalIgnoreCase));
             var filtered = query.ToList();
             var items = filtered
                 .OrderByDescending(i => i.CreatedAt)

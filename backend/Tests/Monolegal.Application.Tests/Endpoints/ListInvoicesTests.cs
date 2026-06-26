@@ -42,10 +42,67 @@ public class ListInvoicesTests
         await repo.AddAsync(At("c2", InvoiceStatus.PrimerRecordatorio, DateTime.UtcNow));
         await repo.AddAsync(At("c3", InvoiceStatus.PrimerRecordatorio, DateTime.UtcNow));
 
-        var (items, total) = await repo.GetPagedAsync(InvoiceStatus.PrimerRecordatorio, 1, 10);
+        var (items, total) = await repo.GetPagedAsync(InvoiceStatus.PrimerRecordatorio, null, 1, 10);
 
         total.ShouldBe(2);
         items.ShouldAllBe(i => i.Status == InvoiceStatus.PrimerRecordatorio);
+    }
+
+    // ── Búsqueda por cliente (spec 014, FR-012) ─────────────────────────────────
+
+    [Fact]
+    public async Task GetPaged_WithClientSearch_ReturnsOnlyMatchingClient_CaseInsensitive()
+    {
+        var repo = new InMemoryInvoiceRepository();
+        await repo.AddAsync(At("Acme-001", InvoiceStatus.Pending, DateTime.UtcNow));
+        await repo.AddAsync(At("Acme-002", InvoiceStatus.Pagado, DateTime.UtcNow));
+        await repo.AddAsync(At("Globex-001", InvoiceStatus.Pending, DateTime.UtcNow));
+
+        var (items, total) = await repo.GetPagedAsync(null, "acme", 1, 10);
+
+        total.ShouldBe(2);
+        items.ShouldAllBe(i => i.ClientId.StartsWith("Acme"));
+    }
+
+    [Fact]
+    public async Task GetPaged_WithClientSearchAndStatus_CombinesWithAnd()
+    {
+        var repo = new InMemoryInvoiceRepository();
+        await repo.AddAsync(At("Acme-001", InvoiceStatus.Pending, DateTime.UtcNow));
+        await repo.AddAsync(At("Acme-002", InvoiceStatus.Pagado, DateTime.UtcNow));
+        await repo.AddAsync(At("Globex-001", InvoiceStatus.Pending, DateTime.UtcNow));
+
+        var (items, total) = await repo.GetPagedAsync(InvoiceStatus.Pending, "acme", 1, 10);
+
+        total.ShouldBe(1);
+        items.ShouldHaveSingleItem().ClientId.ShouldBe("Acme-001");
+    }
+
+    [Fact]
+    public async Task GetPaged_WithBlankSearch_IsIgnored()
+    {
+        var repo = new InMemoryInvoiceRepository();
+        await repo.AddAsync(At("Acme-001", InvoiceStatus.Pending, DateTime.UtcNow));
+        await repo.AddAsync(At("Globex-001", InvoiceStatus.Pending, DateTime.UtcNow));
+
+        var (_, total) = await repo.GetPagedAsync(null, "   ", 1, 10);
+
+        total.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task Validator_RejectsSearchExceedingMaxLength()
+    {
+        var longSearch = new string('a', ListInvoicesQueryValidator.MaxSearchLength + 1);
+        var result = await Validator().ValidateAsync(new ListInvoicesQuery(null, 1, 10, longSearch));
+        result.IsValid.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task Validator_AcceptsSearchWithinMaxLength()
+    {
+        var result = await Validator().ValidateAsync(new ListInvoicesQuery(null, 1, 10, "Acme"));
+        result.IsValid.ShouldBeTrue();
     }
 
     // ── Paginación: total independiente de la página ─────────────────────────────
@@ -57,7 +114,7 @@ public class ListInvoicesTests
         for (var i = 0; i < 25; i++)
             await repo.AddAsync(At($"c{i}", InvoiceStatus.Pending, DateTime.UtcNow.AddSeconds(i)));
 
-        var (items, total) = await repo.GetPagedAsync(null, page: 1, pageSize: 10);
+        var (items, total) = await repo.GetPagedAsync(null, null, page: 1, pageSize: 10);
 
         items.Count.ShouldBe(10);
         total.ShouldBe(25);
@@ -70,7 +127,7 @@ public class ListInvoicesTests
         for (var i = 0; i < 5; i++)
             await repo.AddAsync(At($"c{i}", InvoiceStatus.Pending, DateTime.UtcNow.AddSeconds(i)));
 
-        var (items, total) = await repo.GetPagedAsync(null, page: 99, pageSize: 10);
+        var (items, total) = await repo.GetPagedAsync(null, null, page: 99, pageSize: 10);
 
         items.ShouldBeEmpty();
         total.ShouldBe(5);
@@ -87,7 +144,7 @@ public class ListInvoicesTests
         await repo.AddAsync(older);
         await repo.AddAsync(newer);
 
-        var (items, _) = await repo.GetPagedAsync(null, 1, 10);
+        var (items, _) = await repo.GetPagedAsync(null, null, 1, 10);
 
         items[0].Id.ShouldBe(newer.Id);
         items[1].Id.ShouldBe(older.Id);

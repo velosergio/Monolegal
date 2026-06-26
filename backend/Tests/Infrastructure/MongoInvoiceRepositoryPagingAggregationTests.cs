@@ -27,7 +27,7 @@ public sealed class MongoInvoiceRepositoryPagingAggregationTests : IClassFixture
         await repo.AddAsync(InvoiceTestFactory.Create("c2", status: InvoiceStatus.PrimerRecordatorio));
         await repo.AddAsync(InvoiceTestFactory.Create("c3", status: InvoiceStatus.PrimerRecordatorio));
 
-        var (items, total) = await repo.GetPagedAsync(InvoiceStatus.PrimerRecordatorio, 1, 10);
+        var (items, total) = await repo.GetPagedAsync(InvoiceStatus.PrimerRecordatorio, null, 1, 10);
 
         total.ShouldBe(2);
         items.ShouldAllBe(i => i.Status == InvoiceStatus.PrimerRecordatorio);
@@ -40,7 +40,7 @@ public sealed class MongoInvoiceRepositoryPagingAggregationTests : IClassFixture
         for (var i = 0; i < 15; i++)
             await repo.AddAsync(InvoiceTestFactory.Create($"c{i}", status: InvoiceStatus.Pending));
 
-        var (items, total) = await repo.GetPagedAsync(null, page: 1, pageSize: 10);
+        var (items, total) = await repo.GetPagedAsync(null, null, page: 1, pageSize: 10);
 
         items.Count.ShouldBe(10);
         total.ShouldBe(15);
@@ -57,9 +57,26 @@ public sealed class MongoInvoiceRepositoryPagingAggregationTests : IClassFixture
         var last = InvoiceTestFactory.Create("c2", status: InvoiceStatus.Pending);
         await repo.AddAsync(last);
 
-        var (items, _) = await repo.GetPagedAsync(null, 1, 10);
+        var (items, _) = await repo.GetPagedAsync(null, null, 1, 10);
 
         items.First().Id.ShouldBe(last.Id);
+    }
+
+    [Fact]
+    public async Task GetPagedAsync_WithClientSearch_MatchesCaseInsensitiveAndCombinesWithStatus()
+    {
+        var repo = await _fixture.CreateCleanRepositoryAsync();
+        await repo.AddAsync(InvoiceTestFactory.Create("Acme-001", status: InvoiceStatus.Pending));
+        await repo.AddAsync(InvoiceTestFactory.Create("Acme-002", status: InvoiceStatus.Pagado));
+        await repo.AddAsync(InvoiceTestFactory.Create("Globex-001", status: InvoiceStatus.Pending));
+
+        var (onlyAcme, totalAcme) = await repo.GetPagedAsync(null, "acme", 1, 10);
+        totalAcme.ShouldBe(2);
+        onlyAcme.ShouldAllBe(i => i.ClientId.StartsWith("Acme"));
+
+        var (acmePending, totalAcmePending) = await repo.GetPagedAsync(InvoiceStatus.Pending, "ACME", 1, 10);
+        totalAcmePending.ShouldBe(1);
+        acmePending.ShouldHaveSingleItem().ClientId.ShouldBe("Acme-001");
     }
 
     [Fact]

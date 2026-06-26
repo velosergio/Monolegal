@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Monolegal.Domain.Entities;
 using Monolegal.Domain.Enums;
@@ -104,10 +106,24 @@ public sealed class MongoInvoiceRepository : IInvoiceRepository
     }
 
     public async Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
-        InvoiceStatus? status, int page, int pageSize, CancellationToken cancellationToken = default)
+        InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        var filter = status.HasValue
-            ? Builders<Invoice>.Filter.Eq(x => x.Status, status.Value)
+        var filters = new List<FilterDefinition<Invoice>>();
+
+        if (status.HasValue)
+            filters.Add(Builders<Invoice>.Filter.Eq(x => x.Status, status.Value));
+
+        if (!string.IsNullOrWhiteSpace(clientSearch))
+        {
+            // Escapamos los metacaracteres para tratar la entrada como literal (sin inyección de regex)
+            // y aplicamos coincidencia "contains" case-insensitive sobre ClientId.
+            var pattern = Regex.Escape(clientSearch.Trim());
+            filters.Add(Builders<Invoice>.Filter.Regex(
+                x => x.ClientId, new BsonRegularExpression(pattern, "i")));
+        }
+
+        var filter = filters.Count > 0
+            ? Builders<Invoice>.Filter.And(filters)
             : Builders<Invoice>.Filter.Empty;
 
         var total = await _collection

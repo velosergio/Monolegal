@@ -23,6 +23,7 @@ public static class ListInvoices
     {
         app.MapGet("/api/invoices", async (
             string? status,
+            string? search,
             int? page,
             int? pageSize,
             IInvoiceRepository invoiceRepository,
@@ -31,11 +32,15 @@ public static class ListInvoices
         {
             var logger = loggerFactory.CreateLogger(nameof(ListInvoices));
 
+            // Normalización de la búsqueda: trim; vacío/whitespace ⇒ ausente (sin filtro).
+            var normalizedSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
+
             // Defaults aplicados solo ante ausencia del parámetro (FR-006).
             var query = new ListInvoicesQuery(
                 status,
                 page ?? DefaultPage,
-                pageSize ?? DefaultPageSize);
+                pageSize ?? DefaultPageSize,
+                normalizedSearch);
 
             // Validación de parámetros (page/pageSize/status) → 400 ante valores inválidos.
             var validator = new ListInvoicesQueryValidator(InvoiceStatusApi.IsValid);
@@ -57,13 +62,13 @@ public static class ListInvoices
                 statusFilter = parsed;
 
             var (items, total) = await invoiceRepository.GetPagedAsync(
-                statusFilter, query.Page, query.PageSize, cancellationToken);
+                statusFilter, query.Search, query.Page, query.PageSize, cancellationToken);
 
             var data = items.Select(InvoiceListItemDto.FromEntity).ToList();
 
             logger.LogInformation(
-                "Listado de facturas. Status={Status} Page={Page} PageSize={PageSize} Total={Total} Returned={Returned}",
-                query.Status ?? "(todos)", query.Page, query.PageSize, total, data.Count);
+                "Listado de facturas. Status={Status} Search={Search} Page={Page} PageSize={PageSize} Total={Total} Returned={Returned}",
+                query.Status ?? "(todos)", query.Search ?? "(sin búsqueda)", query.Page, query.PageSize, total, data.Count);
 
             return Results.Ok(new PagedResponse<InvoiceListItemDto>(data, total, query.PageSize));
         })
@@ -72,7 +77,9 @@ public static class ListInvoices
         .WithSummary("Listar facturas")
         .WithDescription(
             "Devuelve una lista paginada de facturas, opcionalmente filtrada por estado " +
-            "(query param 'status'). Admite paginación con 'page' y 'pageSize' (máximo 50).")
+            "(query param 'status') y por cliente (query param 'search', coincidencia " +
+            "case-insensitive sobre clientId, máximo 100 caracteres). Admite paginación " +
+            "con 'page' y 'pageSize' (máximo 50).")
         .Produces<PagedResponse<InvoiceListItemDto>>(StatusCodes.Status200OK)
         .ProducesValidationProblem();
     }

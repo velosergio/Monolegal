@@ -199,7 +199,7 @@ LastReminderSentAt: DateTime?
 
 ---
 
-## ⚙️ Fase 3: Worker & Email Service `2/4 specs`
+## ⚙️ Fase 3: Worker & Email Service `4/4 specs`
 
 ### Spec 3.1: Email Service Interface
 
@@ -246,9 +246,9 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🎨 Fase 4: Frontend (React UI) `0/6 specs`
+## 🎨 Fase 4: Frontend (React UI) `2/6 specs`
 
-### Spec 4.1: Layout Base
+### Spec 4.1: Layout Base ✅ Implementada (feature 014-admin-panel-invoices)
 
 **GIVEN** aplicación React iniciada  
 **WHEN** se carga `/`  
@@ -259,7 +259,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Footer con info
 - ✅ Responsive (mobile/desktop)
 
-### Spec 4.2: Invoices Page - Listado
+### Spec 4.2: Invoices Page - Listado ✅ Implementada (feature 014-admin-panel-invoices)
 
 **GIVEN** usuario en `/invoices`  
 **WHEN** página carga  

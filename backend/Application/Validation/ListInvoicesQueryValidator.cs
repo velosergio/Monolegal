@@ -5,8 +5,9 @@ namespace Backend.Application.Validation;
 /// <summary>
 /// Parámetros de consulta normalizados para GET /api/invoices.
 /// Los valores nulos representan parámetros ausentes (se aplican defaults antes de validar).
+/// <c>Search</c> es la búsqueda por cliente ya normalizada (trim; vacío ⇒ null) — spec 014, FR-012.
 /// </summary>
-public sealed record ListInvoicesQuery(string? Status, int Page, int PageSize);
+public sealed record ListInvoicesQuery(string? Status, int Page, int PageSize, string? Search = null);
 
 /// <summary>
 /// Validador de los parámetros de listado (spec 009, FR-003/FR-003a/FR-006/FR-017).
@@ -17,6 +18,7 @@ public sealed record ListInvoicesQuery(string? Status, int Page, int PageSize);
 public sealed class ListInvoicesQueryValidator : AbstractValidator<ListInvoicesQuery>
 {
     public const int MaxPageSize = 50;
+    public const int MaxSearchLength = 100;
 
     public ListInvoicesQueryValidator(System.Func<string, bool> isValidStatus)
     {
@@ -32,5 +34,10 @@ public sealed class ListInvoicesQueryValidator : AbstractValidator<ListInvoicesQ
             .Must(isValidStatus)
             .When(x => x.Status is not null)
             .WithMessage("El parámetro 'status' no corresponde a un estado válido.");
+
+        RuleFor(x => x.Search!)
+            .MaximumLength(MaxSearchLength)
+            .When(x => x.Search is not null)
+            .WithMessage($"El parámetro 'search' no puede exceder {MaxSearchLength} caracteres.");
     }
 }

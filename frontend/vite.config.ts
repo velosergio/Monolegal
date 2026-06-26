@@ -14,6 +14,13 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    // Proxy del API al backend ASP.NET en desarrollo (ver launchSettings: http://localhost:5155).
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5155',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     outDir: 'dist',

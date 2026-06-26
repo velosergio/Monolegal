@@ -1,20 +1,51 @@
-import type React from 'react'
+import { lazy, Suspense } from 'react'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './index.css'
-import { InvoiceList } from './features/invoices/components/InvoiceList'
-import { InvoiceTransitionsTab } from './features/settings/components/InvoiceTransitionsTab'
+import { ErrorBoundary } from './components/feedback/ErrorBoundary'
+import { AppShell } from './components/layout/AppShell'
+import { Skeleton } from './components/ui/skeleton'
+import { InvoicesTableSkeleton } from './features/invoices/components/InvoicesTableSkeleton'
 
-const App: React.FC = () => {
+const InvoicesPage = lazy(() =>
+  import('./features/invoices/components/InvoicesPage').then((module) => ({
+    default: module.InvoicesPage,
+  }))
+)
+
+const SettingsPage = lazy(() =>
+  import('./features/settings/components/SettingsPage').then((module) => ({
+    default: module.SettingsPage,
+  }))
+)
+
+function App() {
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>MonoLegal</h1>
-        <p>Gestión de Facturas</p>
-      </header>
-      <main className="app-main">
-        <InvoiceList invoices={[]} />
-        <InvoiceTransitionsTab />
-      </main>
-    </div>
+    <BrowserRouter>
+      <AppShell>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<Navigate to="/facturas" replace />} />
+            <Route
+              path="/facturas"
+              element={
+                <Suspense fallback={<InvoicesTableSkeleton />}>
+                  <InvoicesPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/configuracion"
+              element={
+                <Suspense fallback={<Skeleton className="h-48 w-full max-w-2xl" />}>
+                  <SettingsPage />
+                </Suspense>
+              }
+            />
+            <Route path="*" element={<Navigate to="/facturas" replace />} />
+          </Routes>
+        </ErrorBoundary>
+      </AppShell>
+    </BrowserRouter>
   )
 }
 

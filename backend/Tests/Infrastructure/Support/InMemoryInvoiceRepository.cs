@@ -62,11 +62,17 @@ public sealed class InMemoryInvoiceRepository : IInvoiceRepository
     // ──────────────────────────────────────────────────────────────────────────
 
     public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
-        InvoiceStatus? status, int page, int pageSize, CancellationToken cancellationToken = default)
+        InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default)
     {
         var query = _store.Values.AsEnumerable();
         if (status.HasValue)
             query = query.Where(i => i.Status == status.Value);
+
+        if (!string.IsNullOrWhiteSpace(clientSearch))
+        {
+            var term = clientSearch.Trim();
+            query = query.Where(i => i.ClientId.Contains(term, StringComparison.OrdinalIgnoreCase));
+        }
 
         var filtered = query.ToList();
         long total = filtered.Count;

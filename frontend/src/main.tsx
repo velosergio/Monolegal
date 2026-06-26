@@ -11,7 +11,7 @@ if (!rootElement) throw new Error('Root element not found')
 
 createRoot(rootElement).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="system" storageKey="ml-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="ml-ui-theme">
       <QueryClientProvider client={queryClient}>
         <App />
       </QueryClientProvider>

@@ -38,13 +38,16 @@ public interface IInvoiceRepository
     Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Returns a page of invoices, optionally filtered by <paramref name="status"/>, ordered by
-    /// <see cref="Entities.Invoice.CreatedAt"/> descending, together with the total number of
-    /// matches for the applied filter (independent of the returned page). Used by
-    /// GET /api/invoices. See specs/009-invoice-api-endpoints/contracts/list-invoices.md.
+    /// Returns a page of invoices, optionally filtered by <paramref name="status"/> and/or by a
+    /// case-insensitive "contains" match of <paramref name="clientSearch"/> against
+    /// <see cref="Entities.Invoice.ClientId"/>, ordered by <see cref="Entities.Invoice.CreatedAt"/>
+    /// descending, together with the total number of matches for the applied filters (independent
+    /// of the returned page). Both filters combine with AND. A null/empty <paramref name="clientSearch"/>
+    /// means "no client search". Used by GET /api/invoices. See
+    /// specs/014-admin-panel-invoices/contracts/list-invoices-search.md.
     /// </summary>
     Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
-        InvoiceStatus? status, int page, int pageSize, CancellationToken cancellationToken = default);
+        InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns the count of invoices grouped by status across the whole collection.

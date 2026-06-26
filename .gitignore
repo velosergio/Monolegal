@@ -51,6 +51,9 @@ target/
 build/
 out/
 
+# Test coverage
+coverage/
+
 # Temporary files
 *.tmp
 *.temp

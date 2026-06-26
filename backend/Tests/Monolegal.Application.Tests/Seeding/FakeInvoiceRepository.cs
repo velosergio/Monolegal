@@ -51,9 +51,14 @@ internal sealed class FakeInvoiceRepository : IInvoiceRepository
         => Task.FromResult((long)_store.Count);
 
     public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
-        InvoiceStatus? status, int page, int pageSize, CancellationToken ct = default)
+        InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken ct = default)
     {
         var query = status.HasValue ? _store.Where(i => i.Status == status.Value) : _store.AsEnumerable();
+        if (!string.IsNullOrWhiteSpace(clientSearch))
+        {
+            var term = clientSearch.Trim();
+            query = query.Where(i => i.ClientId.Contains(term, System.StringComparison.OrdinalIgnoreCase));
+        }
         var filtered = query.ToList();
         var items = filtered
             .OrderByDescending(i => i.CreatedAt)
