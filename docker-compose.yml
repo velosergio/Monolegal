@@ -89,7 +89,6 @@ services:
     volumes:
       - mongo_data:/data/db
       - mongo_config:/data/configdb
-      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init.js:ro
     restart: unless-stopped
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet

@@ -4,7 +4,7 @@
 
 **Creado**: 2026-06-26
 
-**Estado**: Draft
+**Estado**: Activo
 
 **Entrada**: Descripción del usuario:
 

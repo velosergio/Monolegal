@@ -1,6 +1,9 @@
 const currencyFormatter = new Intl.NumberFormat('es-CO', {
   style: 'currency',
   currency: 'COP',
+  // Muestra el código "COP" en lugar del símbolo "$", que es idéntico al del
+  // dólar y hacía que los montos en pesos colombianos se confundieran con USD.
+  currencyDisplay: 'code',
   maximumFractionDigits: 0,
 })
 

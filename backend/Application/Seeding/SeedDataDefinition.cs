@@ -34,17 +34,17 @@ public static class SeedDataDefinition
     public static IReadOnlyList<SeedInvoicePlan> Invoices { get; } = new List<SeedInvoicePlan>
     {
         // Cliente A — 3 facturas en estados variados
-        new(ClienteA, 150.00m, InvoiceStatus.Pending),
-        new(ClienteA, 320.00m, InvoiceStatus.PrimerRecordatorio),
-        new(ClienteA, 90.00m, InvoiceStatus.Pagado),
+        new(ClienteA, 1_500_000m, InvoiceStatus.Pending),
+        new(ClienteA, 3_200_000m, InvoiceStatus.PrimerRecordatorio),
+        new(ClienteA, 900_000m, InvoiceStatus.Pagado),
 
         // Cliente B — 2 facturas
-        new(ClienteB, 540.00m, InvoiceStatus.SegundoRecordatorio),
-        new(ClienteB, 75.00m, InvoiceStatus.Desactivado),
+        new(ClienteB, 5_400_000m, InvoiceStatus.SegundoRecordatorio),
+        new(ClienteB, 750_000m, InvoiceStatus.Desactivado),
 
         // Cliente C — 3 facturas
-        new(ClienteC, 210.00m, InvoiceStatus.Pending),
-        new(ClienteC, 410.00m, InvoiceStatus.PrimerRecordatorio),
-        new(ClienteC, 1200.00m, InvoiceStatus.SegundoRecordatorio),
+        new(ClienteC, 2_100_000m, InvoiceStatus.Pending),
+        new(ClienteC, 4_100_000m, InvoiceStatus.PrimerRecordatorio),
+        new(ClienteC, 12_000_000m, InvoiceStatus.SegundoRecordatorio),
     };
 }
