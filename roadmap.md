@@ -246,7 +246,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🎨 Fase 4: Frontend (React UI) `5/10 specs`
+## 🎨 Fase 4: Frontend (React UI) `8/9 specs`
 
 ### Spec 4.1: Layout Base ✅ Implementada (feature 014-admin-panel-invoices)
 
@@ -303,7 +303,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Toast de éxito/error
 - ✅ Tabla y modal se actualizan
 
-### Spec 4.6: Vista Configuración + Resend API + Tools
+### Spec 4.6: Vista Configuración + Resend API + Tools ✅ Implementada (feature 017-configuracion-resend-tools)
 
 **GIVEN** usuario en `/configuracion`  
 **WHEN** página carga  
@@ -342,20 +342,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ POST/PUT/DELETE a `/api/clients`
 - ✅ Toast de éxito/error y refresco automático del listado
 
-### Spec 4.9: Dashboard UI/UX
-
-**GIVEN** usuario en `/dashboard`  
-**WHEN** revisa métricas  
-**THEN**:
-
-- ✅ Layout refinado con jerarquía visual clara
-- ✅ Gráficos interactivos (donut, barras, tendencias)
-- ✅ Filtros por rango de fechas y estado
-- ✅ Animaciones (motion) suaves y consistentes
-- ✅ Diseño responsive (mobile/desktop)
-- ✅ Estados de carga (skeletons) y vacíos (empty states)
-
-### Spec 4.10: Vista Envíos
+### Spec 4.9: Vista Envíos
 
 **GIVEN** usuario en `/envios`  
 **WHEN** página carga  
@@ -528,7 +515,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 | 1    | 1.1-1.4 | 4/4 | ✅ |
 | 2    | 2.1-2.2 | 2/2 | ✅ |
 | 3    | 3.1-3.4 | 4/4 | ✅ |
-| 4    | 4.1-4.5 | 510 | 🟡 |
+| 4    | 4.1-4.5 | 8/9 | 🟡 |
 | 5    | 5.1-5.6 | 0/6 | ⬜ |
 | 6    | 6.1-6.6 | 0/6 | ⬜ |
 

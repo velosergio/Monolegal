@@ -9,6 +9,8 @@ const detail: InvoiceDetail = {
   id: 'abcdef1234567890',
   clientId: 'Acme S.A.',
   amount: 1_500_000,
+  dueDate: '2026-02-01T00:00:00.000Z',
+  items: [{ description: 'Concepto', quantity: 1, unitPrice: 1_500_000, subtotal: 1_500_000 }],
   status: 'primerrecordatorio',
   createdAt: '2026-01-01T08:00:00.000Z',
   updatedAt: '2026-06-01T10:30:00.000Z',

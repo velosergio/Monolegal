@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useReducer } from 'react'
 import { useToast } from '@/components/feedback/useToast'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -28,6 +28,51 @@ const CREDENTIAL_BADGE: Record<
   configured: { label: 'Configurada', variant: 'secondary' },
   invalid: { label: 'Inválida', variant: 'destructive' },
   notconfigured: { label: 'No configurada', variant: 'outline' },
+}
+
+/** Estado editable del formulario del proveedor de email. */
+type FormState = {
+  provider: EmailProvider
+  fromAddress: string
+  fromName: string
+  smtpHost: string
+  smtpPort: string
+  smtpUsername: string
+  smtpUseStartTls: boolean
+  resendFromDomain: string
+}
+
+/** Construye el estado inicial del formulario a partir de la configuración cargada. */
+function initFormState(initial: EmailSettings): FormState {
+  return {
+    provider: initial.activeProvider,
+    fromAddress: initial.fromAddress,
+    fromName: initial.fromName,
+    smtpHost: initial.smtp.host ?? '',
+    smtpPort: String(initial.smtp.port ?? 587),
+    smtpUsername: initial.smtp.username ?? '',
+    smtpUseStartTls: initial.smtp.useStartTls,
+    resendFromDomain: initial.resend.fromDomain ?? '',
+  }
+}
+
+function formReducer(state: FormState, patch: Partial<FormState>): FormState {
+  return { ...state, ...patch }
+}
+
+/** Validación de cliente del formulario; pura (sin estado local), por eso vive a nivel de módulo. */
+function validateClient(input: EmailSettingsInput): string | null {
+  if (!EMAIL_RE.test(input.fromAddress)) return 'Introduce un correo remitente válido.'
+  if (input.fromName.length === 0) return 'El nombre del remitente es obligatorio.'
+  if (input.activeProvider === 'smtp') {
+    if (input.smtp.host.length === 0) return 'El host SMTP es obligatorio.'
+    if (input.smtp.port < 1 || input.smtp.port > 65535)
+      return 'El puerto SMTP debe estar entre 1 y 65535.'
+  }
+  if (input.activeProvider === 'resend' && input.resend.fromDomain.length === 0) {
+    return 'El dominio remitente de Resend es obligatorio.'
+  }
+  return null
 }
 
 /** Sección de configuración del proveedor de email (spec 017, US1). */
@@ -66,45 +111,24 @@ function EmailProviderForm({ initial }: { initial: EmailSettings }) {
   const update = useUpdateEmailSettings()
   const validate = useValidateEmailCredentials()
 
-  const [provider, setProvider] = useState<EmailProvider>(initial.activeProvider)
-  const [fromAddress, setFromAddress] = useState(initial.fromAddress)
-  const [fromName, setFromName] = useState(initial.fromName)
-  const [smtpHost, setSmtpHost] = useState(initial.smtp.host ?? '')
-  const [smtpPort, setSmtpPort] = useState(String(initial.smtp.port ?? 587))
-  const [smtpUsername, setSmtpUsername] = useState(initial.smtp.username ?? '')
-  const [smtpUseStartTls, setSmtpUseStartTls] = useState(initial.smtp.useStartTls)
-  const [resendFromDomain, setResendFromDomain] = useState(initial.resend.fromDomain ?? '')
+  const [form, dispatch] = useReducer(formReducer, initial, initFormState)
 
   const badge = CREDENTIAL_BADGE[initial.credentialStatus]
   const busy = update.isPending || validate.isPending
 
   function buildInput(): EmailSettingsInput {
     return {
-      activeProvider: provider,
-      fromAddress: fromAddress.trim(),
-      fromName: fromName.trim(),
+      activeProvider: form.provider,
+      fromAddress: form.fromAddress.trim(),
+      fromName: form.fromName.trim(),
       smtp: {
-        host: smtpHost.trim(),
-        port: Number.parseInt(smtpPort, 10) || 0,
-        username: smtpUsername.trim(),
-        useStartTls: smtpUseStartTls,
+        host: form.smtpHost.trim(),
+        port: Number.parseInt(form.smtpPort, 10) || 0,
+        username: form.smtpUsername.trim(),
+        useStartTls: form.smtpUseStartTls,
       },
-      resend: { fromDomain: resendFromDomain.trim() },
+      resend: { fromDomain: form.resendFromDomain.trim() },
     }
-  }
-
-  function validateClient(input: EmailSettingsInput): string | null {
-    if (!EMAIL_RE.test(input.fromAddress)) return 'Introduce un correo remitente válido.'
-    if (input.fromName.length === 0) return 'El nombre del remitente es obligatorio.'
-    if (input.activeProvider === 'smtp') {
-      if (input.smtp.host.length === 0) return 'El host SMTP es obligatorio.'
-      if (input.smtp.port < 1 || input.smtp.port > 65535)
-        return 'El puerto SMTP debe estar entre 1 y 65535.'
-    }
-    if (input.activeProvider === 'resend' && input.resend.fromDomain.length === 0) {
-      return 'El dominio remitente de Resend es obligatorio.'
-    }
-    return null
   }
 
   function handleSave() {
@@ -121,7 +145,7 @@ function EmailProviderForm({ initial }: { initial: EmailSettings }) {
   }
 
   function handleValidate() {
-    validate.mutate(provider, {
+    validate.mutate(form.provider, {
       onSuccess: (result) => {
         if (result.status === 'validated') {
           toast.success(result.message ?? 'Credencial validada correctamente.')
@@ -146,7 +170,10 @@ function EmailProviderForm({ initial }: { initial: EmailSettings }) {
         <label htmlFor="email-provider" className="text-sm font-medium">
           Proveedor activo
         </label>
-        <Select value={provider} onValueChange={(value) => setProvider(value as EmailProvider)}>
+        <Select
+          value={form.provider}
+          onValueChange={(value) => dispatch({ provider: value as EmailProvider })}
+        >
           <SelectTrigger id="email-provider" className="sm:max-w-xs">
             <SelectValue />
           </SelectTrigger>
@@ -162,44 +189,52 @@ function EmailProviderForm({ initial }: { initial: EmailSettings }) {
           <Input
             id="from-address"
             type="email"
-            value={fromAddress}
+            value={form.fromAddress}
             autoComplete="email"
-            onChange={(e) => setFromAddress(e.target.value)}
+            onChange={(e) => dispatch({ fromAddress: e.target.value })}
           />
         </Field>
         <Field id="from-name" label="Nombre remitente">
-          <Input id="from-name" value={fromName} onChange={(e) => setFromName(e.target.value)} />
+          <Input
+            id="from-name"
+            value={form.fromName}
+            onChange={(e) => dispatch({ fromName: e.target.value })}
+          />
         </Field>
       </div>
 
-      {provider === 'smtp' && (
+      {form.provider === 'smtp' && (
         <fieldset className="grid gap-4 border-0 p-0 sm:grid-cols-2">
           <legend className="sr-only">Parámetros SMTP</legend>
           <Field id="smtp-host" label="Host SMTP">
-            <Input id="smtp-host" value={smtpHost} onChange={(e) => setSmtpHost(e.target.value)} />
+            <Input
+              id="smtp-host"
+              value={form.smtpHost}
+              onChange={(e) => dispatch({ smtpHost: e.target.value })}
+            />
           </Field>
           <Field id="smtp-port" label="Puerto">
             <Input
               id="smtp-port"
               type="number"
               inputMode="numeric"
-              value={smtpPort}
-              onChange={(e) => setSmtpPort(e.target.value)}
+              value={form.smtpPort}
+              onChange={(e) => dispatch({ smtpPort: e.target.value })}
             />
           </Field>
           <Field id="smtp-username" label="Usuario">
             <Input
               id="smtp-username"
-              value={smtpUsername}
+              value={form.smtpUsername}
               autoComplete="username"
-              onChange={(e) => setSmtpUsername(e.target.value)}
+              onChange={(e) => dispatch({ smtpUsername: e.target.value })}
             />
           </Field>
           <label className="flex items-center gap-2 self-end text-sm font-medium">
             <input
               type="checkbox"
-              checked={smtpUseStartTls}
-              onChange={(e) => setSmtpUseStartTls(e.target.checked)}
+              checked={form.smtpUseStartTls}
+              onChange={(e) => dispatch({ smtpUseStartTls: e.target.checked })}
               className="h-4 w-4 rounded border-input"
             />
             Usar STARTTLS
@@ -207,12 +242,12 @@ function EmailProviderForm({ initial }: { initial: EmailSettings }) {
         </fieldset>
       )}
 
-      {provider === 'resend' && (
+      {form.provider === 'resend' && (
         <Field id="resend-domain" label="Dominio remitente (Resend)">
           <Input
             id="resend-domain"
-            value={resendFromDomain}
-            onChange={(e) => setResendFromDomain(e.target.value)}
+            value={form.resendFromDomain}
+            onChange={(e) => dispatch({ resendFromDomain: e.target.value })}
           />
         </Field>
       )}

@@ -50,6 +50,22 @@ internal sealed class FakeInvoiceRepository : IInvoiceRepository
     public Task<long> CountAsync(CancellationToken ct = default)
         => Task.FromResult((long)_store.Count);
 
+    public Task<long> DeleteAllAsync(CancellationToken ct = default)
+    {
+        var removed = (long)_store.Count;
+        _store.Clear();
+        return Task.FromResult(removed);
+    }
+
+    public Task<bool> DeleteAsync(string id, CancellationToken ct = default)
+    {
+        var item = _store.FirstOrDefault(i => i.Id == id);
+        return Task.FromResult(item is not null && _store.Remove(item));
+    }
+
+    public Task<long> CountByClientIdAsync(string clientId, CancellationToken ct = default)
+        => Task.FromResult((long)_store.Count(i => i.ClientId == clientId));
+
     public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
         InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken ct = default)
     {

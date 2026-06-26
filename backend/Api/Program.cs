@@ -1,10 +1,10 @@
 using System.Text.Json.Serialization;
 using Backend.Api.OpenApi;
 using Backend.Application.Abstractions;
-using Backend.Application.Seeding;
 using Backend.Infrastructure.Configuration;
 using Backend.Infrastructure.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Monolegal.Api.Endpoints.Clients;
 using Monolegal.Api.Endpoints.Invoices;
 using Monolegal.Api.Endpoints.Settings;
 using Monolegal.Api.Endpoints.Workers;
@@ -45,12 +45,11 @@ try
             new JsonStringEnumConverter(new LowerCaseNamingPolicy()));
     });
 
-    // Development-only data seeder (spec 008). Gate de seguridad: en producción NO se
-    // registra ni se ejecuta. Se registra tras AddInfrastructure para correr después de
-    // la verificación de conexión a MongoDB.
+    // Development-only data seeder (spec 008). El servicio IDevDataSeeder se registra siempre en
+    // AddInfrastructure (es idempotente y lo reutiliza la zona de peligro); aquí sólo se habilita
+    // el DISPARO automático al arranque, restringido a Development como gate de seguridad.
     if (builder.Environment.IsDevelopment())
     {
-        builder.Services.AddSingleton<IDevDataSeeder, DevDataSeeder>();
         builder.Services.AddHostedService<DevDataSeederHostedService>();
     }
 
@@ -110,12 +109,28 @@ try
     app.MapResendFailedNotifications();
     app.MapSanitizeStuckNotifications();
 
+    // Maintenance "danger zone" endpoints (/configuracion)
+    app.MapDeleteAllData();
+    app.MapFlushDatabase();
+
     // Invoices endpoints
     app.MapPayInvoice();
     app.MapListInvoices();
     app.MapGetInvoiceById();
     app.MapTransitionInvoice();
     app.MapGetInvoiceStats();
+
+    // Invoices CRUD endpoints (spec 018 — US1)
+    app.MapCreateInvoice();
+    app.MapUpdateInvoice();
+    app.MapDeleteInvoice();
+
+    // Clients CRUD endpoints (spec 018 — US2)
+    app.MapListClients();
+    app.MapGetClientById();
+    app.MapCreateClient();
+    app.MapUpdateClient();
+    app.MapDeleteClient();
 
     // Workers endpoints
     app.MapTriggerTransitions();

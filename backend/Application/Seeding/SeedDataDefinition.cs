@@ -19,6 +19,17 @@ public static class SeedDataDefinition
     public const string ClienteB = "seed-cliente-b";
     public const string ClienteC = "seed-cliente-c";
 
+    /// <summary>
+    /// Definiciones de los 3 clientes a sembrar (spec 018, research D11). Usan los IDs estables
+    /// referenciados por las facturas, con emails coherentes para la resolución de notificaciones.
+    /// </summary>
+    public static IReadOnlyList<SeedClientPlan> Clients { get; } = new List<SeedClientPlan>
+    {
+        new(ClienteA, "Cliente A", "cliente.a@monolegal.test", "+57 300 000 0001", "Calle A #1-11"),
+        new(ClienteB, "Cliente B", "cliente.b@monolegal.test", "+57 300 000 0002", "Calle B #2-22"),
+        new(ClienteC, "Cliente C", "cliente.c@monolegal.test", "+57 300 000 0003", "Calle C #3-33"),
+    };
+
     /// <summary>Las 8 facturas a sembrar (fuente de verdad de los tests).</summary>
     public static IReadOnlyList<SeedInvoicePlan> Invoices { get; } = new List<SeedInvoicePlan>
     {

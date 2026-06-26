@@ -9,6 +9,12 @@ namespace Backend.Application.Seeding;
 public sealed record SeedInvoicePlan(string ClientId, decimal Amount, InvoiceStatus Status);
 
 /// <summary>
+/// Definición declarativa de un cliente a sembrar (spec 018), antes de materializarse en la
+/// entidad de dominio <c>Client</c> con su identificador estable.
+/// </summary>
+public sealed record SeedClientPlan(string Id, string Name, string Email, string? Phone, string? Address);
+
+/// <summary>
 /// Resultado observable de una ejecución del sembrador de datos de desarrollo.
 /// </summary>
 /// <param name="Seeded"><c>true</c> si se sembró; <c>false</c> si se omitió.</param>

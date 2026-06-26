@@ -98,6 +98,8 @@ export interface InvoiceDetail {
   id: string
   clientId: string
   amount: number
+  dueDate: string // ISO-8601 UTC
+  items: InvoiceItem[]
   status: InvoiceStatus
   createdAt: string // ISO-8601 UTC
   updatedAt: string // ISO-8601 UTC
@@ -106,4 +108,29 @@ export interface InvoiceDetail {
   lastStatusTransitionAt: string // ISO-8601 UTC
   statusHistory: StatusChange[]
   allowedTransitions: InvoiceStatus[]
+}
+
+/**
+ * Línea de detalle de una factura (spec 018). El subtotal lo deriva el backend; en el formulario
+ * se recalcula en vivo como `quantity * unitPrice`.
+ */
+export interface InvoiceItem {
+  description: string
+  quantity: number
+  unitPrice: number
+  subtotal: number
+}
+
+/** Línea de detalle editable en el formulario (sin subtotal: se deriva). */
+export interface InvoiceItemForm {
+  description: string
+  quantity: number
+  unitPrice: number
+}
+
+/** Datos del formulario de factura (alta/edición). */
+export interface InvoiceFormValues {
+  clientId: string
+  dueDate: string // yyyy-MM-dd
+  items: InvoiceItemForm[]
 }

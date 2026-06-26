@@ -2,8 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { EmailProvider, EmailSettingsInput } from '../types'
 import { getEmailSettings, updateEmailSettings, validateEmailCredentials } from './emailSettings'
 
-/** Clave de caché de la configuración de email. */
-export const emailSettingsKey = ['settings', 'email'] as const
+/** Clave de caché de la configuración de email (privada del módulo). */
+const emailSettingsKey = ['settings', 'email'] as const
 
 /** Hook de lectura de la configuración de email. */
 export function useEmailSettings() {

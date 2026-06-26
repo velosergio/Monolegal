@@ -1,3 +1,4 @@
+import { Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -16,13 +17,22 @@ interface InvoicesTableProps {
   invoices: Invoice[]
   /** Abre el detalle de una factura (modal). Cuando se omite, el ID se muestra como texto. */
   onSelectInvoice?: (id: string) => void
+  /** Abre el formulario de edición de una factura (spec 018). Deshabilitado en estado terminal. */
+  onEditInvoice?: (id: string) => void
+  /** Abre la confirmación de eliminación de una factura (spec 018). */
+  onDeleteInvoice?: (id: string) => void
 }
 
 /**
  * Tabla de facturas: ID, Cliente, Monto, Estado, Última Acción y acción "Pagar"
  * (solo para facturas en estado no terminal). El ID es accionable (abre el detalle).
  */
-export function InvoicesTable({ invoices, onSelectInvoice }: InvoicesTableProps) {
+export function InvoicesTable({
+  invoices,
+  onSelectInvoice,
+  onEditInvoice,
+  onDeleteInvoice,
+}: InvoicesTableProps) {
   const pay = usePayInvoice()
 
   return (
@@ -69,19 +79,41 @@ export function InvoicesTable({ invoices, onSelectInvoice }: InvoicesTableProps)
                 {formatDate(invoice.lastStatusTransitionAt)}
               </TableCell>
               <TableCell className="text-right">
-                {isTerminal ? (
-                  <span className="text-xs text-muted-foreground">—</span>
-                ) : (
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    disabled={isPaying}
-                    onClick={() => pay.mutate(invoice.id)}
-                  >
-                    {isPaying ? 'Pagando…' : 'Pagar'}
-                  </Button>
-                )}
+                <div className="flex justify-end gap-2">
+                  {!isTerminal ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      disabled={isPaying}
+                      onClick={() => pay.mutate(invoice.id)}
+                    >
+                      {isPaying ? 'Pagando…' : 'Pagar'}
+                    </Button>
+                  ) : null}
+                  {onEditInvoice && !isTerminal ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onEditInvoice(invoice.id)}
+                      aria-label={`Editar la factura ${shortId(invoice.id)}`}
+                    >
+                      <Pencil className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                  ) : null}
+                  {onDeleteInvoice ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onDeleteInvoice(invoice.id)}
+                      aria-label={`Eliminar la factura ${shortId(invoice.id)}`}
+                    >
+                      <Trash2 className="h-4 w-4" aria-hidden="true" />
+                    </Button>
+                  ) : null}
+                </div>
               </TableCell>
             </TableRow>
           )

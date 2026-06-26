@@ -56,6 +56,15 @@ public sealed class ThrowingInvoiceRepository : IInvoiceRepository
     public Task<long> CountAsync(CancellationToken cancellationToken = default)
         => _inner.CountAsync(cancellationToken);
 
+    public Task<long> DeleteAllAsync(CancellationToken cancellationToken = default)
+        => _inner.DeleteAllAsync(cancellationToken);
+
+    public Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
+        => _inner.DeleteAsync(id, cancellationToken);
+
+    public Task<long> CountByClientIdAsync(string clientId, CancellationToken cancellationToken = default)
+        => _inner.CountByClientIdAsync(clientId, cancellationToken);
+
     public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
         InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default)
         => _inner.GetPagedAsync(status, clientSearch, page, pageSize, cancellationToken);

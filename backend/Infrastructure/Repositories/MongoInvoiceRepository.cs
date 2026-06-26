@@ -101,6 +101,31 @@ public sealed class MongoInvoiceRepository : IInvoiceRepository
             .ConfigureAwait(false);
     }
 
+    public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
+    {
+        var result = await _collection
+            .DeleteOneAsync(x => x.Id == id, cancellationToken)
+            .ConfigureAwait(false);
+
+        return result.DeletedCount > 0;
+    }
+
+    public async Task<long> CountByClientIdAsync(string clientId, CancellationToken cancellationToken = default)
+    {
+        return await _collection
+            .CountDocumentsAsync(x => x.ClientId == clientId, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<long> DeleteAllAsync(CancellationToken cancellationToken = default)
+    {
+        var result = await _collection
+            .DeleteManyAsync(FilterDefinition<Invoice>.Empty, cancellationToken)
+            .ConfigureAwait(false);
+
+        return result.DeletedCount;
+    }
+
     public async Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
         InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default)
     {

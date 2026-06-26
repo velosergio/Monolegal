@@ -31,11 +31,20 @@ public sealed class DevDataSeeder : IDevDataSeeder
         };
 
     private readonly IInvoiceRepository _invoiceRepository;
+    private readonly IClientRepository? _clientRepository;
     private readonly ILogger<DevDataSeeder> _logger;
 
-    public DevDataSeeder(IInvoiceRepository invoiceRepository, ILogger<DevDataSeeder> logger)
+    /// <param name="clientRepository">
+    /// Repositorio de clientes (spec 018). Opcional para no romper construcciones de test previas:
+    /// cuando se provee, el seeder también crea los documentos <c>Client</c> con IDs estables.
+    /// </param>
+    public DevDataSeeder(
+        IInvoiceRepository invoiceRepository,
+        ILogger<DevDataSeeder> logger,
+        IClientRepository? clientRepository = null)
     {
         _invoiceRepository = invoiceRepository;
+        _clientRepository = clientRepository;
         _logger = logger;
     }
 
@@ -49,6 +58,17 @@ public sealed class DevDataSeeder : IDevDataSeeder
                 "Seed de desarrollo omitido. Sembrado={Seeded} Motivo={Reason} FacturasExistentes={Existing}",
                 skipped.Seeded, skipped.Reason, existing);
             return skipped;
+        }
+
+        // Clientes primero (si hay repositorio): las facturas referencian sus IDs estables.
+        if (_clientRepository is not null)
+        {
+            foreach (var clientPlan in SeedDataDefinition.Clients)
+            {
+                var client = Client.CreateForSeed(
+                    clientPlan.Id, clientPlan.Name, clientPlan.Email, clientPlan.Phone, clientPlan.Address);
+                await _clientRepository.AddAsync(client, cancellationToken).ConfigureAwait(false);
+            }
         }
 
         var plans = SeedDataDefinition.Invoices;

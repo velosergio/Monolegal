@@ -55,6 +55,19 @@ public class InvoiceRepositoryContractTests
         public Task<long> CountAsync(CancellationToken ct = default)
             => Task.FromResult((long)_store.Count);
 
+        public Task<long> DeleteAllAsync(CancellationToken ct = default)
+        {
+            var removed = (long)_store.Count;
+            _store.Clear();
+            return Task.FromResult(removed);
+        }
+
+        public Task<bool> DeleteAsync(string id, CancellationToken ct = default)
+            => Task.FromResult(_store.Remove(id));
+
+        public Task<long> CountByClientIdAsync(string clientId, CancellationToken ct = default)
+            => Task.FromResult((long)_store.Values.Count(i => i.ClientId == clientId));
+
         public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
             InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken ct = default)
         {

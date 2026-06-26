@@ -74,6 +74,19 @@ public class InvoiceWorkerTests
         public Task<long> CountAsync(CancellationToken cancellationToken = default)
             => Task.FromResult((long)_store.Count);
 
+        public Task<long> DeleteAllAsync(CancellationToken cancellationToken = default)
+        {
+            var removed = (long)_store.Count;
+            _store.Clear();
+            return Task.FromResult(removed);
+        }
+
+        public Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
+            => Task.FromResult(_store.Remove(id));
+
+        public Task<long> CountByClientIdAsync(string clientId, CancellationToken cancellationToken = default)
+            => Task.FromResult((long)_store.Values.Count(i => i.ClientId == clientId));
+
         public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
             InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default)
         {

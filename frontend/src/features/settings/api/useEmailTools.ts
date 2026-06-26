@@ -1,12 +1,28 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { resendFailedNotifications, sanitizeStuckNotifications } from './emailTools'
 
-/** Mutación de reenvío masivo de notificaciones fallidas. */
+/** Mutación de reenvío masivo de notificaciones fallidas; refresca facturas y estadísticas. */
 export function useResendFailed() {
-  return useMutation({ mutationFn: () => resendFailedNotifications() })
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => resendFailedNotifications(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['invoices'] })
+      queryClient.invalidateQueries({ queryKey: ['invoice'] })
+      queryClient.invalidateQueries({ queryKey: ['invoice-stats'] })
+    },
+  })
 }
 
-/** Mutación de saneamiento de notificaciones atascadas. */
+/** Mutación de saneamiento de notificaciones atascadas; refresca facturas y estadísticas. */
 export function useSanitizeStuck() {
-  return useMutation({ mutationFn: () => sanitizeStuckNotifications() })
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => sanitizeStuckNotifications(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['invoices'] })
+      queryClient.invalidateQueries({ queryKey: ['invoice'] })
+      queryClient.invalidateQueries({ queryKey: ['invoice-stats'] })
+    },
+  })
 }

@@ -20,6 +20,12 @@ const SettingsPage = lazy(() =>
   }))
 )
 
+const ClientsPage = lazy(() =>
+  import('./features/clients/components/ClientsPage').then((module) => ({
+    default: module.ClientsPage,
+  }))
+)
+
 const DashboardPage = lazy(() =>
   import('./features/dashboard/components/DashboardPage').then((module) => ({
     default: module.DashboardPage,
@@ -46,6 +52,14 @@ function App() {
                 element={
                   <Suspense fallback={<InvoicesTableSkeleton />}>
                     <InvoicesPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/clientes"
+                element={
+                  <Suspense fallback={<Skeleton className="h-48 w-full" />}>
+                    <ClientsPage />
                   </Suspense>
                 }
               />

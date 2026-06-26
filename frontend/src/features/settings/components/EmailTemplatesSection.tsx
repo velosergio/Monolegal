@@ -110,8 +110,8 @@ function TemplateEditor({
   const reset = useResetEmailTemplate()
   const preview = usePreviewEmailTemplate()
 
-  const [subject, setSubject] = useState(template.subject)
-  const [body, setBody] = useState(template.body)
+  const [subject, setSubject] = useState(() => template.subject)
+  const [body, setBody] = useState(() => template.body)
   const [previewResult, setPreviewResult] = useState<{ subject: string; body: string } | null>(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
@@ -120,9 +120,13 @@ function TemplateEditor({
 
   function findInvalidVariables(text: string): string[] {
     const invalid: string[] = []
+    const seen = new Set<string>()
     for (const match of text.matchAll(VARIABLE_RE)) {
       const name = match[1]
-      if (!allowed.has(name) && !invalid.includes(name)) invalid.push(name)
+      if (!allowed.has(name) && !seen.has(name)) {
+        seen.add(name)
+        invalid.push(name)
+      }
     }
     return invalid
   }

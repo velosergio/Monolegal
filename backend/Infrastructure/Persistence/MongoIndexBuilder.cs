@@ -29,6 +29,9 @@ public sealed class MongoIndexBuilder(
     private readonly IMongoCollection<Invoice> _collection =
         database.GetCollection<Invoice>("Invoices");
 
+    private readonly IMongoCollection<Client> _clients =
+        database.GetCollection<Client>("Clients");
+
     private readonly ILogger<MongoIndexBuilder> _logger = logger;
 
     /// <summary>
@@ -75,6 +78,54 @@ public sealed class MongoIndexBuilder(
                 _logger.LogWarning(
                     ex,
                     "No se pudo crear el índice '{IndexName}' en la colección Invoices. Se continúa el arranque.",
+                    model.Options?.Name ?? "(sin nombre)");
+            }
+        }
+
+        await EnsureClientIndexesAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Crea los índices de la colección <c>Clients</c> (spec 018): índice único sobre <c>Email</c>
+    /// (case-insensitive vía collation strength 2, research D5) e índice ascendente sobre <c>Name</c>
+    /// para el orden del listado. Idempotente.
+    /// </summary>
+    private async Task EnsureClientIndexesAsync(CancellationToken cancellationToken)
+    {
+        var models = new[]
+        {
+            new CreateIndexModel<Client>(
+                Builders<Client>.IndexKeys.Ascending(x => x.Email),
+                new CreateIndexOptions
+                {
+                    Background = false,
+                    Unique = true,
+                    Name = "Email_unique",
+                    Collation = new Collation("en", strength: CollationStrength.Secondary),
+                }),
+
+            new CreateIndexModel<Client>(
+                Builders<Client>.IndexKeys.Ascending(x => x.Name),
+                new CreateIndexOptions { Background = false, Name = "Name_asc" }),
+        };
+
+        foreach (var model in models)
+        {
+            try
+            {
+                var indexName = await _clients.Indexes
+                    .CreateOneAsync(model, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false);
+
+                _logger.LogInformation(
+                    "Índice de MongoDB asegurado. Colección=Clients Índice={IndexName}",
+                    indexName);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                _logger.LogWarning(
+                    ex,
+                    "No se pudo crear el índice '{IndexName}' en la colección Clients. Se continúa el arranque.",
                     model.Options?.Name ?? "(sin nombre)");
             }
         }

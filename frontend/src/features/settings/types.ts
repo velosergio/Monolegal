@@ -91,3 +91,16 @@ export interface ResendFailedResult {
 export interface SanitizeResult {
   sanitized: number
 }
+
+/** Resultado de `POST /api/settings/maintenance/delete-all-data`. */
+export interface DeleteAllDataResult {
+  deletedInvoices: number
+}
+
+/** Resultado de `POST /api/settings/maintenance/flush-database`. */
+export interface FlushDatabaseResult {
+  deletedInvoices: number
+  seeded: boolean
+  clientsCreated: number
+  invoicesCreated: number
+}

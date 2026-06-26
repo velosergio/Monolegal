@@ -8,8 +8,8 @@ import {
   updateEmailTemplate,
 } from './emailTemplates'
 
-/** Clave de caché de las plantillas de email. */
-export const emailTemplatesKey = ['settings', 'email', 'templates'] as const
+/** Clave de caché de las plantillas de email (privada del módulo). */
+const emailTemplatesKey = ['settings', 'email', 'templates'] as const
 
 /** Hook de lectura de las plantillas de email. */
 export function useEmailTemplates() {

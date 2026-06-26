@@ -14,6 +14,18 @@ public interface IInvoiceRepository
     Task UpdateAsync(Invoice invoice, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Elimina permanentemente (hard delete) una factura por su id (spec 018, RF-010). Devuelve
+    /// <c>true</c> si existía y se eliminó, <c>false</c> si no había una factura con ese id.
+    /// </summary>
+    Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Cuenta las facturas asociadas a un cliente (spec 018, RF-018). Lo usa el borrado de cliente
+    /// para impedir la eliminación de clientes con facturas asociadas.
+    /// </summary>
+    Task<long> CountByClientIdAsync(string clientId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Returns all invoices in states that can be automatically transitioned:
     /// Pending, PrimerRecordatorio, SegundoRecordatorio.
     /// </summary>
@@ -36,6 +48,13 @@ public interface IInvoiceRepository
     /// specs/008-seed-data-clientes/contracts/dev-data-seeder.md.
     /// </summary>
     Task<long> CountAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes every invoice in the collection and returns the number of documents
+    /// removed. Used by the maintenance "danger zone" (delete all records) to clear
+    /// business data without dropping the database. Irreversible.
+    /// </summary>
+    Task<long> DeleteAllAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns a page of invoices, optionally filtered by <paramref name="status"/> and/or by a

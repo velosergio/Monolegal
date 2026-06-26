@@ -1,7 +1,9 @@
 using Backend.Application.Abstractions;
 using Backend.Application.Notifications;
+using Backend.Application.Seeding;
 using Backend.Infrastructure.Clients;
 using Backend.Infrastructure.Email;
+using Backend.Infrastructure.Maintenance;
 using Backend.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +27,10 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // Mapeos BSON personalizados (spec 017): claves enum en diccionarios persistidos.
+        // Debe registrarse antes de cualquier (de)serialización de SystemSettings.
+        MongoSerializationConfig.Register();
+
         var mongoOptions = BuildMongoOptions(configuration);
         services.AddSingleton(Microsoft.Extensions.Options.Options.Create(mongoOptions));
 
@@ -34,6 +40,7 @@ public static class DependencyInjection
         // Repositories
         services.AddSingleton<ISystemSettingsRepository, MongoSystemSettingsRepository>();
         services.AddSingleton<IInvoiceRepository, MongoInvoiceRepository>();
+        services.AddSingleton<IClientRepository, MongoClientRepository>();
 
         // Build the client from explicit settings so pooling and server-selection
         // timeout are configured (FR-010, research D4).
@@ -57,6 +64,9 @@ public static class DependencyInjection
         // Migración única e idempotente del historial de estados y limpieza de estados legacy
         // (spec 015, FR-030/FR-031). Se ejecuta al arranque y es segura de reejecutar.
         services.AddHostedService<Backend.Infrastructure.Hosting.StatusHistoryBackfillMigration>();
+
+        // Migración única e idempotente de items/vencimiento para facturas previas (spec 018, D6).
+        services.AddHostedService<Backend.Infrastructure.Hosting.InvoiceItemsBackfillMigration>();
 
         // Background worker options: interval is operational config, bound from configuration
         // (section "InvoiceTransitionsWorker", overridable via env var InvoiceTransitionsWorker__IntervalMinutes).
@@ -91,12 +101,24 @@ public static class DependencyInjection
         else
             services.AddSingleton<IEmailService, NoOpEmailService>();
 
-        // Resolución del correo del cliente y orquestador de notificación en transición.
-        services.AddSingleton<IClientEmailResolver, ConfiguredClientEmailResolver>();
+        // Resolución del correo del cliente (spec 018, D8): la implementación principal lee de la
+        // colección Clients y recurre al resolver basado en configuración cuando no hay dato.
+        services.AddSingleton<ConfiguredClientEmailResolver>();
+        services.AddSingleton<IClientEmailResolver>(sp => new ClientRepositoryEmailResolver(
+            sp.GetRequiredService<IClientRepository>(),
+            sp.GetRequiredService<ConfiguredClientEmailResolver>()));
         services.AddSingleton<IInvoiceTransitionNotifier, InvoiceTransitionNotifier>();
 
         // Herramientas globales de administración de envíos (spec 017, US4).
         services.AddSingleton<IEmailAdminService, EmailAdminService>();
+
+        // Sembrador de datos de desarrollo. Se registra SIEMPRE (es idempotente: sólo siembra con
+        // la base vacía) para que la zona de peligro pueda re-sembrar tras un flush. El disparo
+        // automático al arranque sigue restringido a Development (ver Program.cs).
+        services.AddSingleton<IDevDataSeeder, DevDataSeeder>();
+
+        // Operaciones destructivas de mantenimiento de la "zona de peligro" (/configuracion).
+        services.AddSingleton<IMaintenanceService, MaintenanceService>();
 
         // Background worker: evaluates and applies invoice status transitions periodically.
         services.AddHostedService<InvoiceTransitionsWorker>();

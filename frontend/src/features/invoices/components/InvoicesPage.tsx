@@ -1,13 +1,18 @@
+import { Plus } from 'lucide-react'
 import { domAnimation, LazyMotion, m, useReducedMotion } from 'motion/react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useDocumentTitle } from '@/hooks/use-document-title'
 import { fadeInUp, motionTransition } from '@/lib/motion'
 import { cn } from '@/lib/utils'
+import { useInvoiceDetail } from '../api/useInvoiceDetail'
 import { useInvoices } from '../api/useInvoices'
 import { PAGE_SIZE, useInvoicesViewState } from '../hooks/useInvoicesViewState'
 import { useSelectedInvoice } from '../hooks/useSelectedInvoice'
 import { ClientSearch } from './ClientSearch'
+import { DeleteInvoiceDialog } from './DeleteInvoiceDialog'
 import { InvoiceDetailModal } from './InvoiceDetailModal'
+import { InvoiceFormModal } from './InvoiceFormModal'
 import { InvoicesEmptyState } from './InvoicesEmptyState'
 import { InvoicesPagination } from './InvoicesPagination'
 import { InvoicesTable } from './InvoicesTable'
@@ -26,6 +31,12 @@ export function InvoicesPage() {
   const { selectedId, open: openInvoice, close: closeInvoice } = useSelectedInvoice()
   const reduceMotion = useReducedMotion()
 
+  // Estado del CRUD (spec 018): alta, edición (por id → detalle) y borrado.
+  const [isCreating, setIsCreating] = useState(false)
+  const [editId, setEditId] = useState<string | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const editDetail = useInvoiceDetail(editId)
+
   const query = useInvoices({ status, search, page, pageSize: PAGE_SIZE })
   const { data, isLoading, isError, isPlaceholderData } = query
 
@@ -43,6 +54,10 @@ export function InvoicesPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <StatusFilter value={status} onChange={setStatus} />
         <ClientSearch value={searchInput} onChange={setSearchInput} />
+        <Button type="button" className="sm:ml-auto" onClick={() => setIsCreating(true)}>
+          <Plus className="h-4 w-4" aria-hidden="true" />
+          Nueva factura
+        </Button>
       </div>
 
       <LazyMotion features={domAnimation}>
@@ -72,13 +87,31 @@ export function InvoicesPage() {
               className={cn('transition-opacity', isPlaceholderData && 'opacity-60')}
               aria-busy={isPlaceholderData}
             >
-              <InvoicesTable invoices={data.data} onSelectInvoice={openInvoice} />
+              <InvoicesTable
+                invoices={data.data}
+                onSelectInvoice={openInvoice}
+                onEditInvoice={setEditId}
+                onDeleteInvoice={setDeleteId}
+              />
             </div>
           )}
         </m.div>
       </LazyMotion>
 
       <InvoiceDetailModal invoiceId={selectedId} onClose={closeInvoice} />
+
+      {/* Alta de factura */}
+      <InvoiceFormModal open={isCreating} onClose={() => setIsCreating(false)} />
+
+      {/* Edición: se abre cuando el detalle de la factura seleccionada ya cargó */}
+      <InvoiceFormModal
+        open={editId != null && editDetail.data != null}
+        invoice={editDetail.data ?? null}
+        onClose={() => setEditId(null)}
+      />
+
+      {/* Borrado con confirmación */}
+      <DeleteInvoiceDialog invoiceId={deleteId} onClose={() => setDeleteId(null)} />
 
       {!isError && data && data.total > 0 ? (
         <InvoicesPagination

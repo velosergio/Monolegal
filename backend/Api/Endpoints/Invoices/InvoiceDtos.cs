@@ -31,6 +31,22 @@ public sealed record InvoiceListItemDto(
 /// <summary>Respuesta paginada genérica: datos de la página, total de coincidencias y tamaño de página.</summary>
 public sealed record PagedResponse<T>(IReadOnlyList<T> Data, long Total, int PageSize);
 
+/// <summary>Línea de detalle de una factura para transporte HTTP (spec 018). El subtotal es derivado.</summary>
+public sealed record InvoiceItemDto(string Description, decimal Quantity, decimal UnitPrice, decimal Subtotal)
+{
+    public static InvoiceItemDto FromEntity(InvoiceItem item) =>
+        new(item.Description, item.Quantity, item.UnitPrice, item.Subtotal);
+}
+
+/// <summary>Línea de detalle recibida en creación/edición (sin subtotal: se deriva).</summary>
+public sealed record InvoiceItemInput(string? Description, decimal Quantity, decimal UnitPrice);
+
+/// <summary>Cuerpo de POST /api/invoices (spec 018, RF-001). El monto NO se captura: se deriva de los items.</summary>
+public sealed record CreateInvoiceRequest(string? ClientId, DateTime? DueDate, IReadOnlyList<InvoiceItemInput>? Items);
+
+/// <summary>Cuerpo de PUT /api/invoices/{id} (spec 018, RF-003). Sin status ni amount.</summary>
+public sealed record UpdateInvoiceRequest(string? ClientId, DateTime? DueDate, IReadOnlyList<InvoiceItemInput>? Items);
+
 /// <summary>Un evento del historial de cambios de estado (spec 015).</summary>
 public sealed record StatusChangeDto(
     string From,
@@ -53,6 +69,8 @@ public sealed record InvoiceDetailDto(
     string Id,
     string ClientId,
     decimal Amount,
+    DateTime DueDate,
+    IReadOnlyList<InvoiceItemDto> Items,
     InvoiceStatus Status,
     DateTime CreatedAt,
     DateTime UpdatedAt,
@@ -68,6 +86,8 @@ public sealed record InvoiceDetailDto(
         invoice.Id,
         invoice.ClientId,
         invoice.Amount,
+        invoice.DueDate,
+        invoice.Items.Select(InvoiceItemDto.FromEntity).ToList(),
         invoice.Status,
         invoice.CreatedAt,
         invoice.UpdatedAt,
