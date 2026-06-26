@@ -1,0 +1,32 @@
+# Extras SOLO para desarrollo local. Docker Compose carga este archivo
+# automáticamente al ejecutar `docker compose up` (sin -f).
+#
+# Easypanel NO usa este archivo: solo consume `docker-compose.yml`, por lo que
+# en el servidor no se publican puertos al host ni se exponen Mongo/backend.
+#
+# Aquí se añaden los puertos publicados (para acceder desde el navegador/host),
+# nombres de contenedor legibles y el entorno de desarrollo.
+services:
+  frontend:
+    container_name: monolegal-frontend
+    ports:
+      - "5173:5173"
+
+  backend:
+    container_name: monolegal-backend
+    ports:
+      - "5000:5000"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      LOG_LEVEL: Debug
+
+  worker:
+    container_name: monolegal-worker
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      LOG_LEVEL: Debug
+
+  mongo:
+    container_name: monolegal-mongo
+    ports:
+      - "27017:27017"
