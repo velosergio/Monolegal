@@ -15,10 +15,10 @@ describe('Sidebar', () => {
     expect(facturas).toHaveAttribute('aria-current', 'page')
   })
 
-  it('muestra Dashboard deshabilitado con "Próximamente"', () => {
+  it('expone Dashboard como ruta navegable (habilitada)', () => {
     renderSidebar(<Sidebar />)
-    expect(screen.getByRole('button', { name: /Dashboard/ })).toBeDisabled()
-    expect(screen.getAllByText('Próximamente')).toHaveLength(1)
+    expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
+    expect(screen.queryByText('Próximamente')).not.toBeInTheDocument()
   })
 
   it('expone Configuración como ruta navegable', () => {

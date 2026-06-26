@@ -54,6 +54,10 @@ public static class DependencyInjection
         services.AddSingleton<MongoIndexBuilder>();
         services.AddHostedService<MongoConnectionVerifier>();
 
+        // Migración única e idempotente del historial de estados y limpieza de estados legacy
+        // (spec 015, FR-030/FR-031). Se ejecuta al arranque y es segura de reejecutar.
+        services.AddHostedService<Backend.Infrastructure.Hosting.StatusHistoryBackfillMigration>();
+
         // Background worker options: interval is operational config, bound from configuration
         // (section "InvoiceTransitionsWorker", overridable via env var InvoiceTransitionsWorker__IntervalMinutes).
         // Default interval applies when unset/invalid (spec 012, FR-001/FR-002, SC-005).

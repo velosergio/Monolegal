@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 import { InvoicesPage } from '@/features/invoices/components/InvoicesPage'
 import { DURATION, motionTransition, REDUCED_TRANSITION } from '@/lib/motion'
@@ -30,7 +31,11 @@ describe('Movimiento reducido', () => {
     )
     mockFetchJson({ data: [], total: 0, pageSize: 10 })
 
-    renderWithQuery(<InvoicesPage />)
+    renderWithQuery(
+      <MemoryRouter>
+        <InvoicesPage />
+      </MemoryRouter>
+    )
     expect(await screen.findByRole('heading', { name: 'Facturas' })).toBeInTheDocument()
   })
 })

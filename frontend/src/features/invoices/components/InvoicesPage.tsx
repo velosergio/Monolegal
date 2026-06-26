@@ -5,7 +5,9 @@ import { fadeInUp, motionTransition } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 import { useInvoices } from '../api/useInvoices'
 import { PAGE_SIZE, useInvoicesViewState } from '../hooks/useInvoicesViewState'
+import { useSelectedInvoice } from '../hooks/useSelectedInvoice'
 import { ClientSearch } from './ClientSearch'
+import { InvoiceDetailModal } from './InvoiceDetailModal'
 import { InvoicesEmptyState } from './InvoicesEmptyState'
 import { InvoicesPagination } from './InvoicesPagination'
 import { InvoicesTable } from './InvoicesTable'
@@ -21,6 +23,7 @@ export function InvoicesPage() {
   useDocumentTitle('Facturas')
   const { status, searchInput, search, page, setStatus, setSearchInput, setPage } =
     useInvoicesViewState()
+  const { selectedId, open: openInvoice, close: closeInvoice } = useSelectedInvoice()
   const reduceMotion = useReducedMotion()
 
   const query = useInvoices({ status, search, page, pageSize: PAGE_SIZE })
@@ -69,11 +72,13 @@ export function InvoicesPage() {
               className={cn('transition-opacity', isPlaceholderData && 'opacity-60')}
               aria-busy={isPlaceholderData}
             >
-              <InvoicesTable invoices={data.data} />
+              <InvoicesTable invoices={data.data} onSelectInvoice={openInvoice} />
             </div>
           )}
         </m.div>
       </LazyMotion>
+
+      <InvoiceDetailModal invoiceId={selectedId} onClose={closeInvoice} />
 
       {!isError && data && data.total > 0 ? (
         <InvoicesPagination

@@ -93,18 +93,6 @@ public sealed class MongoInvoiceRepository : IInvoiceRepository
             .ConfigureAwait(false);
     }
 
-    public async Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default)
-    {
-        var update = Builders<Invoice>.Update
-            .Set(x => x.Status, newStatus)
-            .Set(x => x.UpdatedAt, DateTime.UtcNow)
-            .Set(x => x.LastStatusTransitionAt, DateTime.UtcNow);
-
-        await _collection
-            .UpdateOneAsync(x => x.Id == id, update, cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-    }
-
     public async Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
         InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default)
     {

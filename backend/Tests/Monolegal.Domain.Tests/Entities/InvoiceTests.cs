@@ -22,11 +22,64 @@ public class InvoiceTests
         invoice.Id.ShouldNotBeNullOrWhiteSpace();
         invoice.ClientId.ShouldBe(clientId);
         invoice.Amount.ShouldBe(amount);
-        invoice.Status.ShouldBe(InvoiceStatus.Draft);
+        // spec 015 (FR-031): el estado inicial es Pending (los estados legacy se retiraron).
+        invoice.Status.ShouldBe(InvoiceStatus.Pending);
         invoice.CreatedAt.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(1));
         invoice.UpdatedAt.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(1));
         invoice.RemindersCount.ShouldBe(0);
         invoice.LastReminderSentAt.ShouldBeNull();
+        // El historial arranca vacío; el evento de creación se siembra por migración/derivación.
+        invoice.StatusHistory.ShouldBeEmpty();
+    }
+
+    // ── spec 015: historial de cambios de estado ─────────────────────────────────
+
+    [Fact]
+    public void UpdateStatus_ShouldAppendStatusChange_WithFromToAtAndSource()
+    {
+        // Arrange
+        var invoice = new Invoice("client_123", 100m);
+
+        // Act — origen por defecto (Manual)
+        invoice.UpdateStatus(InvoiceStatus.PrimerRecordatorio);
+
+        // Assert
+        invoice.StatusHistory.Count.ShouldBe(1);
+        var change = invoice.StatusHistory[0];
+        change.From.ShouldBe(InvoiceStatus.Pending);
+        change.To.ShouldBe(InvoiceStatus.PrimerRecordatorio);
+        change.At.ShouldBe(invoice.LastStatusTransitionAt);
+        change.Source.ShouldBe(StatusChangeSource.Manual);
+    }
+
+    [Fact]
+    public void UpdateStatus_WithAutomaticSource_ShouldRecordAutomatic()
+    {
+        // Arrange
+        var invoice = new Invoice("client_123", 100m);
+
+        // Act
+        invoice.UpdateStatus(InvoiceStatus.PrimerRecordatorio, StatusChangeSource.Automatic);
+
+        // Assert
+        invoice.StatusHistory[^1].Source.ShouldBe(StatusChangeSource.Automatic);
+    }
+
+    [Fact]
+    public void UpdateStatus_MultipleTimes_ShouldAccumulateHistoryInOrder()
+    {
+        // Arrange
+        var invoice = new Invoice("client_123", 100m);
+
+        // Act
+        invoice.UpdateStatus(InvoiceStatus.PrimerRecordatorio, StatusChangeSource.Automatic);
+        invoice.UpdateStatus(InvoiceStatus.Pagado);
+
+        // Assert — orden cronológico de inserción
+        invoice.StatusHistory.Count.ShouldBe(2);
+        invoice.StatusHistory[0].To.ShouldBe(InvoiceStatus.PrimerRecordatorio);
+        invoice.StatusHistory[1].From.ShouldBe(InvoiceStatus.PrimerRecordatorio);
+        invoice.StatusHistory[1].To.ShouldBe(InvoiceStatus.Pagado);
     }
 
     [Fact]

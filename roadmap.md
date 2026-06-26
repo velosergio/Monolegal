@@ -246,7 +246,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🎨 Fase 4: Frontend (React UI) `2/6 specs`
+## 🎨 Fase 4: Frontend (React UI) `4/6 specs`
 
 ### Spec 4.1: Layout Base ✅ Implementada (feature 014-admin-panel-invoices)
 
@@ -271,7 +271,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Paginación (10 items/página)
 - ✅ Skeleton loaders mientras carga
 
-### Spec 4.3: Invoice Detail Modal
+### Spec 4.3: Invoice Detail Modal ✅ Implementada (feature 015-admin-panel-detail-dashboard)
 
 **GIVEN** usuario hace click en fila de tabla  
 **WHEN** modal se abre  
@@ -282,7 +282,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Botón "Cambiar Estado" (solo si es transición válida)
 - ✅ Datos actualizados via TanStack Query
 
-### Spec 4.4: Dashboard / Stats
+### Spec 4.4: Dashboard / Stats ✅ Implementada (feature 015-admin-panel-detail-dashboard)
 
 **GIVEN** usuario en `/dashboard`  
 **WHEN** página carga  

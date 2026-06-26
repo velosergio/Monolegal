@@ -25,6 +25,21 @@ export const fadeInUp: Variants = {
   visible: { opacity: 1, y: 0 },
 }
 
+/** Entrada de una barra de gráfico: crece desde 0 en el eje correspondiente. */
+export const growBar: Variants = {
+  hidden: { scaleX: 0 },
+  visible: { scaleX: 1 },
+}
+
+/**
+ * Devuelve la transición de un gráfico con un retardo escalonado por índice,
+ * desactivando el retardo y la duración cuando el movimiento está reducido.
+ */
+export function chartTransition(reduced: boolean | null, index = 0): Transition {
+  if (reduced) return REDUCED_TRANSITION
+  return { duration: DURATION.slow, ease: EASE_OUT, delay: index * 0.05 }
+}
+
 /**
  * Devuelve la transición adecuada según la preferencia de movimiento reducido.
  */

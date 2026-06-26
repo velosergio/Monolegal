@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Monolegal.Domain.Enums;
 
@@ -20,6 +21,10 @@ public class Invoice
     public DateTime? LastReminderSentAt { get; private set; }
     public DateTime LastStatusTransitionAt { get; private set; }
 
+    // Historial completo de cambios de estado, embebido en el documento (spec 015).
+    // Se *appendea* en cada llamada a UpdateStatus; es la única vía de cambio de estado.
+    public List<StatusChange> StatusHistory { get; private set; }
+
     // Último resultado de notificación por correo asociado a una transición (spec 013).
     public NotificationType? LastNotificationType { get; private set; }
     public NotificationOutcome LastNotificationOutcome { get; private set; }
@@ -37,10 +42,12 @@ public class Invoice
         Id = Guid.NewGuid().ToString("N");
         ClientId = clientId;
         Amount = amount;
-        Status = InvoiceStatus.Draft;
+        // Estado inicial del conjunto activo (spec 015, FR-031): se retiraron los estados legacy.
+        Status = InvoiceStatus.Pending;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = CreatedAt;
         LastStatusTransitionAt = CreatedAt;
+        StatusHistory = new List<StatusChange>();
         RemindersCount = 0;
         LastReminderSentAt = null;
         LastNotificationType = null;
@@ -49,10 +56,24 @@ public class Invoice
         LastNotificationError = null;
     }
 
-    public void UpdateStatus(InvoiceStatus newStatus)
+    /// <summary>
+    /// Cambia el estado de la factura, actualiza las marcas de auditoría y registra el evento
+    /// en <see cref="StatusHistory"/> (spec 015). Es la **única vía** de cambio de estado del
+    /// dominio, de modo que el historial nunca se desincroniza del estado actual (FR-029).
+    /// </summary>
+    /// <param name="newStatus">Estado destino.</param>
+    /// <param name="source">
+    /// Origen del cambio. Por defecto <see cref="StatusChangeSource.Manual"/>; el worker pasa
+    /// <see cref="StatusChangeSource.Automatic"/> explícitamente.
+    /// </param>
+    public void UpdateStatus(InvoiceStatus newStatus, StatusChangeSource source = StatusChangeSource.Manual)
     {
+        var previousStatus = Status;
+        var at = DateTime.UtcNow;
+
         Status = newStatus;
-        LastStatusTransitionAt = DateTime.UtcNow;
+        LastStatusTransitionAt = at;
+        StatusHistory.Add(new StatusChange(previousStatus, newStatus, at, source));
         UpdateAuditDate();
     }
 

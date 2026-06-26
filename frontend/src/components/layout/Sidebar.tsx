@@ -17,7 +17,7 @@ interface SidebarProps {
  * Sidebar de marca a altura completa (patrón de dashboard moderno): cabecera con
  * el logo oficial y el botón de colapsar/expandir, navegación principal por
  * rutas (react-router) que ocupa el espacio disponible y el pie anclado al
- * fondo. "Dashboard" se muestra deshabilitado con la etiqueta "Próximamente".
+ * fondo. Los ítems con `disabled` se muestran inertes con la etiqueta "Próximamente".
  */
 export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: SidebarProps) {
   return (

@@ -50,13 +50,6 @@ public sealed class InMemoryInvoiceRepository : IInvoiceRepository
     public Task<long> CountAsync(CancellationToken cancellationToken = default)
         => Task.FromResult((long)_store.Count);
 
-    public Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default)
-    {
-        if (_store.TryGetValue(id, out var invoice))
-            invoice.UpdateStatus(newStatus);
-        return Task.CompletedTask;
-    }
-
     // ──────────────────────────────────────────────────────────────────────────
     // Métodos añadidos por la spec 009 (listado paginado y agregaciones)
     // ──────────────────────────────────────────────────────────────────────────

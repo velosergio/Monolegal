@@ -9,11 +9,11 @@ export interface NavItem {
 }
 
 /**
- * Ítems de la navegación lateral. "Dashboard" queda deshabilitado
- * ("Próximamente"); "Facturas" y "Configuración" son rutas reales.
+ * Ítems de la navegación lateral. Todas son rutas reales (spec 015 habilitó
+ * "Dashboard").
  */
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: '/facturas', label: 'Facturas', icon: FileText, disabled: false },
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, disabled: true },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, disabled: false },
   { to: '/configuracion', label: 'Configuración', icon: Settings, disabled: false },
 ]

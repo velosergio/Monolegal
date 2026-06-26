@@ -8,7 +8,9 @@ services:
     ports:
       - "5173:5173"
     environment:
-      VITE_API_URL: http://localhost:5000
+      # Destino del proxy `/api` del dev server de Vite hacia el backend dentro de
+      # la red de Compose (el nombre de servicio `backend`, no `localhost`).
+      VITE_API_PROXY_TARGET: http://backend:5000
     depends_on:
       backend:
         condition: service_healthy

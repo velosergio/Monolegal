@@ -4,6 +4,7 @@ import './index.css'
 import { ErrorBoundary } from './components/feedback/ErrorBoundary'
 import { AppShell } from './components/layout/AppShell'
 import { Skeleton } from './components/ui/skeleton'
+import { DashboardSkeleton } from './features/dashboard/components/DashboardSkeleton'
 import { InvoicesTableSkeleton } from './features/invoices/components/InvoicesTableSkeleton'
 
 const InvoicesPage = lazy(() =>
@@ -15,6 +16,12 @@ const InvoicesPage = lazy(() =>
 const SettingsPage = lazy(() =>
   import('./features/settings/components/SettingsPage').then((module) => ({
     default: module.SettingsPage,
+  }))
+)
+
+const DashboardPage = lazy(() =>
+  import('./features/dashboard/components/DashboardPage').then((module) => ({
+    default: module.DashboardPage,
   }))
 )
 
@@ -30,6 +37,14 @@ function App() {
               element={
                 <Suspense fallback={<InvoicesTableSkeleton />}>
                   <InvoicesPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <Suspense fallback={<DashboardSkeleton />}>
+                  <DashboardPage />
                 </Suspense>
               }
             />

@@ -30,14 +30,6 @@ public interface IInvoiceRepository
     Task<long> CountAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Atomically updates only the status-related fields of an invoice:
-    /// <see cref="Entities.Invoice.Status"/>, <see cref="Entities.Invoice.UpdatedAt"/>
-    /// and <see cref="Entities.Invoice.LastStatusTransitionAt"/>. The rest of the document
-    /// (Amount, ClientId, RemindersCount, ...) is left untouched. A non-existent id is a no-op.
-    /// </summary>
-    Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Returns a page of invoices, optionally filtered by <paramref name="status"/> and/or by a
     /// case-insensitive "contains" match of <paramref name="clientSearch"/> against
     /// <see cref="Entities.Invoice.ClientId"/>, ordered by <see cref="Entities.Invoice.CreatedAt"/>

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Backend.Tests.Infrastructure.Support;
 using Monolegal.Api.Endpoints.Invoices;
 using Monolegal.Domain.Enums;
+using Monolegal.Domain.Services;
 using Shouldly;
 using Xunit;
 
@@ -23,12 +24,16 @@ public class GetInvoiceByIdTests
         var found = await repo.GetByIdAsync(invoice.Id);
         found.ShouldNotBeNull();
 
-        var dto = InvoiceDetailDto.FromEntity(found!);
+        var transitionService = new InvoiceTransitionService();
+        var dto = InvoiceDetailDto.FromEntity(found!, transitionService.GetAllowedTransitions(found!.Status));
         dto.Id.ShouldBe(invoice.Id);
         dto.ClientId.ShouldBe("c1");
         dto.Amount.ShouldBe(250m);
         dto.Status.ShouldBe(InvoiceStatus.PrimerRecordatorio);
         dto.LastStatusTransitionAt.ShouldBe(invoice.LastStatusTransitionAt);
+        // PrimerRecordatorio → {SegundoRecordatorio, Pagado} (spec 015)
+        dto.AllowedTransitions.ShouldBe(new[] { "segundorecordatorio", "pagado" });
+        dto.StatusHistory.ShouldNotBeNull();
     }
 
     [Fact]

@@ -84,7 +84,8 @@ public static class TransitionInvoice
                 "Transición aplicada. InvoiceId={InvoiceId} NuevoEstado={NewStatus}",
                 invoice.Id, invoice.Status);
 
-            return Results.Ok(InvoiceDetailDto.FromEntity(invoice));
+            var allowed = transitionService.GetAllowedTransitions(invoice.Status);
+            return Results.Ok(InvoiceDetailDto.FromEntity(invoice, allowed));
         })
         .WithName("TransitionInvoice")
         .WithTags("Invoices")

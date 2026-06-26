@@ -25,3 +25,18 @@ export function formatDate(iso: string): string {
 export function shortId(id: string): string {
   return id.length > 8 ? `${id.slice(0, 8)}…` : id
 }
+
+/**
+ * Etiqueta legible en español del origen de un cambio de estado (spec 015).
+ * Respaldo al valor en bruto para orígenes desconocidos (compatibilidad futura).
+ */
+export function statusChangeSourceLabel(source: string): string {
+  switch (source) {
+    case 'automatic':
+      return 'Automático'
+    case 'manual':
+      return 'Manual'
+    default:
+      return source
+  }
+}

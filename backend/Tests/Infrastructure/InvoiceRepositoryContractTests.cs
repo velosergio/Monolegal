@@ -10,7 +10,7 @@ using Xunit;
 namespace Backend.Tests.Infrastructure;
 
 /// <summary>
-/// Contract tests for IInvoiceRepository methods GetByStatusAsync and UpdateStatusAsync,
+/// Contract tests for IInvoiceRepository method GetByStatusAsync,
 /// verified against the in-memory fake implementation.
 /// </summary>
 [Trait("Category", "Repository")]
@@ -48,13 +48,6 @@ public class InvoiceRepositoryContractTests
 
         public Task<IEnumerable<Invoice>> GetByStatusAsync(InvoiceStatus status, CancellationToken ct = default)
             => Task.FromResult(_store.Values.Where(i => i.Status == status));
-
-        public Task UpdateStatusAsync(string id, InvoiceStatus newStatus, CancellationToken ct = default)
-        {
-            if (_store.TryGetValue(id, out var invoice))
-                invoice.UpdateStatus(newStatus);
-            return Task.CompletedTask;
-        }
 
         public Task<long> CountAsync(CancellationToken ct = default)
             => Task.FromResult((long)_store.Count);
@@ -134,44 +127,5 @@ public class InvoiceRepositoryContractTests
         var result = (await repo.GetByStatusAsync(InvoiceStatus.PrimerRecordatorio)).ToList();
 
         result.Count.ShouldBe(2);
-    }
-
-    // ── UpdateStatusAsync ─────────────────────────────────────────────────────
-
-    [Fact]
-    public async Task UpdateStatusAsync_ChangesStatusOfTargetInvoice()
-    {
-        var invoice = new Invoice("c1", 100);
-        invoice.UpdateStatus(InvoiceStatus.Pending);
-        var repo = await RepoWithAsync(invoice);
-
-        await repo.UpdateStatusAsync(invoice.Id, InvoiceStatus.PrimerRecordatorio);
-
-        var updated = await repo.GetByIdAsync(invoice.Id);
-        updated!.Status.ShouldBe(InvoiceStatus.PrimerRecordatorio);
-    }
-
-    [Fact]
-    public async Task UpdateStatusAsync_DoesNotAffectOtherInvoices()
-    {
-        var target = new Invoice("c1", 100);
-        target.UpdateStatus(InvoiceStatus.Pending);
-        var other = new Invoice("c2", 200);
-        other.UpdateStatus(InvoiceStatus.Pending);
-        var repo = await RepoWithAsync(target, other);
-
-        await repo.UpdateStatusAsync(target.Id, InvoiceStatus.Pagado);
-
-        var untouched = await repo.GetByIdAsync(other.Id);
-        untouched!.Status.ShouldBe(InvoiceStatus.Pending);
-    }
-
-    [Fact]
-    public async Task UpdateStatusAsync_IsNoOp_WhenIdNotFound()
-    {
-        var repo = await RepoWithAsync();
-
-        // Should not throw
-        await repo.UpdateStatusAsync("nonexistent-id", InvoiceStatus.Pagado);
     }
 }

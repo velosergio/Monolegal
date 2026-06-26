@@ -4,11 +4,8 @@
  * Ver backend/Api/Endpoints/Invoices/InvoiceStatusApi.cs (JsonStringEnumConverter global).
  */
 export type KnownInvoiceStatus =
-  | 'draft'
   | 'pending'
   | 'pagado'
-  | 'overdue'
-  | 'cancelled'
   | 'primerrecordatorio'
   | 'segundorecordatorio'
   | 'desactivado'
@@ -36,18 +33,14 @@ export const FILTERABLE_STATUSES = [
 export const TERMINAL_STATUSES: ReadonlySet<string> = new Set<KnownInvoiceStatus>([
   'pagado',
   'desactivado',
-  'cancelled',
 ])
 
 /**
- * Etiqueta legible en español por estado.
+ * Etiqueta legible en español por estado (conjunto activo; los estados legacy se retiraron, spec 015).
  */
 export const INVOICE_STATUS_LABELS: Record<KnownInvoiceStatus, string> = {
-  draft: 'Borrador',
   pending: 'Pendiente',
   pagado: 'Pagado',
-  overdue: 'Vencida',
-  cancelled: 'Cancelada',
   primerrecordatorio: '1er Recordatorio',
   segundorecordatorio: '2do Recordatorio',
   desactivado: 'Desactivado',
@@ -80,4 +73,37 @@ export interface PagedInvoices {
   data: Invoice[]
   total: number
   pageSize: number
+}
+
+/**
+ * Origen de un cambio de estado (spec 015). Se admite un valor desconocido sin romper el tipado.
+ */
+export type StatusChangeSource = 'automatic' | 'manual' | (string & {})
+
+/**
+ * Un evento del historial de cambios de estado de una factura.
+ */
+export interface StatusChange {
+  from: InvoiceStatus
+  to: InvoiceStatus
+  at: string // ISO-8601 UTC
+  source: StatusChangeSource
+}
+
+/**
+ * Detalle completo de una factura (spec 015), extendido con el historial de cambios de
+ * estado y los estados destino válidos provistos por el backend.
+ */
+export interface InvoiceDetail {
+  id: string
+  clientId: string
+  amount: number
+  status: InvoiceStatus
+  createdAt: string // ISO-8601 UTC
+  updatedAt: string // ISO-8601 UTC
+  remindersCount: number
+  lastReminderSentAt: string | null // ISO-8601 UTC
+  lastStatusTransitionAt: string // ISO-8601 UTC
+  statusHistory: StatusChange[]
+  allowedTransitions: InvoiceStatus[]
 }

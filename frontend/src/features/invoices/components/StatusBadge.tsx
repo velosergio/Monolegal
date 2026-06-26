@@ -7,11 +7,8 @@ import { type InvoiceStatus, type KnownInvoiceStatus, statusLabel } from '../typ
  * mantener el contraste (WCAG A) en ambos temas.
  */
 const STATUS_CLASSES: Record<KnownInvoiceStatus, string> = {
-  draft: 'bg-muted text-muted-foreground',
   pending: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200',
   pagado: 'bg-lime-100 text-lime-800 dark:bg-lime-950 dark:text-lime-300',
-  overdue: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200',
-  cancelled: 'bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
   primerrecordatorio: 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200',
   segundorecordatorio: 'bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-200',
   desactivado: 'bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',

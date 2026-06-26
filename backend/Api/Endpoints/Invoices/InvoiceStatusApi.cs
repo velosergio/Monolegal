@@ -14,8 +14,8 @@ namespace Monolegal.Api.Endpoints.Invoices;
 public static class InvoiceStatusApi
 {
     /// <summary>
-    /// Conjunto cerrado de estados válidos aceptados como filtro o destino de transición
-    /// en esta feature. Los estados legacy (Draft/Overdue/Cancelled) no se aceptan como entrada.
+    /// Conjunto cerrado de estados válidos aceptados como filtro o destino de transición.
+    /// Los estados legacy (Draft/Overdue/Cancelled) se retiraron del sistema (spec 015, FR-031).
     /// </summary>
     public static readonly IReadOnlyCollection<InvoiceStatus> ValidStatuses = new[]
     {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Monolegal.Domain.Entities;
 using Monolegal.Domain.Enums;
 
@@ -30,7 +31,24 @@ public sealed record InvoiceListItemDto(
 /// <summary>Respuesta paginada genérica: datos de la página, total de coincidencias y tamaño de página.</summary>
 public sealed record PagedResponse<T>(IReadOnlyList<T> Data, long Total, int PageSize);
 
-/// <summary>Objeto completo de una factura para el endpoint de detalle.</summary>
+/// <summary>Un evento del historial de cambios de estado (spec 015).</summary>
+public sealed record StatusChangeDto(
+    string From,
+    string To,
+    DateTime At,
+    string Source)
+{
+    public static StatusChangeDto FromEntity(StatusChange change) => new(
+        InvoiceStatusApi.ToApiString(change.From),
+        InvoiceStatusApi.ToApiString(change.To),
+        change.At,
+        change.Source.ToString().ToLowerInvariant());
+}
+
+/// <summary>
+/// Objeto completo de una factura para el endpoint de detalle, extendido (spec 015) con el
+/// historial de cambios de estado y los estados destino válidos.
+/// </summary>
 public sealed record InvoiceDetailDto(
     string Id,
     string ClientId,
@@ -40,9 +58,13 @@ public sealed record InvoiceDetailDto(
     DateTime UpdatedAt,
     int RemindersCount,
     DateTime? LastReminderSentAt,
-    DateTime LastStatusTransitionAt)
+    DateTime LastStatusTransitionAt,
+    IReadOnlyList<StatusChangeDto> StatusHistory,
+    IReadOnlyList<string> AllowedTransitions)
 {
-    public static InvoiceDetailDto FromEntity(Invoice invoice) => new(
+    public static InvoiceDetailDto FromEntity(
+        Invoice invoice,
+        IReadOnlyList<InvoiceStatus> allowedTransitions) => new(
         invoice.Id,
         invoice.ClientId,
         invoice.Amount,
@@ -51,7 +73,9 @@ public sealed record InvoiceDetailDto(
         invoice.UpdatedAt,
         invoice.RemindersCount,
         invoice.LastReminderSentAt,
-        invoice.LastStatusTransitionAt);
+        invoice.LastStatusTransitionAt,
+        invoice.StatusHistory.Select(StatusChangeDto.FromEntity).ToList(),
+        allowedTransitions.Select(InvoiceStatusApi.ToApiString).ToList());
 }
 
 /// <summary>Cuerpo de la petición de transición manual de estado.</summary>

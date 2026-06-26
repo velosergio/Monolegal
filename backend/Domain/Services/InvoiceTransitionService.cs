@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Monolegal.Domain.Entities;
 using Monolegal.Domain.Enums;
 
@@ -102,6 +103,25 @@ public class InvoiceTransitionService
             _ => false
         };
 
+    /// <summary>
+    /// Devuelve los estados destino válidos para una factura en el estado dado, según la matriz de
+    /// transiciones del dominio (spec 015, FR-012). Es la única fuente de verdad de la validez; el
+    /// frontend consume este conjunto sin replicar la matriz. Incluye <see cref="InvoiceStatus.Pagado"/>
+    /// como destino desde cualquier estado activo; los estados terminales devuelven un conjunto vacío.
+    ///
+    /// Matriz: Pending→{PrimerRecordatorio,Pagado}; PrimerRecordatorio→{SegundoRecordatorio,Pagado};
+    /// SegundoRecordatorio→{Desactivado,Pagado}; Desactivado→{Pagado}; Pagado→{}.
+    /// </summary>
+    public IReadOnlyList<InvoiceStatus> GetAllowedTransitions(InvoiceStatus current) =>
+        current switch
+        {
+            InvoiceStatus.Pending => new[] { InvoiceStatus.PrimerRecordatorio, InvoiceStatus.Pagado },
+            InvoiceStatus.PrimerRecordatorio => new[] { InvoiceStatus.SegundoRecordatorio, InvoiceStatus.Pagado },
+            InvoiceStatus.SegundoRecordatorio => new[] { InvoiceStatus.Desactivado, InvoiceStatus.Pagado },
+            InvoiceStatus.Desactivado => new[] { InvoiceStatus.Pagado },
+            _ => Array.Empty<InvoiceStatus>()
+        };
+
     // ──────────────────────────────────────────────────────────────────────────
     // Private helpers
     // ──────────────────────────────────────────────────────────────────────────
@@ -115,7 +135,7 @@ public class InvoiceTransitionService
         var elapsed = now - invoice.LastStatusTransitionAt;
         if (elapsed.TotalDays >= daysRequired)
         {
-            invoice.UpdateStatus(nextStatus);
+            invoice.UpdateStatus(nextStatus, StatusChangeSource.Automatic);
             return true;
         }
         return false;

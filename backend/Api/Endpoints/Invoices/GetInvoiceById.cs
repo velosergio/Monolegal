@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Monolegal.Domain.Repositories;
+using Monolegal.Domain.Services;
 
 namespace Monolegal.Api.Endpoints.Invoices;
 
@@ -19,6 +20,7 @@ public static class GetInvoiceById
         app.MapGet("/api/invoices/{id}", async (
             string id,
             IInvoiceRepository invoiceRepository,
+            InvoiceTransitionService transitionService,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) =>
         {
@@ -31,8 +33,9 @@ public static class GetInvoiceById
                 return Results.NotFound();
             }
 
+            var allowed = transitionService.GetAllowedTransitions(invoice.Status);
             logger.LogInformation("Detalle de factura entregado. InvoiceId={InvoiceId}", id);
-            return Results.Ok(InvoiceDetailDto.FromEntity(invoice));
+            return Results.Ok(InvoiceDetailDto.FromEntity(invoice, allowed));
         })
         .WithName("GetInvoiceById")
         .WithTags("Invoices")

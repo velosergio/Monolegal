@@ -80,7 +80,7 @@ public class InvoiceTransitionNotifierTests
         var email = new FakeEmailService();
         var invoice = InvoiceAt(InvoiceStatus.Pending);
 
-        await CreateNotifier(email).NotifyTransitionAsync(invoice, InvoiceStatus.Draft);
+        await CreateNotifier(email).NotifyTransitionAsync(invoice, InvoiceStatus.Pending);
 
         email.ReminderCalls.ShouldBeEmpty();
         email.PaymentConfirmationCalls.ShouldBeEmpty();
