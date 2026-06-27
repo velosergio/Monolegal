@@ -91,7 +91,7 @@ public static class UpdateInvoice
                 invoice.Id, invoice.ClientId, invoice.Amount);
 
             var allowed = transitionService.GetAllowedTransitions(invoice.Status);
-            return Results.Ok(InvoiceDetailDto.FromEntity(invoice, allowed));
+            return Results.Ok(InvoiceDetailDto.FromEntity(invoice, allowed, client.Name));
         })
         .WithName("UpdateInvoice")
         .WithTags("Invoices")

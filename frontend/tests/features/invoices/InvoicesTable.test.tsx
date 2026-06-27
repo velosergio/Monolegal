@@ -8,7 +8,8 @@ import { mockFetchJson, renderWithQuery } from '../../test-utils'
 const invoices: Invoice[] = [
   {
     id: 'abcdef1234567890',
-    clientId: 'Acme S.A.',
+    clientId: 'client-1',
+    clientName: 'Acme S.A.',
     amount: 1_500_000,
     status: 'pending',
     createdAt: '2026-01-01T08:00:00.000Z',
@@ -16,7 +17,8 @@ const invoices: Invoice[] = [
   },
   {
     id: 'feedc0de',
-    clientId: 'Globex',
+    clientId: 'client-2',
+    clientName: 'Globex',
     amount: 250_000,
     status: 'pagado',
     createdAt: '2026-02-01T08:00:00.000Z',
@@ -24,7 +26,8 @@ const invoices: Invoice[] = [
   },
   {
     id: 'unknown99',
-    clientId: 'Initech',
+    clientId: 'client-3',
+    clientName: 'Initech',
     amount: 99_000,
     status: 'algo-raro',
     createdAt: '2026-03-01T08:00:00.000Z',

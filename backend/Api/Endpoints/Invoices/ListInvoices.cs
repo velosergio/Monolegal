@@ -27,6 +27,7 @@ public static class ListInvoices
             int? page,
             int? pageSize,
             IInvoiceRepository invoiceRepository,
+            IClientRepository clientRepository,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) =>
         {
@@ -64,7 +65,21 @@ public static class ListInvoices
             var (items, total) = await invoiceRepository.GetPagedAsync(
                 statusFilter, query.Search, query.Page, query.PageSize, cancellationToken);
 
-            var data = items.Select(InvoiceListItemDto.FromEntity).ToList();
+            // Resuelve el nombre legible de cada cliente para la columna "Cliente" del panel.
+            // Se consultan sólo los IDs distintos de la página (a lo sumo PageSize) para evitar N+1;
+            // ante un cliente inexistente se usa el propio clientId como respaldo.
+            var clientNames = new Dictionary<string, string>();
+            foreach (var clientId in items.Select(i => i.ClientId).Distinct())
+            {
+                var client = await clientRepository.GetByIdAsync(clientId, cancellationToken);
+                clientNames[clientId] = client?.Name ?? clientId;
+            }
+
+            var data = items
+                .Select(i => InvoiceListItemDto.FromEntity(
+                    i,
+                    clientNames.TryGetValue(i.ClientId, out var name) ? name : i.ClientId))
+                .ToList();
 
             logger.LogInformation(
                 "Listado de facturas. Status={Status} Search={Search} Page={Page} PageSize={PageSize} Total={Total} Returned={Returned}",

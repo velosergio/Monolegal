@@ -59,7 +59,7 @@ export function InvoicesTable({
                   <button
                     type="button"
                     className="rounded-sm text-left underline-offset-2 hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                    aria-label={`Ver detalle de la factura de ${invoice.clientId}`}
+                    aria-label={`Ver detalle de la factura de ${invoice.clientName}`}
                     onClick={() => onSelectInvoice(invoice.id)}
                   >
                     {shortId(invoice.id)}
@@ -68,7 +68,9 @@ export function InvoicesTable({
                   shortId(invoice.id)
                 )}
               </TableCell>
-              <TableCell className="font-medium">{invoice.clientId}</TableCell>
+              <TableCell className="font-medium" title={invoice.clientId}>
+                {invoice.clientName}
+              </TableCell>
               <TableCell className="text-right tabular-nums">
                 {formatAmount(invoice.amount)}
               </TableCell>

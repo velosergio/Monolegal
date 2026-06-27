@@ -27,6 +27,7 @@ public static class TransitionInvoice
             string id,
             [FromBody] TransitionRequest request,
             IInvoiceRepository invoiceRepository,
+            IClientRepository clientRepository,
             InvoiceTransitionService transitionService,
             IInvoiceTransitionNotifier notifier,
             ILoggerFactory loggerFactory,
@@ -85,7 +86,8 @@ public static class TransitionInvoice
                 invoice.Id, invoice.Status);
 
             var allowed = transitionService.GetAllowedTransitions(invoice.Status);
-            return Results.Ok(InvoiceDetailDto.FromEntity(invoice, allowed));
+            var client = await clientRepository.GetByIdAsync(invoice.ClientId, cancellationToken);
+            return Results.Ok(InvoiceDetailDto.FromEntity(invoice, allowed, client?.Name));
         })
         .WithName("TransitionInvoice")
         .WithTags("Invoices")

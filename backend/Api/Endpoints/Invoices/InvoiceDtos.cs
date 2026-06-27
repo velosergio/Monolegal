@@ -14,14 +14,21 @@ namespace Monolegal.Api.Endpoints.Invoices;
 public sealed record InvoiceListItemDto(
     string Id,
     string ClientId,
+    string ClientName,
     decimal Amount,
     InvoiceStatus Status,
     DateTime CreatedAt,
     DateTime LastStatusTransitionAt)
 {
-    public static InvoiceListItemDto FromEntity(Invoice invoice) => new(
+    /// <summary>
+    /// Mapea la entidad al DTO de listado. <paramref name="clientName"/> es el nombre legible del
+    /// cliente resuelto desde la colección <c>Clients</c>; ante un cliente inexistente se recurre al
+    /// propio <see cref="Invoice.ClientId"/> como respaldo.
+    /// </summary>
+    public static InvoiceListItemDto FromEntity(Invoice invoice, string clientName) => new(
         invoice.Id,
         invoice.ClientId,
+        clientName,
         invoice.Amount,
         invoice.Status,
         invoice.CreatedAt,
@@ -68,6 +75,7 @@ public sealed record StatusChangeDto(
 public sealed record InvoiceDetailDto(
     string Id,
     string ClientId,
+    string ClientName,
     decimal Amount,
     DateTime DueDate,
     IReadOnlyList<InvoiceItemDto> Items,
@@ -80,11 +88,17 @@ public sealed record InvoiceDetailDto(
     IReadOnlyList<StatusChangeDto> StatusHistory,
     IReadOnlyList<string> AllowedTransitions)
 {
+    /// <summary>
+    /// Mapea la entidad al DTO de detalle. <paramref name="clientName"/> es el nombre legible del
+    /// cliente; cuando es <c>null</c> (cliente no resuelto) se recurre al <see cref="Invoice.ClientId"/>.
+    /// </summary>
     public static InvoiceDetailDto FromEntity(
         Invoice invoice,
-        IReadOnlyList<InvoiceStatus> allowedTransitions) => new(
+        IReadOnlyList<InvoiceStatus> allowedTransitions,
+        string? clientName = null) => new(
         invoice.Id,
         invoice.ClientId,
+        clientName ?? invoice.ClientId,
         invoice.Amount,
         invoice.DueDate,
         invoice.Items.Select(InvoiceItemDto.FromEntity).ToList(),

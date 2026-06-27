@@ -29,7 +29,7 @@ export function InvoiceDetailFields({ invoice }: InvoiceDetailFieldsProps) {
       <Field label="Identificador">
         <span className="break-all font-mono text-xs">{invoice.id}</span>
       </Field>
-      <Field label="Cliente">{invoice.clientId}</Field>
+      <Field label="Cliente">{invoice.clientName}</Field>
       <Field label="Monto">
         <span className="tabular-nums">{formatAmount(invoice.amount)}</span>
       </Field>

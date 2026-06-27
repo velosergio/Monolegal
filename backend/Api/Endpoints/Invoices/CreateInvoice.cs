@@ -67,7 +67,7 @@ public static class CreateInvoice
                 invoice.Id, invoice.ClientId, invoice.Amount, invoice.Items.Count);
 
             var allowed = transitionService.GetAllowedTransitions(invoice.Status);
-            var dto = InvoiceDetailDto.FromEntity(invoice, allowed);
+            var dto = InvoiceDetailDto.FromEntity(invoice, allowed, client.Name);
             return Results.Created($"/api/invoices/{invoice.Id}", dto);
         })
         .WithName("CreateInvoice")

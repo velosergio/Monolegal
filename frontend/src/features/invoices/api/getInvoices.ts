@@ -13,6 +13,7 @@ export interface GetInvoicesParams {
 interface InvoiceListItemResponse {
   id: string
   clientId: string
+  clientName: string
   amount: number
   status: InvoiceStatus
   createdAt: string
@@ -58,6 +59,7 @@ export async function getInvoices(
   const data: Invoice[] = body.data.map((item) => ({
     id: item.id,
     clientId: item.clientId,
+    clientName: item.clientName,
     amount: item.amount,
     status: item.status,
     createdAt: item.createdAt,

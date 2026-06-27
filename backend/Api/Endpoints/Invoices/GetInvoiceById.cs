@@ -20,6 +20,7 @@ public static class GetInvoiceById
         app.MapGet("/api/invoices/{id}", async (
             string id,
             IInvoiceRepository invoiceRepository,
+            IClientRepository clientRepository,
             InvoiceTransitionService transitionService,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) =>
@@ -34,8 +35,10 @@ public static class GetInvoiceById
             }
 
             var allowed = transitionService.GetAllowedTransitions(invoice.Status);
+            var client = await clientRepository.GetByIdAsync(invoice.ClientId, cancellationToken);
+            var clientName = client?.Name ?? invoice.ClientId;
             logger.LogInformation("Detalle de factura entregado. InvoiceId={InvoiceId}", id);
-            return Results.Ok(InvoiceDetailDto.FromEntity(invoice, allowed));
+            return Results.Ok(InvoiceDetailDto.FromEntity(invoice, allowed, clientName));
         })
         .WithName("GetInvoiceById")
         .WithTags("Invoices")

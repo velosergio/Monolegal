@@ -60,6 +60,8 @@ export function statusLabel(status: InvoiceStatus): string {
 export interface Invoice {
   id: string
   clientId: string
+  /** Nombre legible del cliente resuelto por el backend; respalda con el clientId si no se encontró. */
+  clientName: string
   amount: number
   status: InvoiceStatus
   createdAt: string // ISO-8601 UTC
@@ -97,6 +99,8 @@ export interface StatusChange {
 export interface InvoiceDetail {
   id: string
   clientId: string
+  /** Nombre legible del cliente resuelto por el backend; respalda con el clientId si no se encontró. */
+  clientName: string
   amount: number
   dueDate: string // ISO-8601 UTC
   items: InvoiceItem[]

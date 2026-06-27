@@ -8,7 +8,8 @@ import { renderWithQuery } from '../../test-utils'
 const invoices: Invoice[] = [
   {
     id: 'abcdef1234567890',
-    clientId: 'Acme S.A.',
+    clientId: 'client-1',
+    clientName: 'Acme S.A.',
     amount: 1_500_000,
     status: 'pending',
     createdAt: '2026-01-01T08:00:00.000Z',
