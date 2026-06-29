@@ -1,6 +1,7 @@
 using Backend.Application.Abstractions;
 using Backend.Application.Notifications;
 using Backend.Application.Seeding;
+using Backend.Application.Services;
 using Backend.Infrastructure.Clients;
 using Backend.Infrastructure.Email;
 using Backend.Infrastructure.Maintenance;
@@ -111,6 +112,9 @@ public static class DependencyInjection
 
         // Herramientas globales de administración de envíos (spec 017, US4).
         services.AddSingleton<IEmailAdminService, EmailAdminService>();
+
+        // Acciones de envío por factura (spec 019, US2/US4): reenvío y cancelación.
+        services.AddSingleton<IInvoiceShipmentService, InvoiceShipmentService>();
 
         // Sembrador de datos de desarrollo. Se registra SIEMPRE (es idempotente: sólo siembra con
         // la base vacía) para que la zona de peligro pueda re-sembrar tras un flush. El disparo

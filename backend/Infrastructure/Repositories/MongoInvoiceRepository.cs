@@ -162,6 +162,61 @@ public sealed class MongoInvoiceRepository : IInvoiceRepository
         return (items, total);
     }
 
+    /// <summary>
+    /// Estados con notificación por correo aplicable (spec 019): el listado de envíos sólo incluye
+    /// facturas en estos estados.
+    /// </summary>
+    private static readonly InvoiceStatus[] NotifiableStatuses =
+    {
+        InvoiceStatus.PrimerRecordatorio,
+        InvoiceStatus.SegundoRecordatorio,
+        InvoiceStatus.Pagado,
+        InvoiceStatus.Desactivado,
+    };
+
+    public async Task<(IReadOnlyList<Invoice> Items, long Total)> GetShipmentsPagedAsync(
+        NotificationOutcome? sendStatus,
+        IReadOnlyCollection<string>? clientIds,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        // Una búsqueda que no resolvió ningún cliente ⇒ resultado vacío sin consultar la colección.
+        if (clientIds is { Count: 0 })
+            return (System.Array.Empty<Invoice>(), 0);
+
+        var filters = new List<FilterDefinition<Invoice>>
+        {
+            Builders<Invoice>.Filter.In(x => x.Status, NotifiableStatuses),
+        };
+
+        if (sendStatus.HasValue)
+            filters.Add(Builders<Invoice>.Filter.Eq(x => x.LastNotificationOutcome, sendStatus.Value));
+
+        if (clientIds is not null)
+            filters.Add(Builders<Invoice>.Filter.In(x => x.ClientId, clientIds));
+
+        var filter = Builders<Invoice>.Filter.And(filters);
+
+        var total = await _collection
+            .CountDocumentsAsync(filter, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        var sort = Builders<Invoice>.Sort
+            .Descending(x => x.LastNotificationAt)
+            .Descending(x => x.CreatedAt);
+
+        var items = await _collection
+            .Find(filter)
+            .Sort(sort)
+            .Skip((page - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return (items, total);
+    }
+
     public async Task<IReadOnlyDictionary<InvoiceStatus, long>> CountByStatusAsync(CancellationToken cancellationToken = default)
     {
         var results = await _collection

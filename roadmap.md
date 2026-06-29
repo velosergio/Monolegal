@@ -529,3 +529,11 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 ✅ **Scalability**: Docker ready, stateless APIs, MongoDB connection pooling  
 ✅ **Maintainability**: Clean Architecture, SOLID, DI container, comentarios estratégicos  
 ✅ **UX**: Responsive, dark mode, loading states, error handling elegante
+
+
+## Anotaciones:
+* vista del modal /facturas:
+  - mejoras en el UX, implementar busqueda en tiempo real en vez del droplist en clientes
+  - mejora en el ux, implementar selector de fecha / calendario "nativo del navegador/sistema" al precionar en la fecha
+* vista del modal /clientes:
+  - habilitar editar al dar click en el nombre

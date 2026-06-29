@@ -95,6 +95,45 @@ public sealed class InMemoryInvoiceRepository : IInvoiceRepository
         return Task.FromResult(((IReadOnlyList<Invoice>)items, total));
     }
 
+    private static readonly InvoiceStatus[] NotifiableStatuses =
+    {
+        InvoiceStatus.PrimerRecordatorio,
+        InvoiceStatus.SegundoRecordatorio,
+        InvoiceStatus.Pagado,
+        InvoiceStatus.Desactivado,
+    };
+
+    public Task<(IReadOnlyList<Invoice> Items, long Total)> GetShipmentsPagedAsync(
+        NotificationOutcome? sendStatus,
+        IReadOnlyCollection<string>? clientIds,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        if (clientIds is { Count: 0 })
+            return Task.FromResult(((IReadOnlyList<Invoice>)Array.Empty<Invoice>(), 0L));
+
+        var query = _store.Values.Where(i => NotifiableStatuses.Contains(i.Status));
+
+        if (sendStatus.HasValue)
+            query = query.Where(i => i.LastNotificationOutcome == sendStatus.Value);
+
+        if (clientIds is not null)
+            query = query.Where(i => clientIds.Contains(i.ClientId));
+
+        var filtered = query.ToList();
+        long total = filtered.Count;
+
+        var items = filtered
+            .OrderByDescending(i => i.LastNotificationAt)
+            .ThenByDescending(i => i.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return Task.FromResult(((IReadOnlyList<Invoice>)items, total));
+    }
+
     public Task<IReadOnlyDictionary<InvoiceStatus, long>> CountByStatusAsync(CancellationToken cancellationToken = default)
     {
         IReadOnlyDictionary<InvoiceStatus, long> result = _store.Values

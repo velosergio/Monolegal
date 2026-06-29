@@ -86,7 +86,7 @@ export function ChangeStatusControl({
       >
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Select
-            value={selected || undefined}
+            value={selected}
             onValueChange={(next) => {
               setSelected(next as InvoiceStatus)
               setValidationError(null)

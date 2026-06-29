@@ -120,3 +120,57 @@ public sealed record InvoiceStatsDto(
     long TotalInvoices,
     IReadOnlyDictionary<string, long> ByStatus,
     IReadOnlyDictionary<string, long> ByClient);
+
+/// <summary>
+/// Ítem del listado de envíos (spec 019). El <c>SendStatus</c> se deriva del resultado de la última
+/// notificación; el estado "reintentando" NO existe aquí: es transitorio en el cliente mientras una
+/// mutación de reenvío está en curso. <c>ClientEmail</c> y <c>LastAttemptAt</c> pueden ser nulos;
+/// <c>LastError</c> sólo es no nulo cuando <c>SendStatus == "failed"</c>.
+/// </summary>
+public sealed record ShipmentListItemDto(
+    string Id,
+    string ClientId,
+    string ClientName,
+    string? ClientEmail,
+    InvoiceStatus Status,
+    string SendStatus,
+    DateTime? LastAttemptAt,
+    int RetryCount,
+    string? LastError)
+{
+    /// <summary>Mapea una factura y su correo/nombre de cliente resueltos al ítem de envío.</summary>
+    public static ShipmentListItemDto FromEntity(Invoice invoice, string clientName, string? clientEmail) => new(
+        invoice.Id,
+        invoice.ClientId,
+        clientName,
+        clientEmail,
+        invoice.Status,
+        ToSendStatus(invoice.LastNotificationOutcome),
+        invoice.LastNotificationAt,
+        invoice.NotificationRetryCount,
+        invoice.LastNotificationOutcome == NotificationOutcome.Failed ? invoice.LastNotificationError : null);
+
+    /// <summary>Deriva el estado de envío de la vista a partir del resultado de notificación.</summary>
+    public static string ToSendStatus(NotificationOutcome outcome) => outcome switch
+    {
+        NotificationOutcome.None => "pending",
+        NotificationOutcome.Sent => "sent",
+        NotificationOutcome.Failed => "failed",
+        NotificationOutcome.Skipped => "skipped",
+        _ => "pending",
+    };
+
+    /// <summary>Parsea el filtro <c>sendStatus</c> de la API al <see cref="NotificationOutcome"/>. Null si no es válido.</summary>
+    public static NotificationOutcome? ParseSendStatus(string? value) => value?.Trim().ToLowerInvariant() switch
+    {
+        "pending" => NotificationOutcome.None,
+        "sent" => NotificationOutcome.Sent,
+        "failed" => NotificationOutcome.Failed,
+        "skipped" => NotificationOutcome.Skipped,
+        _ => null,
+    };
+
+    /// <summary>Indica si la cadena es un filtro de sendStatus válido (o ausente).</summary>
+    public static bool IsValidSendStatusFilter(string? value)
+        => string.IsNullOrWhiteSpace(value) || ParseSendStatus(value) is not null;
+}

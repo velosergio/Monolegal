@@ -69,6 +69,23 @@ public interface IInvoiceRepository
         InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Devuelve una página del listado de envíos (spec 019): facturas en estados notificables
+    /// (PrimerRecordatorio, SegundoRecordatorio, Pagado, Desactivado), opcionalmente filtradas por
+    /// <paramref name="sendStatus"/> (resultado de la última notificación) y/o por
+    /// <paramref name="clientIds"/> (resultado de la búsqueda por nombre/correo, resuelta en la capa
+    /// superior vía <see cref="IClientRepository"/>). Ordena por <c>LastNotificationAt</c> descendente
+    /// con desempate por <c>CreatedAt</c> descendente, y devuelve el total de coincidencias
+    /// (independiente de la página). <paramref name="clientIds"/> nulo = sin filtro por cliente; una
+    /// colección vacía significa "ningún cliente coincide" (resultado vacío).
+    /// </summary>
+    Task<(IReadOnlyList<Invoice> Items, long Total)> GetShipmentsPagedAsync(
+        NotificationOutcome? sendStatus,
+        IReadOnlyCollection<string>? clientIds,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Returns the count of invoices grouped by status across the whole collection.
     /// Used by GET /api/invoices/stats (byStatus aggregate).
     /// </summary>

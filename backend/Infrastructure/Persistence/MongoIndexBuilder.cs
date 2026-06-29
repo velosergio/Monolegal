@@ -59,6 +59,15 @@ public sealed class MongoIndexBuilder(
             new CreateIndexModel<Invoice>(
                 Builders<Invoice>.IndexKeys.Ascending(x => x.LastNotificationOutcome),
                 new CreateIndexOptions { Background = false, Name = "LastNotificationOutcome_asc" }),
+
+            // Listado de envíos (spec 019): filtro por estado notificable + sendStatus y orden por
+            // último intento. Índice compuesto para evitar COLLSCAN en GET /api/invoices/shipments.
+            new CreateIndexModel<Invoice>(
+                Builders<Invoice>.IndexKeys
+                    .Ascending(x => x.Status)
+                    .Ascending(x => x.LastNotificationOutcome)
+                    .Descending(x => x.LastNotificationAt),
+                new CreateIndexOptions { Background = false, Name = "Shipments_status_outcome_lastAttempt" }),
         };
 
         foreach (var model in models)

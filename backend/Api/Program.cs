@@ -120,6 +120,11 @@ try
     app.MapTransitionInvoice();
     app.MapGetInvoiceStats();
 
+    // Shipments endpoints (spec 019 — Vista de Envíos)
+    app.MapListShipments();
+    app.MapResendInvoice();
+    app.MapCancelInvoiceNotification();
+
     // Invoices CRUD endpoints (spec 018 — US1)
     app.MapCreateInvoice();
     app.MapUpdateInvoice();

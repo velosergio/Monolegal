@@ -45,6 +45,14 @@ public class Invoice
     public string? LastNotificationError { get; private set; }
 
     /// <summary>
+    /// Reintentos del aviso vigente (intentos de notificación posteriores al primero) — spec 019.
+    /// Se reinicia a 0 al entrar en un nuevo estado notificable (ver <see cref="UpdateStatus"/>);
+    /// lo incrementan los reenvíos manuales (POST /resend) y masivos (resend-failed) vía
+    /// <see cref="RecordNotificationRetry"/>. El primer intento de la transición no lo modifica.
+    /// </summary>
+    public int NotificationRetryCount { get; private set; }
+
+    /// <summary>
     /// Estados terminales a efectos de edición (spec 018, RF-004a): una factura en estos estados
     /// no admite modificación de sus campos (cliente, items, vencimiento).
     /// </summary>
@@ -82,6 +90,7 @@ public class Invoice
         LastNotificationOutcome = NotificationOutcome.None;
         LastNotificationAt = null;
         LastNotificationError = null;
+        NotificationRetryCount = 0;
     }
 
     /// <summary>
@@ -141,8 +150,23 @@ public class Invoice
         Status = newStatus;
         LastStatusTransitionAt = at;
         StatusHistory.Add(new StatusChange(previousStatus, newStatus, at, source));
+
+        // Al entrar en un nuevo estado notificable comienza el conteo del aviso vigente (spec 019).
+        if (IsNotifiableStatus(newStatus))
+            NotificationRetryCount = 0;
+
         UpdateAuditDate();
     }
+
+    /// <summary>
+    /// Indica si el estado tiene una notificación por correo aplicable (mismo criterio que el
+    /// worker / las herramientas de envío): recordatorios, pago y desactivación.
+    /// </summary>
+    private static bool IsNotifiableStatus(InvoiceStatus status) =>
+        status is InvoiceStatus.PrimerRecordatorio
+            or InvoiceStatus.SegundoRecordatorio
+            or InvoiceStatus.Pagado
+            or InvoiceStatus.Desactivado;
 
     public void RecordReminderSent()
     {
@@ -170,6 +194,16 @@ public class Invoice
         LastNotificationOutcome = outcome;
         LastNotificationAt = at;
         LastNotificationError = outcome == NotificationOutcome.Failed ? error : null;
+        UpdateAuditDate();
+    }
+
+    /// <summary>
+    /// Incrementa el contador de reintentos del aviso vigente (spec 019). Lo invocan las rutas de
+    /// reenvío (por factura y masiva); NO lo invoca la primera notificación de la transición.
+    /// </summary>
+    public void RecordNotificationRetry()
+    {
+        NotificationRetryCount++;
         UpdateAuditDate();
     }
 

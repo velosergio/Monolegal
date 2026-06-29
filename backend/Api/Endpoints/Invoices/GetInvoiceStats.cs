@@ -19,6 +19,7 @@ public static class GetInvoiceStats
     {
         app.MapGet("/api/invoices/stats", async (
             IInvoiceRepository invoiceRepository,
+            IClientRepository clientRepository,
             ILoggerFactory loggerFactory,
             CancellationToken cancellationToken) =>
         {
@@ -26,12 +27,23 @@ public static class GetInvoiceStats
 
             var total = await invoiceRepository.CountAsync(cancellationToken);
             var byStatusRaw = await invoiceRepository.CountByStatusAsync(cancellationToken);
-            var byClient = await invoiceRepository.CountByClientAsync(cancellationToken);
+            var byClientRaw = await invoiceRepository.CountByClientAsync(cancellationToken);
 
             // Claves de byStatus como cadena de API en minúscula (research.md D1).
             var byStatus = new Dictionary<string, long>();
             foreach (var (status, count) in byStatusRaw)
                 byStatus[InvoiceStatusApi.ToApiString(status)] = count;
+
+            // Reemplaza la clave clientId por el nombre legible del cliente para el gráfico
+            // "Facturas por cliente". Ante un cliente inexistente se conserva el clientId; si dos
+            // clientes comparten nombre, sus conteos se agregan bajo la misma clave.
+            var byClient = new Dictionary<string, long>();
+            foreach (var (clientId, count) in byClientRaw)
+            {
+                var client = await clientRepository.GetByIdAsync(clientId, cancellationToken);
+                var key = client?.Name ?? clientId;
+                byClient[key] = byClient.TryGetValue(key, out var existing) ? existing + count : count;
+            }
 
             logger.LogInformation(
                 "Estadísticas de facturas. Total={Total} Estados={EstadosCount} Clientes={ClientesCount}",

@@ -48,6 +48,9 @@ public sealed class EmailAdminService : IEmailAdminService
             attempted++;
             try
             {
+                // Reintento del aviso vigente: incrementa el contador (spec 019, D2/D6).
+                invoice.RecordNotificationRetry();
+
                 // El estado de la factura no cambia; reusamos la lógica de notificación de la
                 // transición "hacia su estado actual" (previousStatus == Status).
                 await _notifier

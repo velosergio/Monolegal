@@ -14,6 +14,12 @@ const InvoicesPage = lazy(() =>
   }))
 )
 
+const ShipmentsPage = lazy(() =>
+  import('./features/shipments/components/ShipmentsPage').then((module) => ({
+    default: module.ShipmentsPage,
+  }))
+)
+
 const SettingsPage = lazy(() =>
   import('./features/settings/components/SettingsPage').then((module) => ({
     default: module.SettingsPage,
@@ -52,6 +58,14 @@ function App() {
                 element={
                   <Suspense fallback={<InvoicesTableSkeleton />}>
                     <InvoicesPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/envios"
+                element={
+                  <Suspense fallback={<InvoicesTableSkeleton />}>
+                    <ShipmentsPage />
                   </Suspense>
                 }
               />

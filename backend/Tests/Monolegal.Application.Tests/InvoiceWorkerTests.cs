@@ -71,6 +71,10 @@ public class InvoiceWorkerTests
         public Task<IEnumerable<Invoice>> GetByNotificationOutcomeAsync(NotificationOutcome outcome, CancellationToken cancellationToken = default)
             => Task.FromResult(_store.Values.Where(i => i.LastNotificationOutcome == outcome));
 
+        public Task<(IReadOnlyList<Invoice> Items, long Total)> GetShipmentsPagedAsync(
+            NotificationOutcome? sendStatus, IReadOnlyCollection<string>? clientIds, int page, int pageSize, CancellationToken cancellationToken = default)
+            => Task.FromResult(((IReadOnlyList<Invoice>)System.Array.Empty<Invoice>(), 0L));
+
         public Task<long> CountAsync(CancellationToken cancellationToken = default)
             => Task.FromResult((long)_store.Count);
 

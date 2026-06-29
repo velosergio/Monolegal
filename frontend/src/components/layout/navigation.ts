@@ -1,4 +1,4 @@
-import { FileText, LayoutDashboard, type LucideIcon, Settings, Users } from 'lucide-react'
+import { FileText, LayoutDashboard, type LucideIcon, Send, Settings, Users } from 'lucide-react'
 
 export interface NavItem {
   /** Ruta de react-router (ignorada cuando `disabled`). */
@@ -15,6 +15,7 @@ export interface NavItem {
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, disabled: false },
   { to: '/facturas', label: 'Facturas', icon: FileText, disabled: false },
+  { to: '/envios', label: 'Envíos', icon: Send, disabled: false },
   { to: '/clientes', label: 'Clientes', icon: Users, disabled: false },
   { to: '/configuracion', label: 'Configuración', icon: Settings, disabled: false },
 ]

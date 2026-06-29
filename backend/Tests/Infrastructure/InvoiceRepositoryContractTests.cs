@@ -68,6 +68,10 @@ public class InvoiceRepositoryContractTests
         public Task<long> CountByClientIdAsync(string clientId, CancellationToken ct = default)
             => Task.FromResult((long)_store.Values.Count(i => i.ClientId == clientId));
 
+        public Task<(IReadOnlyList<Invoice> Items, long Total)> GetShipmentsPagedAsync(
+            NotificationOutcome? sendStatus, IReadOnlyCollection<string>? clientIds, int page, int pageSize, CancellationToken ct = default)
+            => Task.FromResult(((IReadOnlyList<Invoice>)System.Array.Empty<Invoice>(), 0L));
+
         public Task<(IReadOnlyList<Invoice> Items, long Total)> GetPagedAsync(
             InvoiceStatus? status, string? clientSearch, int page, int pageSize, CancellationToken ct = default)
         {
