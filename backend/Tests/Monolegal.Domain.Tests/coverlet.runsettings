@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Configuración de cobertura del dominio (spec 020).
+  Excluye el código AUTOGENERADO (p. ej. el motor de [GeneratedRegex] de EmailTemplateRenderer)
+  y los miembros marcados [ExcludeFromCodeCoverage], para que la métrica refleje sólo el código
+  de dominio escrito a mano.
+-->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

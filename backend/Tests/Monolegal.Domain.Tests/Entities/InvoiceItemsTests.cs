@@ -59,6 +59,45 @@ public class InvoiceItemsTests
             () => Invoice.Create("client_1", new List<InvoiceItem>(), DateTime.UtcNow));
     }
 
+    [Fact]
+    public void Create_WithNullItems_Throws()
+    {
+        Should.Throw<ArgumentException>(
+            () => Invoice.Create("client_1", null!, DateTime.UtcNow));
+    }
+
+    // ── Invoice.UpdateDetails: validaciones de argumentos ──────────────────────────
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData(null)]
+    public void UpdateDetails_WithInvalidClientId_Throws(string? invalidClientId)
+    {
+        var invoice = Invoice.Create("client_1", SampleItems(), DateTime.UtcNow.AddDays(10));
+
+        Should.Throw<ArgumentException>(
+            () => invoice.UpdateDetails(invalidClientId!, SampleItems(), DateTime.UtcNow));
+    }
+
+    [Fact]
+    public void UpdateDetails_WithEmptyItems_Throws()
+    {
+        var invoice = Invoice.Create("client_1", SampleItems(), DateTime.UtcNow.AddDays(10));
+
+        Should.Throw<ArgumentException>(
+            () => invoice.UpdateDetails("client_1", new List<InvoiceItem>(), DateTime.UtcNow));
+    }
+
+    [Fact]
+    public void UpdateDetails_WithNullItems_Throws()
+    {
+        var invoice = Invoice.Create("client_1", SampleItems(), DateTime.UtcNow.AddDays(10));
+
+        Should.Throw<ArgumentException>(
+            () => invoice.UpdateDetails("client_1", null!, DateTime.UtcNow));
+    }
+
     // ── Invoice.UpdateDetails (edición) ────────────────────────────────────────────
 
     [Fact]

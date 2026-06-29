@@ -73,4 +73,66 @@ public class SystemSettingsEmailTests
 
         settings.EmailTemplates.ShouldNotContainKey(NotificationType.PaymentConfirmation);
     }
+
+    // ── C10.2: resetear un tipo sin personalización no toca la marca de auditoría ──
+    [Fact]
+    public void ResetTemplate_TipoInexistente_NoCambiaUpdatedAt()
+    {
+        var settings = new SystemSettings();
+        var before = settings.UpdatedAt;
+
+        settings.ResetTemplate(NotificationType.Reminder); // no había plantilla para este tipo
+
+        settings.UpdatedAt.ShouldBe(before);
+        settings.EmailTemplates.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void UpdateTransitions_ReemplazaConfiguracionYActualizaFecha()
+    {
+        var settings = new SystemSettings();
+        var before = settings.UpdatedAt;
+
+        var config = new InvoiceTransitionsConfig
+        {
+            PendingToFirstReminderDays = 5,
+            FirstToSecondReminderDays = 6,
+            SecondToDeactivatedDays = 7,
+        };
+
+        settings.UpdateTransitions(config);
+
+        settings.InvoiceTransitions.PendingToFirstReminderDays.ShouldBe(5);
+        settings.InvoiceTransitions.FirstToSecondReminderDays.ShouldBe(6);
+        settings.InvoiceTransitions.SecondToDeactivatedDays.ShouldBe(7);
+        settings.UpdatedAt.ShouldBeGreaterThanOrEqualTo(before);
+    }
+
+    // ── C10.4: parámetros no secretos de SMTP/Resend se conservan ──
+    [Fact]
+    public void SmtpSettings_ConservaPropiedadesAsignadas()
+    {
+        var smtp = new SmtpSettings
+        {
+            Host = "smtp.monolegal.co",
+            Port = 2525,
+            Username = "buzon",
+            UseStartTls = false,
+        };
+
+        smtp.Host.ShouldBe("smtp.monolegal.co");
+        smtp.Port.ShouldBe(2525);
+        smtp.Username.ShouldBe("buzon");
+        smtp.UseStartTls.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void SmtpSettings_Defaults_PuertoSeguroYStartTls()
+    {
+        var smtp = new SmtpSettings();
+
+        smtp.Port.ShouldBe(587);
+        smtp.UseStartTls.ShouldBeTrue();
+        smtp.Host.ShouldBeNull();
+    }
 }

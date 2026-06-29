@@ -48,6 +48,8 @@ public class InvoiceManualTransitionTests
     [InlineData(InvoiceStatus.Pending, InvoiceStatus.Desactivado)]
     [InlineData(InvoiceStatus.PrimerRecordatorio, InvoiceStatus.Desactivado)]
     [InlineData(InvoiceStatus.SegundoRecordatorio, InvoiceStatus.PrimerRecordatorio)]
+    [InlineData(InvoiceStatus.Desactivado, InvoiceStatus.PrimerRecordatorio)]
+    [InlineData(InvoiceStatus.Desactivado, InvoiceStatus.SegundoRecordatorio)]
     [InlineData(InvoiceStatus.Pagado, InvoiceStatus.PrimerRecordatorio)]
     public void DisallowedTransition_ThrowsAndDoesNotChangeStatus(InvoiceStatus from, InvoiceStatus to)
     {
@@ -65,5 +67,14 @@ public class InvoiceManualTransitionTests
         var service = new InvoiceTransitionService();
 
         Should.Throw<InvalidOperationException>(() => service.ApplyManualTransition(invoice, InvoiceStatus.Pagado));
+    }
+
+    [Fact]
+    public void ApplyManualTransition_NullInvoice_Throws()
+    {
+        var service = new InvoiceTransitionService();
+
+        Should.Throw<ArgumentNullException>(
+            () => service.ApplyManualTransition(null!, InvoiceStatus.PrimerRecordatorio));
     }
 }

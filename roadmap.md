@@ -246,7 +246,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🎨 Fase 4: Frontend (React UI) `8/9 specs`
+## 🎨 Fase 4: Frontend (React UI) `9/9 specs`
 
 ### Spec 4.1: Layout Base ✅ Implementada (feature 014-admin-panel-invoices)
 
@@ -342,7 +342,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ POST/PUT/DELETE a `/api/clients`
 - ✅ Toast de éxito/error y refresco automático del listado
 
-### Spec 4.9: Vista Envíos
+### Spec 4.9: Vista Envíos ✅ Implementada (feature 019-vista-envios)
 
 **GIVEN** usuario en `/envios`  
 **WHEN** página carga  
@@ -359,9 +359,9 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🧪 Fase 5: Testing & Quality `0/6 specs`
+## 🧪 Fase 5: Testing & Quality `1/6 specs`
 
-### Spec 5.1: Unit Tests - Domain
+### Spec 5.1: Unit Tests - Domain ✅ Implementada (feature 020-test-unitarios-dominio)
 
 **GIVEN** entidades de dominio  
 **WHEN** se ejecutan tests  
@@ -433,43 +433,9 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🚀 Fase 6: Deployment & Documentation `0/6 specs`
+## 🚀 Fase 6: Documentation `0/6 specs`
 
-### Spec 6.1: Docker Compose Optimizado
-
-**GIVEN** archivos docker  
-**WHEN** `docker-compose up`  
-**THEN**:
-
-- ✅ Backend corriendo en puerto 5000
-- ✅ Frontend corriendo en puerto 3000
-- ✅ MongoDB en puerto 27017
-- ✅ Worker procesando en background
-- ✅ Volumes para persistencia
-
-### Spec 6.2: Multi-stage Build
-
-**GIVEN** Dockerfile  
-**WHEN** se construye imagen  
-**THEN**:
-
-- ✅ Frontend: build assets, servidos estaticamente
-- ✅ Backend: compiled release, slim image
-- ✅ Tamaño final < 500MB
-- ✅ No secrets en imagen
-
-### Spec 6.3: Environment Configuration
-
-**GIVEN** variables de configuración  
-**WHEN** se despliega  
-**THEN**:
-
-- ✅ `.env.example` documentado
-- ✅ MongoDB URI configurable
-- ✅ Email service credentials (variables)
-- ✅ CORS origin whitelist
-
-### Spec 6.4: API Documentation
+### Spec 6.1: API Documentation
 
 **GIVEN** proyecto finalizado  
 **WHEN** se lee documentación  
@@ -480,8 +446,9 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ API endpoint reference
 - ✅ Setup instructions
 - ✅ Deployment guide
+- ✅ Coleccion Postman
 
-### Spec 6.5: Code Comments & Architecture Doc
+### Spec 6.2: Code Comments & Architecture Doc
 
 **GIVEN** código implementado  
 **WHEN** se revisa  
@@ -492,7 +459,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Dependency Injection claramente mapeado
 - ✅ Decision records (ADR) para cambios importantes
 
-### Spec 6.6: Runbook
+### Spec 6.3: Runbook
 
 **GIVEN** aplicación en producción  
 **WHEN** ocurre issue  
@@ -515,9 +482,9 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 | 1    | 1.1-1.4 | 4/4 | ✅ |
 | 2    | 2.1-2.2 | 2/2 | ✅ |
 | 3    | 3.1-3.4 | 4/4 | ✅ |
-| 4    | 4.1-4.5 | 8/9 | 🟡 |
-| 5    | 5.1-5.6 | 0/6 | ⬜ |
-| 6    | 6.1-6.6 | 0/6 | ⬜ |
+| 4    | 4.1-4.5 | 9/9 | ✅ |
+| 5    | 5.1-5.6 | 1/6 | 🟡 |
+| 6    | 6.1-6.3 | 0/3 | ⬜ |
 
 ---
 

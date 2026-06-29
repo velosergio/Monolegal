@@ -219,7 +219,10 @@ public class Invoice
     /// <summary>
     /// Permite sobrescribir <see cref="CreatedAt"/> para pruebas deterministas de orden
     /// (p. ej. paginación por fecha de creación). Sólo accesible desde los ensamblados de tests.
+    /// Lo ejercita <c>Monolegal.Application.Tests</c>, por lo que se excluye de la cobertura del
+    /// dominio (medida en aislamiento) en lugar de inflarla con un test redundante.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal void OverrideCreatedAt(DateTime dateTime)
     {
         CreatedAt = dateTime;

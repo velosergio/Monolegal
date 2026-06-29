@@ -341,6 +341,28 @@ public class InvoiceStatusTransitionsTests
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // Robustez: un estado fuera del conjunto conocido (dato corrupto) no transiciona
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void TryApplyTransition_UnknownStatus_ReturnsFalseAndStatusUnchanged()
+    {
+        // Arrange — estado inválido (no presente en el conjunto activo), simulando un
+        // documento corrupto en Mongo; ejercita la rama defensiva por defecto del switch.
+        var invoice = new Invoice("client_test", 1000m);
+        var unknown = (InvoiceStatus)999;
+        invoice.UpdateStatus(unknown);
+        var service = new InvoiceTransitionService();
+
+        // Act
+        var transitioned = service.TryApplyTransition(invoice, DefaultConfig(), DateTime.UtcNow);
+
+        // Assert
+        transitioned.ShouldBeFalse();
+        invoice.Status.ShouldBe(unknown);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // US1 – LastStatusTransitionAt se actualiza tras una transición exitosa
     // ─────────────────────────────────────────────────────────────────────────
 
