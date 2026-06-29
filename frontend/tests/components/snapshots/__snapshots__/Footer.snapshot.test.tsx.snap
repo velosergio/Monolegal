@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Footer (snapshot) > mantiene el marcado en estado colapsado 1`] = `
+<DocumentFragment>
+  <footer
+    class="border-t border-sidebar-border px-4 py-4 text-xs text-sidebar-foreground/60 text-center"
+  >
+    <p>
+      v0.1.0
+    </p>
+  </footer>
+</DocumentFragment>
+`;
+
+exports[`Footer (snapshot) > mantiene el marcado en estado expandido 1`] = `
+<DocumentFragment>
+  <footer
+    class="border-t border-sidebar-border px-4 py-4 text-xs text-sidebar-foreground/60"
+  >
+    <p>
+      Monolegal · v0.1.0 · © 2026
+    </p>
+  </footer>
+</DocumentFragment>
+`;

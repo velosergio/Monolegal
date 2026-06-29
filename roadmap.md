@@ -359,7 +359,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🧪 Fase 5: Testing & Quality `2/6 specs`
+## 🧪 Fase 5: Testing & Quality `3/6 specs`
 
 ### Spec 5.1: Unit Tests - Domain ✅ Implementada (feature 020-test-unitarios-dominio)
 
@@ -384,7 +384,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ 404 en ID no existente
 - ✅ WebApplicationFactory para setup
 
-### Spec 5.3: Frontend Component Tests
+### Spec 5.3: Frontend Component Tests ✅ Implementada (feature 022-tests-componentes-frontend)
 
 **GIVEN** componentes React  
 **WHEN** se corren tests con Vitest  

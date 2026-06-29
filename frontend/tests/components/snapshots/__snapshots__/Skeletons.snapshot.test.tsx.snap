@@ -1,0 +1,524 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Esqueletos de carga (snapshot) > DashboardSkeleton mantiene su marcado 1`] = `
+<DocumentFragment>
+  <output
+    aria-label="Cargando estadísticas"
+    class="flex flex-col gap-6"
+  >
+    <span
+      class="sr-only"
+    >
+      Cargando estadísticas…
+    </span>
+    <div
+      class="grid grid-cols-1 gap-4 sm:grid-cols-3"
+    >
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col gap-1.5 p-6 pb-2"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-24"
+          />
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-8 w-16"
+          />
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col gap-1.5 p-6 pb-2"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-24"
+          />
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-8 w-16"
+          />
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col gap-1.5 p-6 pb-2"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-24"
+          />
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-8 w-16"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="grid grid-cols-1 gap-4 lg:grid-cols-2"
+    >
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col gap-1.5 p-6"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-5 w-40"
+          />
+        </div>
+        <div
+          class="p-6 pt-0 flex flex-col gap-3"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-full"
+          />
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-full"
+          />
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-full"
+          />
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-full"
+          />
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col gap-1.5 p-6"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-5 w-40"
+          />
+        </div>
+        <div
+          class="p-6 pt-0 flex flex-col gap-3"
+        >
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-full"
+          />
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-full"
+          />
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-full"
+          />
+          <div
+            class="animate-pulse rounded-md bg-muted h-4 w-full"
+          />
+        </div>
+      </div>
+    </div>
+  </output>
+</DocumentFragment>
+`;
+
+exports[`Esqueletos de carga (snapshot) > InvoiceDetailSkeleton mantiene su marcado 1`] = `
+<DocumentFragment>
+  <div
+    aria-hidden="true"
+    class="flex flex-col gap-4"
+  >
+    <div
+      class="animate-pulse rounded-md bg-muted h-5 w-40"
+    />
+    <div
+      class="grid grid-cols-2 gap-4"
+    >
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="animate-pulse rounded-md bg-muted h-3 w-20"
+        />
+        <div
+          class="animate-pulse rounded-md bg-muted h-4 w-28"
+        />
+      </div>
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="animate-pulse rounded-md bg-muted h-3 w-20"
+        />
+        <div
+          class="animate-pulse rounded-md bg-muted h-4 w-28"
+        />
+      </div>
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="animate-pulse rounded-md bg-muted h-3 w-20"
+        />
+        <div
+          class="animate-pulse rounded-md bg-muted h-4 w-28"
+        />
+      </div>
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="animate-pulse rounded-md bg-muted h-3 w-20"
+        />
+        <div
+          class="animate-pulse rounded-md bg-muted h-4 w-28"
+        />
+      </div>
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="animate-pulse rounded-md bg-muted h-3 w-20"
+        />
+        <div
+          class="animate-pulse rounded-md bg-muted h-4 w-28"
+        />
+      </div>
+      <div
+        class="flex flex-col gap-2"
+      >
+        <div
+          class="animate-pulse rounded-md bg-muted h-3 w-20"
+        />
+        <div
+          class="animate-pulse rounded-md bg-muted h-4 w-28"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Esqueletos de carga (snapshot) > InvoicesTableSkeleton mantiene su marcado con un número fijo de filas 1`] = `
+<DocumentFragment>
+  <div
+    class="relative w-full overflow-x-auto"
+  >
+    <table
+      aria-hidden="true"
+      class="w-full caption-bottom text-sm"
+    >
+      <thead
+        class="[&_tr]:border-b"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 w-[120px]"
+          >
+            ID
+          </th>
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+          >
+            Cliente
+          </th>
+          <th
+            class="h-11 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            Monto
+          </th>
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+          >
+            Estado
+          </th>
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+          >
+            Última Acción
+          </th>
+          <th
+            class="h-11 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="[&_tr:last-child]:border-0"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-20"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-32"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted ml-auto h-4 w-24"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse bg-muted h-5 w-24 rounded-full"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-28"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted ml-auto h-8 w-16"
+            />
+          </td>
+        </tr>
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-20"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-32"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted ml-auto h-4 w-24"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse bg-muted h-5 w-24 rounded-full"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-28"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted ml-auto h-8 w-16"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Esqueletos de carga (snapshot) > ShipmentsTableSkeleton mantiene su marcado con un número fijo de filas 1`] = `
+<DocumentFragment>
+  <div
+    class="relative w-full overflow-x-auto"
+  >
+    <table
+      aria-hidden="true"
+      class="w-full caption-bottom text-sm"
+    >
+      <thead
+        class="[&_tr]:border-b"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 w-[120px]"
+          >
+            ID
+          </th>
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+          >
+            Cliente
+          </th>
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+          >
+            Email
+          </th>
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+          >
+            Estado de envío
+          </th>
+          <th
+            class="h-11 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+          >
+            Último intento
+          </th>
+          <th
+            class="h-11 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            Reintentos
+          </th>
+          <th
+            class="h-11 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="[&_tr:last-child]:border-0"
+      >
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-20"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-32"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-40"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse bg-muted h-5 w-24 rounded-full"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-28"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted ml-auto h-4 w-8"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted ml-auto h-8 w-28"
+            />
+          </td>
+        </tr>
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-20"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-32"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-40"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse bg-muted h-5 w-24 rounded-full"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted h-4 w-28"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted ml-auto h-4 w-8"
+            />
+          </td>
+          <td
+            class="p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right"
+          >
+            <div
+              class="animate-pulse rounded-md bg-muted ml-auto h-8 w-28"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</DocumentFragment>
+`;

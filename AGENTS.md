@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-specs/021-integration-tests-api/plan.md
+specs/022-tests-componentes-frontend/plan.md
 <!-- SPECKIT END -->

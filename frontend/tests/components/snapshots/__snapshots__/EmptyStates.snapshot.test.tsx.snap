@@ -1,0 +1,185 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Estados vacíos (snapshot) > DashboardEmptyState mantiene su marcado 1`] = `
+<DocumentFragment>
+  <div
+    class="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border py-16 text-center"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-inbox size-10 text-muted-foreground"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polyline
+        points="22 12 16 12 14 15 10 15 8 12 2 12"
+      />
+      <path
+        d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"
+      />
+    </svg>
+    <p
+      class="text-base font-medium text-foreground"
+    >
+      No hay facturas todavía
+    </p>
+    <p
+      class="max-w-sm text-sm text-muted-foreground"
+    >
+      Cuando se registren facturas, aquí verás las estadísticas de la cartera.
+    </p>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Estados vacíos (snapshot) > InvoicesEmptyState mantiene su marcado 1`] = `
+<DocumentFragment>
+  <output
+    class="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-center"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-search h-10 w-10 text-muted-foreground"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+      />
+      <path
+        d="M14 2v5a1 1 0 0 0 1 1h5"
+      />
+      <circle
+        cx="11.5"
+        cy="14.5"
+        r="2.5"
+      />
+      <path
+        d="M13.3 16.3 15 18"
+      />
+    </svg>
+    <span>
+      <span
+        class="block font-medium text-foreground"
+      >
+        No se encontraron facturas
+      </span>
+      <span
+        class="mt-1 block text-sm text-muted-foreground"
+      >
+        Ajusta los filtros o el término de búsqueda e inténtalo de nuevo.
+      </span>
+    </span>
+  </output>
+</DocumentFragment>
+`;
+
+exports[`Estados vacíos (snapshot) > ShipmentsEmptyState mantiene su marcado con filtros activos 1`] = `
+<DocumentFragment>
+  <output
+    class="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-center"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-file-search h-10 w-10 text-muted-foreground"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+      />
+      <path
+        d="M14 2v5a1 1 0 0 0 1 1h5"
+      />
+      <circle
+        cx="11.5"
+        cy="14.5"
+        r="2.5"
+      />
+      <path
+        d="M13.3 16.3 15 18"
+      />
+    </svg>
+    <span>
+      <span
+        class="block font-medium text-foreground"
+      >
+        No se encontraron envíos
+      </span>
+      <span
+        class="mt-1 block text-sm text-muted-foreground"
+      >
+        Ajusta los filtros o el término de búsqueda e inténtalo de nuevo.
+      </span>
+    </span>
+  </output>
+</DocumentFragment>
+`;
+
+exports[`Estados vacíos (snapshot) > ShipmentsEmptyState mantiene su marcado sin envíos 1`] = `
+<DocumentFragment>
+  <output
+    class="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-center"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-mail-x h-10 w-10 text-muted-foreground"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9"
+      />
+      <path
+        d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"
+      />
+      <path
+        d="m17 17 4 4"
+      />
+      <path
+        d="m21 17-4 4"
+      />
+    </svg>
+    <span>
+      <span
+        class="block font-medium text-foreground"
+      >
+        Aún no hay envíos
+      </span>
+      <span
+        class="mt-1 block text-sm text-muted-foreground"
+      >
+        Cuando las facturas en estados notificables generen avisos, aparecerán aquí.
+      </span>
+    </span>
+  </output>
+</DocumentFragment>
+`;
