@@ -359,7 +359,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🧪 Fase 5: Testing & Quality `1/6 specs`
+## 🧪 Fase 5: Testing & Quality `2/6 specs`
 
 ### Spec 5.1: Unit Tests - Domain ✅ Implementada (feature 020-test-unitarios-dominio)
 
@@ -372,7 +372,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Shouldly para lectibilidad
 - ✅ Mínimo 85% cobertura
 
-### Spec 5.2: Integration Tests - API
+### Spec 5.2: Integration Tests - API ✅ Implementada (feature 021-integration-tests-api) ✅ Implementada (feature 021-integration-test-api)
 
 **GIVEN** endpoints implementados  
 **WHEN** se ejecutan tests  
@@ -406,18 +406,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Hacer transición manual
 - ✅ Ver dashboard actualizado
 
-### Spec 5.5: Code Quality
-
-**GIVEN** código implementado  
-**WHEN** se ejecutan análisis  
-**THEN**:
-
-- ✅ Biome lint al 100% (frontend)
-- ✅ React Doctor sin warnings
-- ✅ No console.log en producción
-- ✅ Naming conventions consistentes
-
-### Spec 5.6: Test Runner Unificado
+### Spec 5.5: Test Runner Unificado
 
 **GIVEN** los distintos sistemas de test del proyecto (backend xUnit, frontend Vitest, E2E Playwright)  
 **WHEN** se ejecuta un único comando (ej. `npm run test:all` o script `test-all`)  
@@ -483,7 +472,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 | 2    | 2.1-2.2 | 2/2 | ✅ |
 | 3    | 3.1-3.4 | 4/4 | ✅ |
 | 4    | 4.1-4.5 | 9/9 | ✅ |
-| 5    | 5.1-5.6 | 1/6 | 🟡 |
+| 5    | 5.1-5.5 | 1/5 | 🟡 |
 | 6    | 6.1-6.3 | 0/3 | ⬜ |
 
 ---

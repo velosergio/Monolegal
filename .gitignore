@@ -53,6 +53,9 @@ out/
 
 # Test coverage
 coverage/
+coverage-report/
+**/TestResults/
+*.cobertura.xml
 
 # Temporary files
 *.tmp

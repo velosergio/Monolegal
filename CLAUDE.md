@@ -5,5 +5,5 @@ Proyecto con arquitectura limpia: backend ASP.NET Core 10 (Minimal APIs, MongoDB
 <!-- SPECKIT START -->
 ## Feature activo
 
-- **020 — Tests Unitarios del Dominio**: `specs/020-tests-unitarios-dominio/plan.md` (spec, research, data-model, contracts, quickstart en la misma carpeta).
+- **021 — Tests de Integración de la API**: `specs/021-integration-tests-api/plan.md` (spec, research, data-model, contracts, quickstart en la misma carpeta).
 <!-- SPECKIT END -->

@@ -6,19 +6,26 @@
 # Uso:
 #   pwsh backend/Tests/Monolegal.Domain.Tests/verify-coverage.ps1
 #   pwsh backend/Tests/Monolegal.Domain.Tests/verify-coverage.ps1 -Threshold 0.85
+#   pwsh backend/Tests/Monolegal.Domain.Tests/verify-coverage.ps1 -Html          # genera reporte HTML
+#   pwsh backend/Tests/Monolegal.Domain.Tests/verify-coverage.ps1 -Html -Open     # genera y lo abre
 #
 # Pensado para el gate de CI (Constitución, Principio IV: cobertura >=85%, publicada por PR).
 
 param(
-    [double]$Threshold = 0.85
+    [double]$Threshold = 0.85,
+    [switch]$Html,
+    [switch]$Open
 )
 
 $ErrorActionPreference = 'Stop'
 
+# Raíz del repo (tres niveles arriba de backend/Tests/Monolegal.Domain.Tests).
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..\..')
 $projectDir = $PSScriptRoot
 $proj = Join-Path $projectDir 'Monolegal.Domain.Tests.csproj'
 $resultsDir = Join-Path $projectDir 'TestResults'
 $runsettings = Join-Path $projectDir 'coverlet.runsettings'
+$reportDir = Join-Path $repoRoot 'coverage-report'
 
 Write-Host "==> Ejecutando suite del dominio con cobertura..." -ForegroundColor Cyan
 dotnet test $proj --collect:"XPlat Code Coverage" --settings $runsettings --results-directory $resultsDir
@@ -45,4 +52,17 @@ if ($lineRate -lt $Threshold) {
 }
 
 Write-Host "Cobertura de líneas del dominio: $pct (umbral $thr). Gate OK." -ForegroundColor Green
+
+if ($Html) {
+    Write-Host "==> Generando reporte HTML..." -ForegroundColor Cyan
+    if (-not (Get-Command reportgenerator -ErrorAction SilentlyContinue)) {
+        Write-Error "reportgenerator no está instalado. Ejecuta: dotnet tool install -g dotnet-reportgenerator-globaltool"
+        exit 1
+    }
+    reportgenerator -reports:"$($cov.FullName)" -targetdir:"$reportDir" -reporttypes:Html
+    $index = Join-Path $reportDir 'index.html'
+    Write-Host "Reporte HTML: $index" -ForegroundColor Green
+    if ($Open) { Start-Process $index }
+}
+
 exit 0

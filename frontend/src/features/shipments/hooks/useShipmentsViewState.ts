@@ -3,7 +3,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import type { ServerSendStatus } from '../types'
 
 export const PAGE_SIZE = 10
-export const SEARCH_DEBOUNCE_MS = 300
+const SEARCH_DEBOUNCE_MS = 300
 
 export interface ShipmentsViewState {
   sendStatus: ServerSendStatus | 'all'
