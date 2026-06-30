@@ -1,0 +1,11 @@
+{
+  "name": "monolegal-test-runner",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Orquestador unificado de pruebas (Spec 5.5 / feature 024): ejecuta backend, worker, frontend y E2E con un solo comando, reporte consolidado y código de salida agregado.",
+  "scripts": {
+    "test:all": "node scripts/test-all.mjs",
+    "test": "node scripts/test-all.mjs"
+  }
+}

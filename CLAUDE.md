@@ -5,5 +5,5 @@ Proyecto con arquitectura limpia: backend ASP.NET Core 10 (Minimal APIs, MongoDB
 <!-- SPECKIT START -->
 ## Feature activo
 
-- **023 — Tests E2E con Playwright**: `specs/023-tests-e2e-playwright/plan.md` (spec, research, data-model, contracts, quickstart en la misma carpeta).
+- **024 — Test Runner Unificado**: `specs/024-test-runner-unificado/plan.md` (spec, research, data-model, contracts, quickstart en la misma carpeta). Comando único `npm run test:all` → `node scripts/test-all.mjs` que orquesta las 4 suites (backend, worker, frontend, E2E) con reporte consolidado y exit code agregado.
 <!-- SPECKIT END -->

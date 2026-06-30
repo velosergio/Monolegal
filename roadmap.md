@@ -359,7 +359,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🧪 Fase 5: Testing & Quality `3/6 specs`
+## 🧪 Fase 5: Testing & Quality `5/5 specs`
 
 ### Spec 5.1: Unit Tests - Domain ✅ Implementada (feature 020-test-unitarios-dominio)
 
@@ -406,18 +406,18 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Hacer transición manual
 - ✅ Ver dashboard actualizado
 
-### Spec 5.5: Test Runner Unificado
+### Spec 5.5: Test Runner Unificado ✅ Implementada (feature 024-test-runner-unification)
 
 **GIVEN** los distintos sistemas de test del proyecto (backend xUnit, frontend Vitest, E2E Playwright)  
 **WHEN** se ejecuta un único comando (ej. `npm run test:all` o script `test-all`)  
 **THEN**:
 
-- ⬜ Corre los tests del backend (`dotnet test`)
-- ⬜ Corre los tests del frontend (`vitest run`)
-- ⬜ Corre los tests E2E (`playwright test`)
-- ⬜ Ejecuta todas las suites con un solo comando multiplataforma (Windows/Linux)
-- ⬜ Reporta resultado consolidado (PASS/FAIL por suite) y código de salida agregado
-- ⬜ Falla el comando completo si cualquier suite falla (apto para CI)
+- ✅ Corre los tests del backend (`dotnet test`)
+- ✅ Corre los tests del frontend (`vitest run`)
+- ✅ Corre los tests E2E (`playwright test`)
+- ✅ Ejecuta todas las suites con un solo comando multiplataforma (Windows/Linux)
+- ✅ Reporta resultado consolidado (PASS/FAIL por suite) y código de salida agregado
+- ✅ Falla el comando completo si cualquier suite falla (apto para CI)
 
 
 ---
@@ -472,7 +472,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 | 2    | 2.1-2.2 | 2/2 | ✅ |
 | 3    | 3.1-3.4 | 4/4 | ✅ |
 | 4    | 4.1-4.5 | 9/9 | ✅ |
-| 5    | 5.1-5.5 | 2/5 | 🟡 |
+| 5    | 5.1-5.5 | 5/5 | ✅ |
 | 6    | 6.1-6.3 | 0/3 | ⬜ |
 
 ---

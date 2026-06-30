@@ -1,0 +1,81 @@
+name: Test All (Unificado)
+
+# Materializa el CI Gate del Principio IV: ejecuta las cuatro suites con un solo
+# comando (`npm run test:all`) y falla el job si cualquiera falla.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-all:
+    name: Suite unificada (backend + worker + frontend + e2e)
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:8
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example_dev_password
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      MONGODB_URI: mongodb://root:example_dev_password@localhost:27017/monolegal_dev?authSource=admin
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        working-directory: frontend
+
+      # El backend debe estar levantado en :5155 para la suite E2E (precondición,
+      # research D7). Se compila en Release y se ejecuta en segundo plano.
+      - name: Build backend (Release)
+        run: dotnet build --configuration Release
+        working-directory: backend
+
+      - name: Start backend (Development env, :5155)
+        run: |
+          nohup dotnet run --project Api --no-build --configuration Release \
+            --urls http://localhost:5155 > "$GITHUB_WORKSPACE/backend.log" 2>&1 &
+          echo "Esperando a que el backend responda en /health..."
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:5155/health > /dev/null 2>&1; then
+              echo "Backend levantado."; exit 0
+            fi
+            sleep 2
+          done
+          echo "El backend no respondió a tiempo. Log:"; cat "$GITHUB_WORKSPACE/backend.log" || true
+          exit 1
+        working-directory: backend
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+
+      # Comando único: ejecuta backend + worker + frontend + e2e y agrega el exit code.
+      - name: Run unified test suite
+        run: npm run test:all

@@ -97,12 +97,32 @@ cd backend && dotnet restore
 
 ### Ejecutar Tests
 
-```bash
-# Backend
-cd backend && dotnet test
+**Todas las suites con un solo comando** (backend + worker + frontend + E2E):
 
-# Frontend
-cd frontend && npm run test -- --run
+```bash
+# Desde la raíz del repo — orquestador unificado (Spec 5.5)
+npm run test:all
+```
+
+Ejecuta las cuatro suites de forma secuencial, imprime un resumen consolidado
+`PASS`/`FAIL` por suite y termina con código de salida `0` solo si todas pasan
+(distinto de `0` si alguna falla, apto para CI). La suite E2E requiere MongoDB y
+el backend levantado en `http://localhost:5155`; ver
+[`specs/024-test-runner-unificado/quickstart.md`](specs/024-test-runner-unificado/quickstart.md).
+
+Para ejecutar un subconjunto (depuración local):
+
+```bash
+node scripts/test-all.mjs backend worker   # o: SUITES=backend,worker npm run test:all
+```
+
+**Suites por separado:**
+
+```bash
+cd backend  && dotnet test          # Backend (xUnit)
+cd worker   && dotnet test          # Worker (xUnit)
+cd frontend && npm run test:run     # Frontend (Vitest)
+cd frontend && npm run test:e2e     # E2E (Playwright)
 ```
 
 ### Linting y Formatting
