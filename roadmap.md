@@ -422,9 +422,9 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 ---
 
-## 🚀 Fase 6: Documentation `0/6 specs`
+## 🚀 Fase 6: Documentation `2/2 specs`
 
-### Spec 6.1: API Documentation
+### Spec 6.1: API Documentation ✅ Implementada (feature 025-documentacion-api)
 
 **GIVEN** proyecto finalizado  
 **WHEN** se lee documentación  
@@ -438,7 +438,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Coleccion Postman
 - ✅ Swagger UI con boton en el sidebar
 
-### Spec 6.2: Code Comments & Architecture Doc
+### Spec 6.2: Code Comments & Architecture Doc ✅ Implementada (feature 026-comentarios-arquitectura)
 
 **GIVEN** código implementado  
 **WHEN** se revisa  
@@ -448,17 +448,6 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ SOLID principles aplicados (comentarios en clase)
 - ✅ Dependency Injection claramente mapeado
 - ✅ Decision records (ADR) para cambios importantes
-
-### Spec 6.3: Runbook
-
-**GIVEN** aplicación en producción  
-**WHEN** ocurre issue  
-**THEN**:
-
-- ✅ Troubleshooting guide
-- ✅ Logs location & analysis
-- ✅ Rollback procedures
-- ✅ Escalation contacts
 
 ---
 
@@ -472,9 +461,9 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 | 1    | 1.1-1.4 | 4/4 | ✅ |
 | 2    | 2.1-2.2 | 2/2 | ✅ |
 | 3    | 3.1-3.4 | 4/4 | ✅ |
-| 4    | 4.1-4.5 | 9/9 | ✅ |
+| 4    | 4.1-4.9 | 9/9 | ✅ |
 | 5    | 5.1-5.5 | 5/5 | ✅ |
-| 6    | 6.1-6.3 | 0/3 | ⬜ |
+| 6    | 6.1-6.2 | 2/2 | ✅ |
 
 ---
 

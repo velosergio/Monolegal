@@ -11,6 +11,10 @@ public sealed record SendTestEmailInput(string? To, string? TemplateType);
 /// Validador del envío de prueba (spec 017, FR-017): destino con formato email y tipo de plantilla
 /// dentro del conjunto admitido.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación del envío de prueba.
+/// LSP — sustituye a <c>AbstractValidator&lt;SendTestEmailInput&gt;</c> sin romper a sus consumidores.
+/// </remarks>
 public sealed class SendTestEmailValidator : AbstractValidator<SendTestEmailInput>
 {
     public SendTestEmailValidator()

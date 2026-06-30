@@ -25,6 +25,11 @@ namespace Monolegal.Infrastructure.Workers;
 ///
 /// Validates: FR-001..FR-012 | US1/US2/US3 (spec.md 012-worker-state-transitions)
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — depende de <see cref="ISystemSettingsRepository"/> e <see cref="IInvoiceRepository"/>
+/// (abstracciones inyectadas por constructor), no de MongoDB. SRP — única responsabilidad: orquestar
+/// el ciclo periódico de evaluación y aplicación de transiciones.
+/// </remarks>
 public sealed class InvoiceTransitionsWorker : BackgroundService
 {
     private readonly IInvoiceRepository _invoiceRepository;

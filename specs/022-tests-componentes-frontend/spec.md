@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-29
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: Roadmap Spec 5.3 — "Frontend Component Tests": componentes React verificados con Vitest (renderiza sin errores, interacciones simuladas, async handlers con TanStack Query mockeado, snapshot tests para UI crítica).
 

@@ -12,6 +12,10 @@ public sealed record UpdateInvoiceInput(string? ClientId, DateTime? DueDate, IRe
 /// al menos un item válido. El bloqueo por estado terminal (RF-004a) se aplica en el dominio/endpoint,
 /// no aquí, pues depende del estado persistido.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación de la edición de factura.
+/// LSP — sustituye a <c>AbstractValidator&lt;UpdateInvoiceInput&gt;</c> sin romper a sus consumidores.
+/// </remarks>
 public sealed class UpdateInvoiceValidator : AbstractValidator<UpdateInvoiceInput>
 {
     public UpdateInvoiceValidator()

@@ -7,6 +7,10 @@ namespace Worker.Services;
 /// Main background worker service that runs as an ASP.NET Core Hosted Service.
 /// Processes async jobs such as email reminders and state transitions.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única responsabilidad: el ciclo de fondo de trabajos asíncronos (recordatorios y transiciones).
+/// DIP — los colaboradores (logger y servicios) se inyectan por constructor como abstracciones.
+/// </remarks>
 public class BackgroundWorker : IHostedService
 {
     private readonly ILogger<BackgroundWorker> _logger;

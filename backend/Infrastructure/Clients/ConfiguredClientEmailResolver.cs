@@ -13,6 +13,11 @@ namespace Backend.Infrastructure.Clients;
 ///
 /// La gestión completa de clientes (con su correo) es una feature futura del roadmap.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IClientEmailResolver"/> leyendo de la configuración.
+/// LSP — es intercambiable con cualquier otro <see cref="IClientEmailResolver"/> (p. ej. el de repositorio).
+/// SRP — única responsabilidad: resolver el correo desde la sección <c>ClientEmails</c>.
+/// </remarks>
 public sealed class ConfiguredClientEmailResolver : IClientEmailResolver
 {
     private readonly IConfiguration _configuration;

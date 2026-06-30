@@ -19,6 +19,10 @@ namespace Backend.Infrastructure.Email;
 /// (entorno) y la contraseña SOLO del entorno. Se evalúa en cada envío para soportar cambios en
 /// runtime sin reinicio (FR-002b).
 /// </summary>
+/// <remarks>
+/// SOLID: DIP/OCP — implementa <see cref="IEmailProvider"/>; se suma a la factory sin modificar consumidores.
+/// LSP — intercambiable con <see cref="ResendEmailProvider"/>. SRP — única responsabilidad: enviar vía SMTP.
+/// </remarks>
 public sealed class SmtpEmailProvider : IEmailProvider
 {
     private readonly ISystemSettingsRepository _settings;

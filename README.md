@@ -1,5 +1,31 @@
 # Monolegal - Plataforma de Gestión de Cobranza
 
+[![Test All](https://github.com/velosergio/monolegal/actions/workflows/test-all.yml/badge.svg)](https://github.com/velosergio/monolegal/actions/workflows/test-all.yml)
+[![Backend](https://github.com/velosergio/monolegal/actions/workflows/backend.yml/badge.svg)](https://github.com/velosergio/monolegal/actions/workflows/backend.yml)
+[![Worker](https://github.com/velosergio/monolegal/actions/workflows/worker.yml/badge.svg)](https://github.com/velosergio/monolegal/actions/workflows/worker.yml)
+[![Frontend](https://github.com/velosergio/monolegal/actions/workflows/frontend.yml/badge.svg)](https://github.com/velosergio/monolegal/actions/workflows/frontend.yml)
+
+**Stack**
+
+[![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-Minimal%20APIs-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-build-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-8-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Docker](https://img.shields.io/badge/Docker%20Compose-orquestación-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/compose/)
+[![TanStack Query](https://img.shields.io/badge/TanStack%20Query-server%20state-FF4154?logo=reactquery&logoColor=white)](https://tanstack.com/query)
+[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-componentes-000000)](https://ui.shadcn.com/)
+[![Biome](https://img.shields.io/badge/Biome-lint%2Fformat-60a5fa)](https://biomejs.dev/)
+
+**Pruebas** — cinco suites orquestadas con [`npm run test:all`](scripts/test-all.mjs)
+
+[![Backend xUnit](https://img.shields.io/badge/Backend-xUnit-512BD4?logo=dotnet&logoColor=white)](backend/Tests/)
+[![Worker xUnit](https://img.shields.io/badge/Worker-xUnit-512BD4?logo=dotnet&logoColor=white)](worker/Tests/)
+[![Vitest](https://img.shields.io/badge/Frontend-Vitest-6E9F18?logo=vitest&logoColor=white)](frontend/)
+[![React Doctor](https://img.shields.io/badge/React%20Doctor-100%2F100-brightgreen)](https://react.doctor/)
+[![Playwright](https://img.shields.io/badge/E2E-Playwright-2EAD33?logo=playwright&logoColor=white)](frontend/e2e/)
+
 Solución modular para gestión de facturas, seguimiento de pagos y automatización de recordatorios de cobranza.
 
 ## Quick Start
@@ -78,7 +104,9 @@ curl http://localhost:5173
 
 **Documentación del proyecto** ([índice completo en `docs/`](docs/README.md)):
 
-- **[Arquitectura](docs/architecture.md)** - Capas, componentes y diagramas
+- **[Arquitectura](docs/architecture.md)** - Capas, componentes, dirección de dependencias y diagramas
+- **[Inyección de Dependencias](docs/dependency-injection.md)** - Mapa abstracción → implementación → ciclo de vida
+- **[Decisiones de arquitectura (ADR)](docs/adr/README.md)** - Registro de decisiones no obvias
 - **[Modelo de datos (ERD)](docs/data-model.md)** - Entidades, enums y ciclo de estados
 - **[Referencia de la API](docs/api-reference.md)** - Endpoints (generada desde OpenAPI)
 - **[Configuración local](docs/setup.md)** - Puesta en marcha y variables de entorno

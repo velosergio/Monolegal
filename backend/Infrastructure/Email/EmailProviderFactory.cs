@@ -10,6 +10,11 @@ namespace Backend.Infrastructure.Email;
 /// Resuelve el <see cref="IEmailProvider"/> concreto a partir del proveedor activo (spec 017, D1).
 /// Recibe todas las implementaciones registradas y selecciona por <see cref="IEmailProvider.Provider"/>.
 /// </summary>
+/// <remarks>
+/// SOLID: OCP — admitir un nuevo proveedor se reduce a registrar otro <see cref="IEmailProvider"/>,
+/// sin modificar la factory. DIP — depende de la abstracción <see cref="IEmailProvider"/>, no de los
+/// proveedores concretos. SRP — única responsabilidad: seleccionar el proveedor activo.
+/// </remarks>
 public sealed class EmailProviderFactory : IEmailProviderFactory
 {
     private readonly IReadOnlyDictionary<DomainEmailProvider, IEmailProvider> _providers;

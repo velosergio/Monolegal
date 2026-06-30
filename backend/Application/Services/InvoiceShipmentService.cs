@@ -16,6 +16,11 @@ namespace Backend.Application.Services;
 /// reintentos del dominio. La cancelación marca como omitida (<c>Skipped</c>) las facturas pendientes
 /// en estado notificable. No expone secretos.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IInvoiceShipmentService"/>; los endpoints dependen de la
+/// abstracción y reutiliza <see cref="IInvoiceTransitionNotifier"/> inyectado, no implementaciones concretas.
+/// SRP — única responsabilidad: las acciones de envío por factura (reenvío y cancelación).
+/// </remarks>
 public sealed class InvoiceShipmentService : IInvoiceShipmentService
 {
     private readonly IInvoiceRepository _invoices;

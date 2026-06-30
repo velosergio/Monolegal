@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-29
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: User description: "Spec 5.2: Integration Tests - API. GIVEN endpoints implementados, WHEN se ejecutan tests, THEN: GET /api/invoices retorna 200, filtro por status funciona, POST transition valida estado permitido, 404 en ID no existente, WebApplicationFactory para setup."
 

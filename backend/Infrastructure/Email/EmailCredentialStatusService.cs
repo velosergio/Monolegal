@@ -11,6 +11,10 @@ namespace Backend.Infrastructure.Email;
 /// La presencia del secreto se determina por el entorno (<see cref="EmailOptions"/>); el resultado
 /// "Validated" es efímero en memoria y se actualiza al validar exitosamente desde la UI.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IEmailCredentialStatus"/>; los consumidores dependen de la abstracción.
+/// SRP — única responsabilidad: reportar el estado de las credenciales sin exponer su valor.
+/// </remarks>
 public sealed class EmailCredentialStatusService : IEmailCredentialStatus
 {
     private readonly EmailOptions _options;

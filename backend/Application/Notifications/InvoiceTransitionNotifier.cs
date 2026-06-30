@@ -22,6 +22,11 @@ namespace Backend.Application.Notifications;
 ///  - Fallo de envío ⇒ resultado Failed, sin tocar contadores ni revertir la transición; no se relanza.
 ///  - Cancelación ⇒ se propaga (apagado ordenado).
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IInvoiceTransitionNotifier"/> y depende de <see cref="IEmailService"/>
+/// e <see cref="IClientEmailResolver"/> (abstracciones inyectadas), no de proveedores concretos de correo.
+/// SRP — única responsabilidad: orquestar la notificación de una transición (sin persistir).
+/// </remarks>
 public sealed class InvoiceTransitionNotifier : IInvoiceTransitionNotifier
 {
     private readonly IEmailService _emailService;

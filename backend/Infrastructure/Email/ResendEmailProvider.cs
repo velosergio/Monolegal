@@ -18,6 +18,10 @@ namespace Backend.Infrastructure.Email;
 /// entorno (<c>Email__Resend__ApiKey</c>); el dominio remitente y el From son configuración no
 /// secreta tomada de <see cref="SystemSettings.Email"/>. Se evalúa por envío (cambios en runtime).
 /// </summary>
+/// <remarks>
+/// SOLID: DIP/OCP — implementa <see cref="IEmailProvider"/>; se suma a la factory sin modificar consumidores.
+/// LSP — intercambiable con <see cref="SmtpEmailProvider"/>. SRP — única responsabilidad: enviar vía la API de Resend.
+/// </remarks>
 public sealed class ResendEmailProvider : IEmailProvider
 {
     private const string SendEndpoint = "https://api.resend.com/emails";

@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-29
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: Roadmap Spec 5.4 — "E2E Tests - Playwright": dada la aplicación fullstack, cuando se corren los tests E2E, entonces se validan los flujos críticos: abrir lista de facturas, filtrar por estado, hacer una transición manual y ver el dashboard actualizado.
 

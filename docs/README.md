@@ -8,6 +8,7 @@
 | Documento | Contenido |
 |-----------|-----------|
 | [architecture.md](./architecture.md) | Panorama de arquitectura: capas del backend, componentes (backend, worker, frontend, MongoDB) y diagramas |
+| [dependency-injection.md](./dependency-injection.md) | Mapa de Inyección de Dependencias: abstracción → implementación → ciclo de vida |
 | [data-model.md](./data-model.md) | Modelo de datos: ERD, entidades, enums, colecciones y ciclo de estados |
 | [api-reference.md](./api-reference.md) | Referencia de endpoints (**generada** desde `openapi.json`) |
 | [setup.md](./setup.md) | Configuración local (Docker o servicios en local) y variables de entorno |
@@ -24,8 +25,14 @@ sirve en `/openapi/v1.json`. En producción está deshabilitado por defecto (ver
 
 ## Decisiones de arquitectura (ADR)
 
+Índice completo y plantilla en [`adr/README.md`](./adr/README.md).
+
 - [0001 — Verificación de conexión a MongoDB](./adr/0001-verificacion-conexion-mongodb.md)
 - [0002 — Documentación de API generada desde snapshot OpenAPI](./adr/0002-documentacion-openapi-generada.md)
+- [0003 — Repositorios y cliente de MongoDB con ciclo de vida Singleton](./adr/0003-repositorios-singleton-mongodb.md)
+- [0004 — Selección del proveedor de correo en runtime (factory + NoOp)](./adr/0004-seleccion-proveedor-email-runtime.md)
+- [0005 — Migraciones idempotentes como IHostedService](./adr/0005-migraciones-idempotentes-hostedservice.md)
+- [0006 — Worker BackgroundService sin estado en memoria](./adr/0006-worker-backgroundservice-estado-mongodb.md)
 
 ## Regenerar la documentación de la API
 

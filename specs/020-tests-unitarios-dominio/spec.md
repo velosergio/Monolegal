@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-29
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: User description: "Spec 5.1: Unit Tests - Domain. GIVEN entidades de dominio, WHEN se ejecutan tests, THEN cobertura: InvoiceStatus transitions valid/invalid (xUnit), Invoice creation con validaciones, Shouldly para legibilidad, mínimo 85% cobertura."
 

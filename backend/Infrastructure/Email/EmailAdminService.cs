@@ -16,6 +16,10 @@ namespace Backend.Infrastructure.Email;
 /// embebido en <see cref="Invoice"/> para el saneamiento. Fail-soft por factura: un fallo aislado
 /// no aborta el lote. No expone secretos.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IEmailAdminService"/> y reutiliza <see cref="IInvoiceTransitionNotifier"/>
+/// inyectado. SRP — única responsabilidad: las herramientas globales de administración de envíos.
+/// </remarks>
 public sealed class EmailAdminService : IEmailAdminService
 {
     private readonly IInvoiceRepository _invoices;

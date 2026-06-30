@@ -9,6 +9,10 @@ public sealed record ClientInput(string? Name, string? Email, string? Phone, str
 /// Validador del alta de cliente (spec 018, RF-015): nombre obligatorio y email con formato válido.
 /// La unicidad del email (RF-015a) se verifica en el endpoint contra el repositorio.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación del alta de cliente.
+/// LSP — sustituye a <c>AbstractValidator&lt;ClientInput&gt;</c> (FluentValidation) sin romper a sus consumidores.
+/// </remarks>
 public sealed class CreateClientValidator : AbstractValidator<ClientInput>
 {
     public CreateClientValidator()
@@ -26,6 +30,10 @@ public sealed class CreateClientValidator : AbstractValidator<ClientInput>
 /// Validador de la edición de cliente (spec 018, RF-016). Mismas reglas de campo que el alta; la
 /// unicidad del email excluyendo al propio cliente se verifica en el endpoint.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación de la edición de cliente.
+/// LSP — sustituye a <c>AbstractValidator&lt;ClientInput&gt;</c> sin romper a sus consumidores.
+/// </remarks>
 public sealed class UpdateClientValidator : AbstractValidator<ClientInput>
 {
     public UpdateClientValidator()

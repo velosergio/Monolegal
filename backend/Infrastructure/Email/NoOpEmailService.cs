@@ -12,6 +12,10 @@ namespace Backend.Infrastructure.Email;
 /// No envía correo real: registra un log estructurado y completa con éxito. Permite ejecutar
 /// los flujos de transición y notificación sin un servidor SMTP.
 /// </summary>
+/// <remarks>
+/// SOLID: LSP — sustituye a cualquier <see cref="IEmailService"/> en Dev/CI sin romper a los consumidores.
+/// DIP — se inyecta vía la abstracción. SRP — única responsabilidad: simular el envío sin servidor real.
+/// </remarks>
 public sealed class NoOpEmailService : IEmailService
 {
     private readonly ILogger<NoOpEmailService> _logger;

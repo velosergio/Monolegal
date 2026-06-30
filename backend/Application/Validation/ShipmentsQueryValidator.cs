@@ -15,6 +15,10 @@ public sealed record ShipmentsQuery(string? SendStatus, int Page, int PageSize, 
 /// está presente, debe ser válido; search ≤ 100. La validación de sendStatus se inyecta como
 /// predicado para no acoplar Application a la capa Api.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación del listado de envíos.
+/// DIP — el predicado de validez de <c>sendStatus</c> se inyecta para no acoplar Application a la capa Api.
+/// </remarks>
 public sealed class ShipmentsQueryValidator : AbstractValidator<ShipmentsQuery>
 {
     public const int MaxPageSize = 50;

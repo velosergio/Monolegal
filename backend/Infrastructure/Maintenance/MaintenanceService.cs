@@ -15,6 +15,10 @@ namespace Backend.Infrastructure.Maintenance;
 /// vacía toda la base, reconstruye índices y vuelve a ejecutar el sembrador. Registra cada
 /// operación con logging estructurado y nunca expone secretos.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IMaintenanceService"/>; los endpoints dependen de la abstracción.
+/// SRP — única responsabilidad: las operaciones destructivas de mantenimiento (zona de peligro).
+/// </remarks>
 public sealed class MaintenanceService : IMaintenanceService
 {
     private readonly IInvoiceRepository _invoices;

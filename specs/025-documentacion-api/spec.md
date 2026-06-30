@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-30
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: Roadmap Spec 6.1 — "API Documentation": dado el proyecto finalizado, cuando alguien lee la documentación, entonces incluye: panorama de arquitectura (architecture overview), diagramas de relación de entidades (ERD), referencia de endpoints de la API, instrucciones de configuración (setup), guía de despliegue (deployment), colección de Postman y Swagger UI accesible mediante un botón en el sidebar.
 

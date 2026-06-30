@@ -8,7 +8,7 @@
 //   - worker   → `dotnet test` en worker/
 //   - frontend → `npm run test:run` (vitest) en frontend/
 //   - doctor   → `npm run doctor` (react-doctor) en frontend/
-//   - e2e      → `npm run test:e2e` (playwright) en frontend/
+//   - e2e      → Playwright; auto-detecta backend Docker (:5000) o local (:5155)
 //
 // Comportamiento (ver contracts/test-runner.md, research.md):
 //   - Ejecuta TODAS las suites de forma secuencial; NO fail-fast (FR-009, D4).
@@ -32,8 +32,87 @@ const SUITES = [
   { id: 'worker', label: 'Worker (xUnit)', command: 'dotnet', args: ['test'], cwd: 'worker' },
   { id: 'frontend', label: 'Frontend (Vitest)', command: 'npm', args: ['run', 'test:run'], cwd: 'frontend' },
   { id: 'doctor', label: 'Frontend (React Doctor)', command: 'npm', args: ['run', 'doctor'], cwd: 'frontend' },
-  { id: 'e2e', label: 'E2E (Playwright)', command: 'npm', args: ['run', 'test:e2e'], cwd: 'frontend' },
+  {
+    id: 'e2e',
+    label: 'E2E (Playwright, local :5155)',
+    command: 'npm',
+    args: ['run', 'test:e2e'],
+    cwd: 'frontend',
+  },
 ]
+
+const E2E_LOCAL_URL = 'http://127.0.0.1:5155'
+const E2E_DOCKER_URL = 'http://127.0.0.1:5000'
+
+/** Comprueba `/health` del backend (timeout corto; usa 127.0.0.1 para evitar IPv6). */
+async function isBackendHealthy(baseUrl) {
+  try {
+    const response = await fetch(`${baseUrl}/health`, { signal: AbortSignal.timeout(2_000) })
+    return response.ok
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Elige el script E2E según el backend disponible:
+ * - `E2E_MODE=docker|local` fuerza el modo.
+ * - Sin forzar: prioriza local (:5155, paridad CI) si responde; si no, Docker (:5000).
+ */
+async function resolveE2eSuite() {
+  const forced = process.env.E2E_MODE?.trim().toLowerCase()
+  if (forced === 'docker') {
+    return {
+      id: 'e2e',
+      label: 'E2E (Playwright, Docker :5000)',
+      command: 'npm',
+      args: ['run', 'test:e2e:docker'],
+      cwd: 'frontend',
+    }
+  }
+  if (forced === 'local') {
+    return SUITES.find((s) => s.id === 'e2e')
+  }
+
+  const [dockerUp, localUp] = await Promise.all([
+    isBackendHealthy(E2E_DOCKER_URL),
+    isBackendHealthy(E2E_LOCAL_URL),
+  ])
+
+  if (localUp) {
+    if (dockerUp) {
+      console.log(
+        'E2E: backends en :5155 y :5000 detectados; usando local (:5155). ' +
+          'Forzar Docker con E2E_MODE=docker.'
+      )
+    }
+    return SUITES.find((s) => s.id === 'e2e')
+  }
+
+  if (dockerUp) {
+    console.log('E2E: backend Docker detectado en :5000 → test:e2e:docker')
+    return {
+      id: 'e2e',
+      label: 'E2E (Playwright, Docker :5000)',
+      command: 'npm',
+      args: ['run', 'test:e2e:docker'],
+      cwd: 'frontend',
+    }
+  }
+
+  console.warn(
+    `E2E: ningún backend respondió en ${E2E_LOCAL_URL} ni ${E2E_DOCKER_URL}. ` +
+      'Se usará test:e2e (local :5155); levanta dotnet run o docker compose.'
+  )
+  return SUITES.find((s) => s.id === 'e2e')
+}
+
+/** Sustituye la definición estática de E2E por la resuelta en tiempo de ejecución. */
+async function prepareSuites(suites) {
+  if (!suites.some((s) => s.id === 'e2e')) return suites
+  const e2eDef = await resolveE2eSuite()
+  return suites.map((s) => (s.id === 'e2e' ? e2eDef : s))
+}
 
 // --- Selección opcional de suites (research D9; default = las cuatro) --------
 // Uso: `node scripts/test-all.mjs backend worker`  o  `SUITES=backend,worker`.
@@ -123,7 +202,7 @@ function printSummary(results) {
 
 // --- Flujo principal: ejecutar todas, agregar, salir -------------------------
 async function main() {
-  const suites = selectSuites()
+  const suites = await prepareSuites(selectSuites())
   const results = []
 
   for (let i = 0; i < suites.length; i++) {

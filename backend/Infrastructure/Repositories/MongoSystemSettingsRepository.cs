@@ -5,6 +5,14 @@ using Monolegal.Domain.Repositories;
 
 namespace Monolegal.Infrastructure.Repositories;
 
+/// <summary>
+/// Implementación MongoDB de <see cref="ISystemSettingsRepository"/>: persiste y recupera la
+/// configuración del sistema (<c>SystemSettings</c>) como documento único.
+/// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="ISystemSettingsRepository"/>; los consumidores dependen de la
+/// abstracción, no de MongoDB. SRP — única responsabilidad: persistir la configuración del sistema.
+/// </remarks>
 public class MongoSystemSettingsRepository : ISystemSettingsRepository
 {
     private readonly IMongoCollection<SystemSettings> _collection;

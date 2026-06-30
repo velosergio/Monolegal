@@ -12,6 +12,10 @@ public sealed record TransitionInvoiceInput(string? NewStatus);
 /// Regla: newStatus requerido y perteneciente al conjunto de estados válidos.
 /// El predicado de validez se inyecta para no acoplar Application a la capa Api.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación del cuerpo de transición.
+/// DIP — el predicado de validez de <c>newStatus</c> se inyecta para no acoplar Application a la capa Api.
+/// </remarks>
 public sealed class TransitionInvoiceRequestValidator : AbstractValidator<TransitionInvoiceInput>
 {
     public TransitionInvoiceRequestValidator(System.Func<string, bool> isValidStatus)

@@ -12,6 +12,10 @@ public sealed record ListClientsQuery(int Page, int PageSize, string? Search = n
 /// Validador del listado de clientes. Reglas: page ≥ 1; 1 ≤ pageSize ≤ 50; search ≤ 100 caracteres.
 /// Replica <see cref="ListInvoicesQueryValidator"/> para consistencia (spec 018, research D9).
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación del listado de clientes.
+/// LSP — sustituye a <c>AbstractValidator&lt;ListClientsQuery&gt;</c> sin romper a sus consumidores.
+/// </remarks>
 public sealed class ListClientsQueryValidator : AbstractValidator<ListClientsQuery>
 {
     public const int MaxPageSize = 50;

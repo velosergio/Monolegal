@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-30
 
-**Status**: Draft
+**Status**: Activo
 
 **Input**: Roadmap Spec 5.5 — "Test Runner Unificado": dados los distintos sistemas de test del proyecto (backend xUnit, worker xUnit, frontend Vitest, E2E Playwright), cuando se ejecuta un único comando, entonces corre todas las suites de forma multiplataforma, reporta un resultado consolidado (PASS/FAIL por suite) con código de salida agregado y falla el comando completo si cualquier suite falla (apto para CI).
 

@@ -15,6 +15,10 @@ namespace Monolegal.Infrastructure.Repositories;
 /// <summary>
 /// MongoDB implementation of <see cref="IInvoiceRepository"/>.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IInvoiceRepository"/>; los casos de uso dependen de la abstracción,
+/// no del driver de MongoDB. SRP — única responsabilidad: la persistencia de facturas.
+/// </remarks>
 public sealed class MongoInvoiceRepository : IInvoiceRepository
 {
     private readonly IMongoCollection<Invoice> _collection;

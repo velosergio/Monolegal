@@ -16,6 +16,11 @@ namespace Backend.Infrastructure.Email;
 /// delega en el <see cref="IEmailProvider"/> correspondiente. Los fallos se propagan como
 /// excepción para que el orquestador los registre como Failed.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IEmailService"/> y delega en el <see cref="IEmailProvider"/> activo
+/// (abstracción). LSP — intercambiable con <see cref="NoOpEmailService"/>. SRP — única responsabilidad:
+/// resolver proveedor y plantillas en runtime y delegar el envío.
+/// </remarks>
 public sealed class SettingsBackedEmailService : IEmailService
 {
     private readonly ISystemSettingsRepository _settings;

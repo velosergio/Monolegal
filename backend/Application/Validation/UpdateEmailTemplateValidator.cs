@@ -11,6 +11,10 @@ public sealed record EmailTemplateInput(string? Subject, string? Body);
 /// Validador de plantillas de email (spec 017, FR-011/FR-015): asunto y cuerpo no vacíos y que
 /// solo referencien variables del catálogo cerrado (<see cref="EmailTemplateVariables"/>).
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación de plantillas de email.
+/// LSP — sustituye a <c>AbstractValidator&lt;EmailTemplateInput&gt;</c> sin romper a sus consumidores.
+/// </remarks>
 public sealed class UpdateEmailTemplateValidator : AbstractValidator<EmailTemplateInput>
 {
     public UpdateEmailTemplateValidator()

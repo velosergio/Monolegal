@@ -59,6 +59,14 @@ flowchart TD
 - **Api** (`backend/Api`): endpoints Minimal API agrupados por recurso, documento OpenAPI
   (`/openapi/v1.json`) y Swagger UI (`/swagger`, solo en Development).
 
+Como las capas externas dependen de las internas y `Domain`/`Application` solo conocen abstracciones
+(interfaces), **los cambios tecnológicos quedan confinados a `Infrastructure`**: sustituir MongoDB por
+otra base, o cambiar el proveedor de correo, se reduce a otra implementación de la interfaz
+correspondiente sin tocar el dominio ni los casos de uso (Principio de Inversión de Dependencias). El
+mapeo concreto de cada abstracción a su implementación y ciclo de vida está en
+[dependency-injection.md](./dependency-injection.md); las clases clave declaran el principio SOLID que
+encarnan en un comentario de clase (`SOLID: …`).
+
 ## Worker de transiciones
 
 El worker (`worker/`) es un `BackgroundService` sin estado en memoria (todo el estado vive en
@@ -97,6 +105,8 @@ se verifica al arranque con política *fail-soft* (ver
 
 ## Documentación relacionada
 
+- [Inyección de Dependencias](./dependency-injection.md) (abstracción → implementación → ciclo de vida)
+- [Registro de decisiones (ADR)](./adr/README.md)
 - [Modelo de datos y ERD](./data-model.md)
 - [Referencia de la API](./api-reference.md) (generada)
 - [Configuración local](./setup.md)

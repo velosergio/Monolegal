@@ -12,6 +12,11 @@ namespace Backend.Infrastructure.Clients;
 /// <paramref name="fallback"/> (típicamente <see cref="ConfiguredClientEmailResolver"/>, basado en
 /// la sección de configuración <c>ClientEmails</c>) cuando el cliente no existe o no tiene email.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IClientEmailResolver"/> y delega en un fallback
+/// <see cref="IClientEmailResolver"/> inyectado. OCP — la estrategia de resolución se compone
+/// (repositorio + fallback) sin modificar a los consumidores. SRP — resolver el correo del cliente.
+/// </remarks>
 public sealed class ClientRepositoryEmailResolver : IClientEmailResolver
 {
     private readonly IClientRepository _clients;

@@ -10,6 +10,10 @@ namespace Monolegal.Domain.Services;
 /// automáticas de las facturas, basándose en el tiempo transcurrido desde la última
 /// transición y la configuración de días en <see cref="InvoiceTransitionsConfig"/>.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de transición de estado de las facturas.
+/// OCP — los plazos se ajustan vía <see cref="InvoiceTransitionsConfig"/> sin modificar el servicio.
+/// </remarks>
 public class InvoiceTransitionService
 {
     /// <summary>

@@ -15,6 +15,10 @@ namespace Monolegal.Infrastructure.Repositories;
 /// inyección), ordenada por nombre ascendente, replicando el patrón de
 /// <see cref="MongoInvoiceRepository.GetPagedAsync"/>.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IClientRepository"/>; la capa Application depende de la abstracción,
+/// no de MongoDB. SRP — única responsabilidad: traducir entre el dominio y la colección <c>Clients</c>.
+/// </remarks>
 public sealed class MongoClientRepository : IClientRepository
 {
     private readonly IMongoCollection<Client> _collection;

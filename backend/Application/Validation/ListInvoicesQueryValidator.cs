@@ -15,6 +15,10 @@ public sealed record ListInvoicesQuery(string? Status, int Page, int PageSize, s
 /// La validación del valor de <c>Status</c> contra el conjunto de estados de dominio se inyecta
 /// como predicado para no acoplar Application a la capa Api.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación del listado de facturas.
+/// DIP — el predicado de validez de <c>Status</c> se inyecta para no acoplar Application a la capa Api.
+/// </remarks>
 public sealed class ListInvoicesQueryValidator : AbstractValidator<ListInvoicesQuery>
 {
     public const int MaxPageSize = 50;

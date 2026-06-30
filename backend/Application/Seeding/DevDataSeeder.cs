@@ -16,6 +16,10 @@ namespace Backend.Application.Seeding;
 /// de facturas está vacía (idempotencia), persistiendo vía <see cref="IInvoiceRepository"/>
 /// y registrando el resultado con logging estructurado.
 /// </summary>
+/// <remarks>
+/// SOLID: DIP — implementa <see cref="IDevDataSeeder"/> y persiste vía <see cref="IInvoiceRepository"/> (abstracción).
+/// SRP — única responsabilidad: sembrar el conjunto de datos de desarrollo de forma idempotente.
+/// </remarks>
 public sealed class DevDataSeeder : IDevDataSeeder
 {
     /// <summary>

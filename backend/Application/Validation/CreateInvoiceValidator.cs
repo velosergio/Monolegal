@@ -15,6 +15,10 @@ public sealed record CreateInvoiceInput(string? ClientId, DateTime? DueDate, IRe
 /// items (RF-011). Exige cliente, fecha de vencimiento y al menos un item con descripción, cantidad
 /// y precio unitario positivos.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación del alta de factura.
+/// LSP — sustituye a <c>AbstractValidator&lt;CreateInvoiceInput&gt;</c> sin romper a sus consumidores.
+/// </remarks>
 public sealed class CreateInvoiceValidator : AbstractValidator<CreateInvoiceInput>
 {
     public CreateInvoiceValidator()

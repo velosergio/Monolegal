@@ -12,6 +12,10 @@ namespace Backend.Infrastructure.Email;
 /// las variables del catálogo con <see cref="EmailTemplateRenderer"/>. Las plantillas por defecto
 /// usan los marcadores canónicos para que el comportamiento sea idéntico con o sin personalización.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única responsabilidad: componer asunto y cuerpo del correo a partir de plantillas.
+/// OCP — admite plantillas personalizadas sobre las default sin modificar la lógica de composición.
+/// </remarks>
 public sealed class EmailTemplateProvider
 {
     private static readonly CultureInfo Culture = CultureInfo.GetCultureInfo("es-CO");

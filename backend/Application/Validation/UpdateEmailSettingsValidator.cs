@@ -25,6 +25,10 @@ public sealed record EmailSettingsRequest(
 /// Validador del cuerpo de actualización de configuración de email (spec 017, FR-005/FR-006).
 /// Requiere remitente válido y los parámetros propios del proveedor activo.
 /// </summary>
+/// <remarks>
+/// SOLID: SRP — única razón de cambio: las reglas de validación de la configuración de email.
+/// LSP — sustituye a <c>AbstractValidator&lt;EmailSettingsRequest&gt;</c> sin romper a sus consumidores.
+/// </remarks>
 public sealed class UpdateEmailSettingsValidator : AbstractValidator<EmailSettingsRequest>
 {
     public UpdateEmailSettingsValidator()
