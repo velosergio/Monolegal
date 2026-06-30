@@ -1,0 +1,935 @@
+{
+  "info": {
+    "_postman_id": "a0b1c2d3-0250-4dcf-9a25-d0c2ed025025",
+    "name": "Monolegal API",
+    "description": "Colección generada automáticamente desde docs/openapi.json por scripts/gen-api-docs.mjs. Configura las variables {{baseUrl}} y {{token}} en un entorno (ver monolegal.postman_environment.json).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5155",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "Listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients?search=&page=&pageSize=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Lista paginada de clientes, con búsqueda opcional (query 'search') por nombre o email."
+          }
+        },
+        {
+          "name": "Crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients"
+              ]
+            },
+            "description": "Crear cliente",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Detalle de cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Detalle de cliente"
+          }
+        },
+        {
+          "name": "Editar cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Editar cliente",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"string\",\n  \"email\": \"string\",\n  \"phone\": \"string\",\n  \"address\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Elimina un cliente sin facturas asociadas. Devuelve 409 si tiene facturas."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "Listar facturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices?status=&search=&page=&pageSize=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Devuelve una lista paginada de facturas, opcionalmente filtrada por estado (query param 'status') y por cliente (query param 'search', coincidencia case-insensitive sobre clientId, máximo 100 caracteres). Admite paginación con 'page' y 'pageSize' (máximo 50)."
+          }
+        },
+        {
+          "name": "Crear factura",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ]
+            },
+            "description": "Crea una factura con cliente, items y fecha de vencimiento. El monto se deriva de los items.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"string\",\n  \"dueDate\": \"2026-01-01T00:00:00Z\",\n  \"items\": [\n    {\n      \"description\": \"string\",\n      \"quantity\": 0,\n      \"unitPrice\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Listar envíos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/shipments?sendStatus=&search=&page=&pageSize=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "shipments"
+              ],
+              "query": [
+                {
+                  "key": "sendStatus",
+                  "value": ""
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                },
+                {
+                  "key": "page",
+                  "value": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Devuelve una lista paginada de envíos por factura (sólo facturas en estados notificables), opcionalmente filtrada por estado de envío (query 'sendStatus': pending/sent/failed/skipped) y por cliente o correo (query 'search', coincidencia case-insensitive, máximo 100 caracteres). Admite 'page' y 'pageSize' (máximo 50)."
+          }
+        },
+        {
+          "name": "Obtener estadísticas de facturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "stats"
+              ]
+            },
+            "description": "Devuelve métricas agregadas para el dashboard: total de facturas, conteo por estado ('byStatus') y conteo por cliente ('byClient')."
+          }
+        },
+        {
+          "name": "Transicionar el estado de una factura",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/transition/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "transition",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Aplica una transición manual de estado a la factura indicada. El cuerpo debe incluir 'newStatus'. Devuelve 400 si el cuerpo es inválido o la transición no está permitida, y 404 si la factura no existe.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newStatus\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Obtener el detalle de una factura",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Devuelve el objeto completo de la factura indicada por su identificador. Un identificador inexistente o con formato inválido devuelve 404 de forma uniforme."
+          }
+        },
+        {
+          "name": "Editar factura",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Edita cliente, items y vencimiento de una factura no terminal. Recalcula el monto.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"string\",\n  \"dueDate\": \"2026-01-01T00:00:00Z\",\n  \"items\": [\n    {\n      \"description\": \"string\",\n      \"quantity\": 0,\n      \"unitPrice\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar factura",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Elimina permanentemente una factura (hard delete), en cualquier estado."
+          }
+        },
+        {
+          "name": "Cancelar envío de una factura",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/:id/cancel-notification",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                ":id",
+                "cancel-notification"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Marca como omitida la notificación de una factura pendiente en estado notificable, para que el worker no la procese. Conserva el registro. Devuelve 409 si la factura no está pendiente y 404 si no existe."
+          }
+        },
+        {
+          "name": "Marcar una factura como pagada",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/:id/pay",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                ":id",
+                "pay"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Aplica la transición de pago a la factura indicada desde cualquier estado activo válido. Devuelve 404 si la factura no existe y 409 si el estado actual no permite el pago."
+          }
+        },
+        {
+          "name": "Reenviar notificación de una factura",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/:id/resend",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                ":id",
+                "resend"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Reenvía la notificación correspondiente al estado actual de la factura e incrementa el contador de reintentos. Fail-soft: un fallo de envío se refleja como 'failed' (HTTP 200). Devuelve el ítem de envío actualizado."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": [
+        {
+          "name": "Obtener la configuración de email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email"
+              ]
+            },
+            "description": "Devuelve la configuración no secreta del proveedor de email y el estado de su credencial. Nunca expone secretos."
+          }
+        },
+        {
+          "name": "Actualizar la configuración de email",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email"
+              ]
+            },
+            "description": "Reemplaza la configuración no secreta del proveedor de email. Devuelve 204. Los secretos siguen viniendo del entorno.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activeProvider\": \"smtp\",\n  \"fromAddress\": \"string\",\n  \"fromName\": \"string\",\n  \"smtp\": null,\n  \"resend\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Listar las plantillas de email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email/templates",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email",
+                "templates"
+              ]
+            },
+            "description": "Devuelve las plantillas efectivas por tipo y el catálogo de variables admitidas."
+          }
+        },
+        {
+          "name": "Actualizar una plantilla de email",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email/templates/:type",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email",
+                "templates",
+                ":type"
+              ],
+              "variable": [
+                {
+                  "key": "type",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Reemplaza el asunto y cuerpo de la plantilla del tipo indicado. Devuelve 204.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"string\",\n  \"body\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Previsualizar una plantilla de email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email/templates/:type/preview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email",
+                "templates",
+                ":type",
+                "preview"
+              ],
+              "variable": [
+                {
+                  "key": "type",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Renderiza la plantilla con datos de ejemplo. Aplica la misma validación de variables que la edición.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"string\",\n  \"body\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Restablecer una plantilla de email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email/templates/:type/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email",
+                "templates",
+                ":type",
+                "reset"
+              ],
+              "variable": [
+                {
+                  "key": "type",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Elimina la personalización de la plantilla del tipo indicado, volviendo al default. Devuelve 204."
+          }
+        },
+        {
+          "name": "Enviar un correo de prueba",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email/test",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email",
+                "test"
+              ]
+            },
+            "description": "Envía un correo de prueba con el proveedor y la plantilla reales. Un fallo de envío se reporta como resultado, no como error 5xx.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"string\",\n  \"templateType\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Reenviar notificaciones fallidas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email/tools/resend-failed",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email",
+                "tools",
+                "resend-failed"
+              ]
+            },
+            "description": "Reintenta el envío de las notificaciones de todas las facturas con último resultado Failed. Devuelve conteos (attempted/resent/failed)."
+          }
+        },
+        {
+          "name": "Sanear notificaciones atascadas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email/tools/sanitize",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email",
+                "tools",
+                "sanitize"
+              ]
+            },
+            "description": "Marca como Failed las facturas en estado notificable con notificación no registrada (None), conservando el registro. No reintenta ni borra."
+          }
+        },
+        {
+          "name": "Validar la credencial del proveedor de email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/email/validate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "email",
+                "validate"
+              ]
+            },
+            "description": "Valida la credencial del proveedor activo (o el indicado) sin enviar correo. Nunca expone el secreto.",
+            "body": {
+              "mode": "raw",
+              "raw": "null",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Obtener la configuración de transiciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/invoice-transitions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "invoice-transitions"
+              ]
+            },
+            "description": "Devuelve la configuración actual de transiciones automáticas de facturas."
+          }
+        },
+        {
+          "name": "Actualizar la configuración de transiciones",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/invoice-transitions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "invoice-transitions"
+              ]
+            },
+            "description": "Reemplaza la configuración de transiciones automáticas de facturas. Devuelve 204 sin contenido.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pendingToFirstReminderDays\": 0,\n  \"firstToSecondReminderDays\": 0,\n  \"secondToDeactivatedDays\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Eliminar todos los datos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/maintenance/delete-all-data",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "maintenance",
+                "delete-all-data"
+              ]
+            },
+            "description": "Elimina todos los registros de negocio (facturas) conservando la base de datos y la configuración del sistema. Irreversible."
+          }
+        },
+        {
+          "name": "Flush DB",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/maintenance/flush-database",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "settings",
+                "maintenance",
+                "flush-database"
+              ]
+            },
+            "description": "Vacía toda la base de datos (incluida la configuración), reconstruye índices y ejecuta nuevamente el sembrador de datos. Irreversible."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workers",
+      "item": [
+        {
+          "name": "Disparar un ciclo de transiciones",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workers/trigger-transitions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "workers",
+                "trigger-transitions"
+              ]
+            },
+            "description": "Dispara manualmente un ciclo de transiciones automáticas de estado de facturas. Devuelve un resumen con el número de facturas evaluadas y transicionadas."
+          }
+        }
+      ]
+    }
+  ]
+}

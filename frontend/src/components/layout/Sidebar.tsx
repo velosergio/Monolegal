@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { Footer } from './Footer'
-import { NAV_ITEMS } from './navigation'
+import { getSwaggerNavItem, NAV_ITEMS } from './navigation'
 
 interface SidebarProps {
   /** Colapsa el sidebar a solo iconos (solo escritorio). */
@@ -20,6 +20,8 @@ interface SidebarProps {
  * fondo. Los ítems con `disabled` se muestran inertes con la etiqueta "Próximamente".
  */
 export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: SidebarProps) {
+  const swaggerItem = getSwaggerNavItem()
+
   return (
     <div className="flex h-full flex-col text-sidebar-foreground">
       <div
@@ -99,6 +101,22 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
             </NavLink>
           )
         })}
+
+        {swaggerItem && (
+          <a
+            href={swaggerItem.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={collapsed ? swaggerItem.label : undefined}
+            className={cn(
+              'flex items-center gap-3 rounded-md border-l-2 border-transparent px-3 py-2 text-left text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-active',
+              collapsed && 'justify-center'
+            )}
+          >
+            <swaggerItem.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+            {!collapsed && swaggerItem.label}
+          </a>
+        )}
       </nav>
 
       <Footer collapsed={collapsed} />

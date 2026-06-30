@@ -436,6 +436,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Setup instructions
 - ✅ Deployment guide
 - ✅ Coleccion Postman
+- ✅ Swagger UI con boton en el sidebar
 
 ### Spec 6.2: Code Comments & Architecture Doc
 

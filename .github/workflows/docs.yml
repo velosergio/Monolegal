@@ -1,0 +1,37 @@
+name: Docs (API generada)
+
+# Verifica que la documentación generada (docs/api-reference.md y la colección de
+# Postman) está sincronizada con el snapshot OpenAPI (docs/openapi.json).
+# Si alguien cambia el snapshot o el generador sin regenerar, el job falla
+# (spec 025, FR-010; ver docs/adr/0002-documentacion-openapi-generada.md).
+on:
+  push:
+    paths:
+      - "docs/openapi.json"
+      - "docs/api-reference.md"
+      - "docs/postman/**"
+      - "scripts/gen-api-docs.mjs"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    paths:
+      - "docs/openapi.json"
+      - "docs/api-reference.md"
+      - "docs/postman/**"
+      - "scripts/gen-api-docs.mjs"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Verificar documentación generada
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+
+      - name: Verificar sincronización (docs:api:verify)
+        run: npm run docs:api:verify

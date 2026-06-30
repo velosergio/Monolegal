@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Monolegal.Domain.Entities;
 
@@ -37,6 +38,7 @@ public sealed class Client
         UpdatedAt = DateTime.UtcNow;
     }
 
+    [MemberNotNull(nameof(Name), nameof(Email))]
     private void SetDetails(string name, string email, string? phone, string? address)
     {
         if (string.IsNullOrWhiteSpace(name))

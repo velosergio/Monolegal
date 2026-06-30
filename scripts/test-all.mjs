@@ -2,11 +2,12 @@
 // =============================================================================
 // Orquestador unificado de pruebas — Spec 5.5 / feature 024-test-runner-unificado
 //
-// Punto de entrada único (`npm run test:all`) que ejecuta las CUATRO suites del
+// Punto de entrada único (`npm run test:all`) que ejecuta las CINCO suites del
 // proyecto y devuelve un código de salida agregado apto para CI:
 //   - backend  → `dotnet test` en backend/
 //   - worker   → `dotnet test` en worker/
 //   - frontend → `npm run test:run` (vitest) en frontend/
+//   - doctor   → `npm run doctor` (react-doctor) en frontend/
 //   - e2e      → `npm run test:e2e` (playwright) en frontend/
 //
 // Comportamiento (ver contracts/test-runner.md, research.md):
@@ -30,12 +31,13 @@ const SUITES = [
   { id: 'backend', label: 'Backend (xUnit)', command: 'dotnet', args: ['test'], cwd: 'backend' },
   { id: 'worker', label: 'Worker (xUnit)', command: 'dotnet', args: ['test'], cwd: 'worker' },
   { id: 'frontend', label: 'Frontend (Vitest)', command: 'npm', args: ['run', 'test:run'], cwd: 'frontend' },
+  { id: 'doctor', label: 'Frontend (React Doctor)', command: 'npm', args: ['run', 'doctor'], cwd: 'frontend' },
   { id: 'e2e', label: 'E2E (Playwright)', command: 'npm', args: ['run', 'test:e2e'], cwd: 'frontend' },
 ]
 
 // --- Selección opcional de suites (research D9; default = las cuatro) --------
 // Uso: `node scripts/test-all.mjs backend worker`  o  `SUITES=backend,worker`.
-// Sin argumentos ni variable ⇒ se ejecutan las cuatro (FR-001 / SC-001).
+// Sin argumentos ni variable ⇒ se ejecutan las cinco (FR-001 / SC-001).
 function selectSuites() {
   const fromArgs = process.argv.slice(2).map((s) => s.trim()).filter(Boolean)
   const fromEnv = (process.env.SUITES ?? '').split(',').map((s) => s.trim()).filter(Boolean)

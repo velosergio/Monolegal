@@ -5,5 +5,5 @@ Proyecto con arquitectura limpia: backend ASP.NET Core 10 (Minimal APIs, MongoDB
 <!-- SPECKIT START -->
 ## Feature activo
 
-- **024 — Test Runner Unificado**: `specs/024-test-runner-unificado/plan.md` (spec, research, data-model, contracts, quickstart en la misma carpeta). Comando único `npm run test:all` → `node scripts/test-all.mjs` que orquesta las 4 suites (backend, worker, frontend, E2E) con reporte consolidado y exit code agregado.
+- **025 — Documentación de API y del Proyecto**: `specs/025-documentacion-api/plan.md` (spec, research, data-model, contracts, quickstart en la misma carpeta). Documentación consolidada en `docs/` (architecture, data-model/ERD, api-reference, setup, deployment) con diagramas Mermaid; `api-reference.md` y la colección Postman se **generan** desde `docs/openapi.json` con `scripts/gen-api-docs.mjs` (Node, sin deps); acceso a Swagger UI desde el sidebar (ítem de enlace externo, `VITE_SWAGGER_URL`, default `/swagger`).
 <!-- SPECKIT END -->

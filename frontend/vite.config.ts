@@ -27,6 +27,17 @@ export default defineConfig({
         target: apiProxyTarget,
         changeOrigin: true,
       },
+      // Documentación interactiva servida por el backend (spec 025): se reenvía
+      // igual que `/api` para que el acceso por defecto `/swagger` del sidebar
+      // funcione en el mismo origen en desarrollo.
+      '/swagger': {
+        target: apiProxyTarget,
+        changeOrigin: true,
+      },
+      '/openapi': {
+        target: apiProxyTarget,
+        changeOrigin: true,
+      },
     },
   },
   build: {

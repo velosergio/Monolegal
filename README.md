@@ -76,6 +76,18 @@ curl http://localhost:5173
 
 ## Documentación
 
+**Documentación del proyecto** ([índice completo en `docs/`](docs/README.md)):
+
+- **[Arquitectura](docs/architecture.md)** - Capas, componentes y diagramas
+- **[Modelo de datos (ERD)](docs/data-model.md)** - Entidades, enums y ciclo de estados
+- **[Referencia de la API](docs/api-reference.md)** - Endpoints (generada desde OpenAPI)
+- **[Configuración local](docs/setup.md)** - Puesta en marcha y variables de entorno
+- **[Guía de despliegue](docs/deployment.md)** - Producción y exposición de Swagger
+- **[Colección de Postman](docs/postman/)** - Peticiones importables (generada)
+- **Swagger UI** - Documentación interactiva en `/swagger` (Development); acceso desde el sidebar del panel
+
+**Diseño dirigido por especificaciones**:
+
 - **[Plan de Implementación](specs/001-project-setup/plan.md)** - Decisiones arquitectónicas
 - **[Investigación Técnica](specs/001-project-setup/research.md)** - Justificaciones y alternativas
 - **[Guía Rápida de Validación](specs/001-project-setup/quickstart.md)** - 30+ validaciones post-setup
