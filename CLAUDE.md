@@ -5,5 +5,5 @@ Proyecto con arquitectura limpia: backend ASP.NET Core 10 (Minimal APIs, MongoDB
 <!-- SPECKIT START -->
 ## Feature activo
 
-- **022 — Tests de Componentes Frontend**: `specs/022-tests-componentes-frontend/plan.md` (spec, research, data-model, contracts, quickstart en la misma carpeta).
+- **023 — Tests E2E con Playwright**: `specs/023-tests-e2e-playwright/plan.md` (spec, research, data-model, contracts, quickstart en la misma carpeta).
 <!-- SPECKIT END -->

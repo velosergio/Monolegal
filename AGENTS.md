@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-specs/022-tests-componentes-frontend/plan.md
+specs/023-tests-e2e-playwright/plan.md
 <!-- SPECKIT END -->

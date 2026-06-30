@@ -395,7 +395,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 - ✅ Async handlers (TanStack Query mocked)
 - ✅ Snapshot tests para UI crítica
 
-### Spec 5.4: E2E Tests - Playwright
+### Spec 5.4: E2E Tests - Playwright ✅ Implementada (feature 023-tests-e2e-playwright)
 
 **GIVEN** aplicación fullstack  
 **WHEN** se corren E2E tests  
@@ -472,7 +472,7 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 | 2    | 2.1-2.2 | 2/2 | ✅ |
 | 3    | 3.1-3.4 | 4/4 | ✅ |
 | 4    | 4.1-4.5 | 9/9 | ✅ |
-| 5    | 5.1-5.5 | 1/5 | 🟡 |
+| 5    | 5.1-5.5 | 2/5 | 🟡 |
 | 6    | 6.1-6.3 | 0/3 | ⬜ |
 
 ---

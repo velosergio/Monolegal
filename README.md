@@ -27,7 +27,7 @@ curl http://localhost:5173
 
 ```
 .
-├── backend/                    # ASP.NET Core 10 (Minimal APIs)
+├── backend/                   # ASP.NET Core 10 (Minimal APIs)
 │   ├── Domain/                # Entidades de negocio
 │   ├── Application/           # Casos de uso, DTOs
 │   ├── Infrastructure/        # MongoDB, email, logging
@@ -37,19 +37,19 @@ curl http://localhost:5173
 ├── frontend/                  # React 19+ + Vite + TypeScript
 │   ├── src/
 │   │   ├── components/        # Componentes reutilizables
-│   │   ├── pages/            # Páginas (invoices, dashboard)
-│   │   ├── hooks/            # Custom hooks (data fetching)
-│   │   └── services/         # API client, state management
-│   └── tests/                # Vitest + Testing Library
+│   │   ├── pages/             # Páginas (invoices, dashboard)
+│   │   ├── hooks/             # Custom hooks (data fetching)
+│   │   └── services/          # API client, state management
+│   └── tests/                 # Vitest + Testing Library
 │
 ├── worker/                    # ASP.NET Core Hosted Service
-│   ├── Services/             # Background jobs
-│   └── Configuration/        # DI setup, Serilog
+│   ├── Services/              # Background jobs
+│   └── Configuration/         # DI setup, Serilog
 │
-├── packages/shared/          # DTOs, Enums, Interfaces compartidas
+├── packages/shared/           # DTOs, Enums, Interfaces compartidas
 │
-├── docker-compose.yml        # Orquestación local
-├── Dockerfile               # Multi-stage build
+├── docker-compose.yml         # Orquestación local
+├── Dockerfile                 # Multi-stage build
 └── .dockerignore
 ```
 

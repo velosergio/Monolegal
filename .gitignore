@@ -57,6 +57,13 @@ coverage-report/
 **/TestResults/
 *.cobertura.xml
 
+# Playwright (E2E)
+frontend/playwright-report/
+frontend/test-results/
+frontend/blob-report/
+frontend/.playwright/
+.last-run.json
+
 # Temporary files
 *.tmp
 *.temp
