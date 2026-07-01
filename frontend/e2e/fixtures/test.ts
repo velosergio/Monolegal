@@ -1,4 +1,5 @@
 import { test as base, expect } from '@playwright/test'
+import { ClientsPage } from '../pages/clients.page'
 import { DashboardPage } from '../pages/dashboard.page'
 import { InvoicesPage } from '../pages/invoices.page'
 import { resetData } from './reset-data'
@@ -15,6 +16,7 @@ import { resetData } from './reset-data'
 export const test = base.extend<{
   invoicesPage: InvoicesPage
   dashboardPage: DashboardPage
+  clientsPage: ClientsPage
   resetData: () => Promise<void>
 }>({
   invoicesPage: async ({ page }, use) => {
@@ -22,6 +24,9 @@ export const test = base.extend<{
   },
   dashboardPage: async ({ page }, use) => {
     await use(new DashboardPage(page))
+  },
+  clientsPage: async ({ page }, use) => {
+    await use(new ClientsPage(page))
   },
   resetData: async ({ request }, use) => {
     await use(async () => {

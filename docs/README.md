@@ -12,6 +12,7 @@
 | [data-model.md](./data-model.md) | Modelo de datos: ERD, entidades, enums, colecciones y ciclo de estados |
 | [api-reference.md](./api-reference.md) | Referencia de endpoints (**generada** desde `openapi.json`) |
 | [setup.md](./setup.md) | Configuración local (Docker o servicios en local) y variables de entorno |
+| [guia-despliegue-prueba-tecnica.md](./guia-despliegue-prueba-tecnica.md) | Despliegue y pruebas para evaluación de la prueba técnica |
 | [deployment.md](./deployment.md) | Guía de despliegue a producción y exposición de Swagger |
 | [postman/](./postman/) | Colección de Postman (**generada**) y plantilla de entorno |
 

@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test'
+import { expect, type Locator, type Page } from '@playwright/test'
 
 /**
  * Page object del Dashboard. Lee la distribución por estado desde la leyenda textual
@@ -36,5 +36,21 @@ export class DashboardPage {
   /** Indica si se muestra el estado vacío del dashboard. */
   async isEmptyStateVisible(): Promise<boolean> {
     return this.page.getByText('No hay facturas todavía').isVisible()
+  }
+
+  /** El gráfico de dona de distribución por estado (spec 016). */
+  donut(): Locator {
+    return this.page.getByRole('img', { name: 'Distribución de facturas por estado' })
+  }
+
+  /** Número total mostrado en el centro de la dona. */
+  async readDonutCenterTotal(): Promise<number> {
+    const text = await this.page.getByTestId('donut-total').innerText()
+    return Number(text.trim())
+  }
+
+  /** Enlace de navegación lateral por su nombre (p. ej. "Dashboard", "Facturas"). */
+  navLink(name: string): Locator {
+    return this.page.getByRole('link', { name, exact: true })
   }
 }

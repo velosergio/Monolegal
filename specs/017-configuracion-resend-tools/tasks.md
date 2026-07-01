@@ -168,7 +168,7 @@ Aplicación web: backend por capas (`backend/Domain|Application|Infrastructure|A
 
 **Purpose**: Calidad, seguridad, accesibilidad y validación end-to-end.
 
-- [ ] T064 [P] E2E Playwright de la jornada completa de `/configuracion` (US1–US4) en `frontend/tests/e2e/settings.spec.ts` — DIFERIDO: el proyecto no tiene infraestructura Playwright (config ni dependencias) y requiere levantar API+Mongo. Pendiente de decisión de tooling E2E.
+- [X] T064 [P] E2E Playwright de la jornada completa de `/configuracion` (US1–US4) en `frontend/e2e/settings.spec.ts` — ✅ 4/4 verde contra Docker (2026-06-30): US1 proveedor (estado credencial + toggle + validación de correo), US2 plantillas (variable no admitida + vista previa), US3 prueba de envío (destino inválido), US4 herramientas (reenvío "nada que procesar" + confirmación de saneamiento). Cubre los caminos sin efectos colaterales; la persistencia real del proveedor, el envío real (NoOp en Dev) y la validación visual quedan como verificación manual.
 - [X] T065 [P] Test de seguridad: ninguna respuesta de API expone `password`/`apiKey` en `backend/Tests/Infrastructure/EmailSecretsNotExposedTests.cs`
 - [X] T066 [P] Biome sin warnings (119 archivos) + `dotnet format --verify-no-changes` limpio + a11y (labels asociados, `Dialog` accesible de Radix, foco/teclado) y responsive de `/configuracion`
 - [X] T067 [P] Actualizar documentación: `README.md` (sección Correos: multi-proveedor, secretos solo en entorno, plantillas, prueba y herramientas) y `.env`

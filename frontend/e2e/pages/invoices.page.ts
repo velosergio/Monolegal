@@ -31,12 +31,13 @@ export class InvoicesPage {
 
   /** Afirma que hay al menos una fila y que TODAS muestran la etiqueta de estado dada. */
   async expectAllRowsHaveStatus(statusLabel: string): Promise<void> {
-    const rows = this.rows()
-    const count = await rows.count()
-    expect(count).toBeGreaterThan(0)
-    for (let i = 0; i < count; i++) {
-      await expect(rows.nth(i)).toContainText(statusLabel)
-    }
+    // Aserciones web-first auto-reintentables: esperan a que la tabla termine de
+    // re-renderizar la lista filtrada. Snapshotear `count()` aquí provocaba carreras
+    // (se capturaba durante el render transitorio sin filtrar y luego se iteraban
+    // índices ya inexistentes). En su lugar afirmamos el estado final: ninguna fila
+    // sin la etiqueta y al menos una con ella.
+    await expect(this.rows().filter({ hasNotText: statusLabel })).toHaveCount(0)
+    await expect(this.rows().filter({ hasText: statusLabel }).first()).toBeVisible()
   }
 
   /** Abre el detalle de la primera factura que esté en el estado dado. */
@@ -91,5 +92,78 @@ export class InvoicesPage {
     await this.changeStatusTo('1er Recordatorio')
     await expect(this.successToast('1er Recordatorio')).toBeVisible()
     await this.closeDialog()
+  }
+
+  // ── CRUD de facturas (spec 018, US1) ──────────────────────────────────────
+
+  /** Abre el formulario de alta de factura. */
+  async openCreateForm(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Nueva factura' }).click()
+    await expect(this.dialog().getByText('Nueva factura')).toBeVisible()
+  }
+
+  /**
+   * Rellena el formulario de factura: cliente, vencimiento y la primera línea de
+   * detalle (descripción, cantidad, precio unitario). El total es de solo lectura
+   * y se deriva de las líneas.
+   */
+  async fillForm(values: {
+    clientLabel?: string
+    dueDate?: string
+    description?: string
+    quantity?: number
+    unitPrice?: number
+  }): Promise<void> {
+    const dialog = this.dialog()
+    if (values.clientLabel !== undefined)
+      await dialog.getByLabel('Cliente').selectOption({ label: values.clientLabel })
+    if (values.dueDate !== undefined)
+      await dialog.getByLabel('Fecha de vencimiento').fill(values.dueDate)
+    if (values.description !== undefined)
+      await dialog.getByLabel('Descripción de la línea 1').fill(values.description)
+    if (values.quantity !== undefined)
+      await dialog.getByLabel('Cantidad de la línea 1').fill(String(values.quantity))
+    if (values.unitPrice !== undefined)
+      await dialog.getByLabel('Precio unitario de la línea 1').fill(String(values.unitPrice))
+  }
+
+  /** Total (solo lectura) mostrado en el editor de líneas del formulario. */
+  formTotal(): Locator {
+    return this.dialog().getByText('Total')
+  }
+
+  async submitCreate(): Promise<void> {
+    await this.dialog().getByRole('button', { name: 'Crear factura' }).click()
+  }
+
+  async submitEdit(): Promise<void> {
+    await this.dialog().getByRole('button', { name: 'Guardar cambios' }).click()
+  }
+
+  /** Fila de la tabla cuyo contenido incluye el texto dado (p. ej. un monto formateado). */
+  rowByText(text: string): Locator {
+    return this.rows().filter({ hasText: text })
+  }
+
+  /** Abre el formulario de edición de la factura cuya fila contiene el texto dado. */
+  async openEditForm(rowText: string): Promise<void> {
+    await this.rowByText(rowText)
+      .getByRole('button', { name: /Editar la factura/ })
+      .click()
+    await expect(this.dialog().getByText('Editar factura')).toBeVisible()
+  }
+
+  /** Elimina la factura cuya fila contiene el texto dado, confirmando el modal. */
+  async deleteByRowText(rowText: string): Promise<void> {
+    await this.rowByText(rowText)
+      .getByRole('button', { name: /Eliminar la factura/ })
+      .click()
+    await expect(this.dialog().getByText('Eliminar factura')).toBeVisible()
+    await this.dialog().getByRole('button', { name: 'Eliminar', exact: true }).click()
+  }
+
+  /** Toast por su texto (role="status"). */
+  toast(text: string): Locator {
+    return this.page.getByText(text)
   }
 }

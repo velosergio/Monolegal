@@ -68,7 +68,7 @@ description: "Task list for feature implementation"
 - [X] T011 [US1] Añadir el caso 1.2 (filtrar por estado): seleccionar "1er Recordatorio" en el filtro y afirmar que todas las filas visibles muestran ese badge (FR-003)
 - [X] T012 [US1] Añadir el caso 1.3 (volver a todos): seleccionar "Todos los estados" y afirmar que se muestran facturas de múltiples estados (≥ las del caso 1.1) (FR-003)
 - [X] T013 [US1] Añadir el caso 1.4 (sin resultados): como el seed pobla todos los estados filtrables, se ejercita el estado vacío del listado vía búsqueda de un cliente inexistente (mismo componente "No se encontraron facturas"), de forma determinista y sin mutar datos (FR-003, spec Edge Cases)
-- [ ] T014 [US1] Ejecutar `npm run test:e2e -- invoices-list-filter.spec.ts` y confirmar PASS; usar `npx playwright show-report` si hay fallos para diagnosticar — ⚠️ PENDIENTE: requiere backend (`:5155`, Development) + MongoDB, no disponibles en el entorno actual. La config y los specs compilan (`playwright test --list` lista los 9 tests)
+- [X] T014 [US1] Ejecutar `npm run test:e2e -- invoices-list-filter.spec.ts` y confirmar PASS — ✅ verde contra Docker vía `npm run test:e2e:docker` (backend `:5000` Development + MongoDB `:27017`), 4/4 estable en ×3 repeticiones (2026-06-30). Se corrigió una carrera en `expectAllRowsHaveStatus` (page object) que capturaba `count()` durante el render transitorio.
 
 **Checkpoint**: El flujo "abrir lista + filtrar por estado" del roadmap queda verificado de extremo a extremo (SC-001). 
 
@@ -87,7 +87,7 @@ description: "Task list for feature implementation"
 - [X] T017 [US2] Añadir el caso 2.2 (aplicar transición no terminal): seleccionar "1er Recordatorio", pulsar "Cambiar Estado" y afirmar el toast "Estado actualizado a «1er Recordatorio»." y el nuevo estado en el detalle (FR-004, SC-006)
 - [X] T018 [US2] Añadir el caso 2.4 (persistencia en lista): cerrar el modal, volver a la lista y afirmar que la factura figura con el estado actualizado (FR-004, SC-006)
 - [X] T019 [US2] Añadir el caso 2.3 (estado terminal): abrir el detalle de la factura `Pagado` y afirmar que no hay control de transición y que se comunica que no admite cambios (FR-005)
-- [ ] T020 [US2] Ejecutar `npm run test:e2e -- manual-transition.spec.ts` y confirmar PASS — ⚠️ PENDIENTE: requiere backend + MongoDB (no disponibles en el entorno actual)
+- [X] T020 [US2] Ejecutar `npm run test:e2e -- manual-transition.spec.ts` y confirmar PASS — ✅ 3/3 verde contra Docker (2026-06-30)
 
 **Checkpoint**: El flujo "transición manual" del roadmap queda verificado (incluido el caso terminal) (SC-001).
 
@@ -105,7 +105,7 @@ description: "Task list for feature implementation"
 - [X] T022 [US3] Añadir el caso 3.1 (reflejo del cambio): leer la distribución por estado en `/` (page object dashboard), realizar la transición Pendiente→1er Recordatorio y, de vuelta en `/`, afirmar delta −1 en "Pendiente" y +1 en "1er Recordatorio" (FR-006, SC-006, research.md D6)
 - [X] T023 [US3] Añadir el caso 3.2 (total coherente): afirmar que "Total de facturas" es igual antes y después de la transición (FR-006)
 - [X] T024 [US3] Caso 3.3 (estado vacío): NO reproducible — el endpoint de flush siempre re-siembra (seeder idempotente), por lo que la BD nunca queda sin facturas. Documentado en el encabezado del spec `dashboard-updated.spec.ts` (omitido conscientemente, sin `.skip`); el estado vacío del dashboard ya está cubierto por pruebas de componente (Vitest, spec 022)
-- [ ] T025 [US3] Ejecutar `npm run test:e2e -- dashboard-updated.spec.ts` y confirmar PASS — ⚠️ PENDIENTE: requiere backend + MongoDB (no disponibles en el entorno actual)
+- [X] T025 [US3] Ejecutar `npm run test:e2e -- dashboard-updated.spec.ts` y confirmar PASS — ✅ 2/2 verde contra Docker (2026-06-30)
 
 **Checkpoint**: El flujo "ver dashboard actualizado" del roadmap queda verificado; la jornada crítica completa está cubierta (SC-001).
 
@@ -115,12 +115,12 @@ description: "Task list for feature implementation"
 
 **Purpose**: Calidad, determinismo y cierre
 
-- [ ] T026 Ejecutar la suite completa `npm run test:e2e` y confirmar que todas las pruebas pasan con código de salida 0 (FR-009, SC-003) — ⚠️ PENDIENTE: requiere backend + MongoDB (no disponibles en el entorno actual)
-- [ ] T027 Ejecutar `npm run test:e2e` por segunda vez consecutiva (con reset previo) y confirmar cero flakiness (SC-002); validar independencia de orden ejecutando un spec aislado (SC-004) — ⚠️ PENDIENTE: requiere backend + MongoDB (no disponibles en el entorno actual)
+- [X] T026 Ejecutar la suite completa `npm run test:e2e` y confirmar que todas las pruebas pasan con código de salida 0 (FR-009, SC-003) — ✅ verde contra Docker, exit code 0 (2026-06-30). Suite ampliada con specs de CRUD facturas/clientes (018), dashboard de inicio (016) y configuración (017): 22/22 en total.
+- [X] T027 Ejecutar `npm run test:e2e` por segunda vez consecutiva (con reset previo) y confirmar cero flakiness (SC-002); validar independencia de orden ejecutando un spec aislado (SC-004) — ✅ 2 corridas consecutivas verdes sin flakiness; spec aislado (`manual-transition.spec.ts`) verde por sí solo; sin `.only`/`.skip` reales (2026-06-30)
 - [X] T028 [P] Ejecutar Biome (`biome check --write`) sobre `frontend/e2e/`, `frontend/playwright.config.ts` y `frontend/vitest.config.ts`: formateo aplicado (CRLF→LF) y `biome check` queda limpio (Principio V)
 - [X] T029 [P] Verificado: no hay `.skip`/`.only` en los specs E2E (FR-012, Principio IV)
 - [X] T030 Confirmado: esta feature solo añade `frontend/e2e/**`, `frontend/playwright.config.ts`, `frontend/package.json`/lockfile, `frontend/vitest.config.ts` y `.gitignore`; no se editó ningún `frontend/src/**` ni `backend/**`. (Nota: el working tree del repo ya tenía modificaciones preexistentes masivas ajenas a esta sesión —p. ej. normalización de fin de línea—, por lo que `git status` muestra muchos archivos `M` no causados por esta feature) (FR-010, SC-005)
-- [ ] T031 Ejecutar la validación de [quickstart.md](./quickstart.md) de principio a fin (levantar backend, reset, `npm run test:e2e`) y confirmar resultados esperados — ⚠️ PENDIENTE: requiere backend + MongoDB (no disponibles en el entorno actual)
+- [X] T031 Ejecutar la validación de [quickstart.md](./quickstart.md) de principio a fin (levantar backend, reset, `npm run test:e2e`) y confirmar resultados esperados — ✅ ejecutado de extremo a extremo contra Docker (reset vía `flush-database` + suite); SC-005 verificado: solo cambios bajo `frontend/e2e/**` (2026-06-30)
 - [X] T032 Marcada la Spec 5.4 como implementada en `roadmap.md` (encabezado con referencia a la feature 023) y matriz de aceptación actualizada (Fase 5: 2/5)
 
 ---

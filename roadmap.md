@@ -478,6 +478,9 @@ Task SendPaymentConfirmationAsync(string clientEmail, Invoice invoice)
 
 
 ## Anotaciones:
+* Fueron 846 tareas ejecutadas en 1 semana de desarrollo
+* Se uso Cursor, Kiro y Claude Code
+
 * vista del modal /facturas:
   - mejoras en el UX, implementar busqueda en tiempo real en vez del droplist en clientes
   - mejora en el ux, implementar selector de fecha / calendario "nativo del navegador/sistema" al precionar en la fecha

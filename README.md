@@ -110,6 +110,7 @@ curl http://localhost:5173
 - **[Modelo de datos (ERD)](docs/data-model.md)** - Entidades, enums y ciclo de estados
 - **[Referencia de la API](docs/api-reference.md)** - Endpoints (generada desde OpenAPI)
 - **[Configuración local](docs/setup.md)** - Puesta en marcha y variables de entorno
+- **[Guía de despliegue y pruebas (prueba técnica)](docs/guia-despliegue-prueba-tecnica.md)** - Docker, local y validación del sistema
 - **[Guía de despliegue](docs/deployment.md)** - Producción y exposición de Swagger
 - **[Colección de Postman](docs/postman/)** - Peticiones importables (generada)
 - **Swagger UI** - Documentación interactiva en `/swagger` (Development); acceso desde el sidebar del panel
@@ -136,6 +137,21 @@ cd backend && dotnet restore
 ```
 
 ### Ejecutar Tests
+
+**Estado actual: 686 pruebas, todas en verde ✅** (última ejecución: 2026-06-30, contra el stack Docker con MongoDB).
+
+| Suite | Framework | Pruebas | Estado |
+|-------|-----------|--------:|:------:|
+| Backend — Dominio | xUnit | 140 | ✅ |
+| Backend — Aplicación · Infraestructura · Contrato | xUnit | 327 | ✅ |
+| Worker | xUnit | 2 | ✅ |
+| Frontend — componentes | Vitest | 195 | ✅ |
+| E2E (facturas, transición manual, dashboard, CRUD, configuración) | Playwright | 22 | ✅ |
+| **Total** | | **686** | **✅ verde** |
+
+La suite E2E corre contra el stack Docker con `cd frontend && npm run test:e2e:docker`
+(backend en `:5000`); es determinista (sin *flakiness* en corridas consecutivas) y no
+contiene `.only`/`.skip`.
 
 **Todas las suites con un solo comando** (backend + worker + frontend + E2E):
 

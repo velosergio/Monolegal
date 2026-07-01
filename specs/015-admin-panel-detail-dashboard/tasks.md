@@ -204,7 +204,7 @@ description: "Task list — Panel de Administración (Detalle de Factura en Moda
 - [X] T060 [P] Pase de accesibilidad WCAG A: *focus trap* y retorno de foco del modal (Radix Dialog), operabilidad por teclado del control de estado y del dashboard, `aria`/labels en gráficos, en `frontend/src/features/invoices/components/` y `frontend/src/features/dashboard/components/`
 - [X] T061 [P] Verificar `prefers-reduced-motion` en modal (apertura/cierre) y gráficos (entrada) vía `useReducedMotion` en `frontend/src/lib/motion.ts` y componentes asociados
 - [X] T062 React Doctor **100/100 honesto** (sin supresiones nuevas) sobre el modal y el dashboard
-- [ ] T063 Ejecutar y verificar la migración: ninguna factura queda sin historial y no existen documentos en estados legacy tras `StatusHistoryBackfillMigration` (validación de datos) — ⚠️ requiere instancia MongoDB (no disponible en este entorno; los tests `StatusHistoryBackfillMigrationTests` están escritos y compilan, pero solo corren contra Mongo)
+- [X] T063 Ejecutar y verificar la migración: ninguna factura queda sin historial y no existen documentos en estados legacy tras `StatusHistoryBackfillMigration` (validación de datos) — ✅ ejecutado contra MongoDB (Docker `:27017`): `StatusHistoryBackfillMigrationTests` 4/4 verde (2026-06-30)
 - [~] T064 Gates de calidad: ✅ `npm run lint` + `npm run build` + `npm run test:run` (96/96) y `dotnet test` Domain.Tests (71/71); ⚠️ los tests de Infra de `Tests.csproj` (29) fallan solo por falta de MongoDB (`localhost:27017` rechaza la conexión), no por la lógica
 - [X] T065 [P] Marcar specs 4.3 y 4.4 como implementadas en `roadmap.md`
 

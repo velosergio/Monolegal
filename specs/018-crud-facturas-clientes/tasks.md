@@ -109,7 +109,7 @@ description: "Lista de tareas para la implementación de CRUD de Facturas y Clie
 ### Tests de UI US1
 
 - [X] T035 [P] [US1] Tests Vitest del `InvoiceItemsEditor`, `InvoiceFormModal` y hooks de mutación en `frontend/src/features/invoices/` (depende de T030, T031, T032)
-- [ ] T036 [US1] E2E Playwright: jornada crear → editar → eliminar factura y verificación de bloqueo terminal en `frontend` (depende de T034)
+- [X] T036 [US1] E2E Playwright: jornada crear → editar → eliminar factura y verificación de bloqueo terminal en `frontend` (depende de T034) — ✅ `frontend/e2e/invoices-crud.spec.ts` 2/2 verde contra Docker (2026-06-30)
 
 **Checkpoint**: US1 (CRUD de facturas) completamente funcional y testeable de forma independiente. MVP entregable.
 
@@ -152,7 +152,7 @@ description: "Lista de tareas para la implementación de CRUD de Facturas y Clie
 ### Tests de UI US2
 
 - [X] T056 [P] [US2] Tests Vitest de componentes/hooks de clientes (formulario, listado, borrado con 409) en `frontend/src/features/clients/` (depende de T050, T052, T053)
-- [ ] T057 [US2] E2E Playwright: listar/buscar/crear/editar/eliminar cliente, incluido borrado con facturas asociadas, en `frontend` (depende de T055)
+- [X] T057 [US2] E2E Playwright: listar/buscar/crear/editar/eliminar cliente, incluido borrado con facturas asociadas, en `frontend` (depende de T055) — ✅ `frontend/e2e/clients-crud.spec.ts` 3/3 verde (incluye rechazo 409) contra Docker (2026-06-30)
 
 **Checkpoint**: US1 y US2 funcionan de forma independiente. Funcionalidad completa.
 
@@ -165,7 +165,7 @@ description: "Lista de tareas para la implementación de CRUD de Facturas y Clie
 - [X] T058 [P] Actualizar documentación de arquitectura (README) y registrar un ADR para "monto derivado de items" y "entidad Cliente + integridad referencial en aplicación" en `docs/` o `README`
 - [X] T059 [P] Ejecutar Biome y React Doctor sobre `frontend` y resolver hasta 0 warnings (Constitución V)
 - [X] T060 Verificar cobertura ≥85% en backend (xUnit) y frontend (Vitest) y publicar el reporte
-- [ ] T061 Ejecutar los escenarios de validación de `quickstart.md` (facturas, clientes, migración) y confirmar resultados esperados
+- [X] T061 Ejecutar los escenarios de validación de `quickstart.md` (facturas, clientes, migración) y confirmar resultados esperados — ✅ facturas+clientes vía E2E (`invoices-crud`/`clients-crud`), migración vía suite Infra `Tests.csproj` 327/327 contra Docker (2026-06-30)
 - [X] T062 [P] Verificar uso de índices (`Email_unique`, `Name_asc`, `ClientId`) y paginación forzada en las consultas de `Clients` (Constitución Performance)
 
 ---
